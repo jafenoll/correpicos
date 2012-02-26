@@ -1,0 +1,73 @@
+BUGS:
+
+
+TODO 
+
+- General :
+  > Diseño grafico
+  > Diseño de navegacion por pantallas
+  > Diseño de clases
+  
+
+- Registra : 
+  > Reloj de tiempo
+  > Guada cada punto con su velocidad, distancia, altitud, y tiempo
+  > Guada las sesiones con distancia , tiempo total y altitud acumulada
+  > presenta el ritmo em min por segundo
+  > mapa
+  > adquiere un partial_wake_lock para que siga registrando (ver si funciona)
+  > autopause con umbral de volocidad configurable y feeback en pantalla cuando activo
+  > Presenta las altitudes acumuladas
+  
+  
+  todo:
+     > valorar si la velocidad que da el GPS no fluctua demasiado
+     > que en el mapa de registro se vaya guardando el track
+     > poder cargar tracks para seguirlos verlos en el mapa principal
+     >  poder poner un track como activo en el mapa y que si me alejo mas de una distancia de el
+        avise, o si voy en direccion contraria
+     > uan vez registrada, pasar la sesion a una BBDD en la SD
+     > soportar entrenamiento por intervalos, registrando los ritmos de cada intervalo
+     > solo registra un punto cuando esta mas lejos que la acuracy del anterior
+     > al dar a parar, que salga un resumen general de la sesion y botones para grabar o eliminar direcatmente
+     > seleccionar el deporte antes de empezar a registrar
+
+- Listas
+  > Saca lista de sesiones
+  > sacar tabla de sesion (puntos en la sesion), una fila por km
+  > poder borrar una sesion 
+  > sacar mapa
+  > exportar el track a KML
+  > el tabla de km indicaciones de como de subida/bajada tiene un tramo
+  > en mapa, tramos por km con etiqueta de ritmo y botones para ir de un km a otro
+  > lista de km, tiempo, sesion y altitud por semana, mes y año
+  > las altitues acumuladas en las cabeceras
+  todo:
+     > varios gráficos...
+     > si tengo laps cargadas, sacar tambien una lista por laps
+     > exportar una sesiona GPX o TRX
+    
+     
+     
+     
+- Config
+  > se pueden configurar cada cuanto tiempo y distancia se activa el GPS
+  > se puede configurar el autopause y su umbral
+
+  todo:
+     > meter lista para tener varias config, y que luego se elijan al registrar
+     > según el modo se configura la pantalal principal del regisra
+       - correr : velocidad en mi por km mas grande
+       - bici : km/h ,as grande
+       - andar, saco mapa y waypoints solo a peticion
+       
+
+- Pruebas:
+  > ver que el autopause ba bien
+  > ver que pause y resume lo hace bien
+  > revisar la navegación entre pantallas, en espacial registrando y al volver de la notificacion
+  
+- conclusiones
+ > para correr una config de cada 10m y 6 seg esta bien 
+  
+  

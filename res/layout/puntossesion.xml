@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android" 
+    	android:id="@+id/pantallasegistra"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">  
+
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:id="@+id/screensesion1"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:orientation="vertical" >
+	    
+	    <LinearLayout 
+	        android:id="@+id/puntosesionCabecera"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_vertical">
+	    
+		     <LinearLayout 
+		        android:id="@+id/listasesionesrow"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:orientation="vertical" android:gravity="center">
+	
+		        <TextView
+		            android:id="@+id/puntoSesionDiaSem"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="20sp"
+		            android:text="lun" />
+		        
+		        <TextView
+		            android:id="@+id/puntoSesionDiaNum"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="20sp"
+		            android:text="15" />
+		        
+		        <TextView
+		            android:id="@+id/puntoSesionDiaMes"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="20sp"
+		            android:text="feb" />
+		        
+		    </LinearLayout>   
+	    
+	         <TextView
+		    	android:id="@+id/separador0"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="10sp"
+		        android:text="      " /> 
+             
+		    <LinearLayout 
+		        android:id="@+id/listasesionesrow"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:orientation="vertical" 
+		        android:padding="2sp">        
+					            
+		            
+		             <TextView
+			            android:id="@+id/puntoSesionDistancia"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="25sp"
+			            android:text="10.2" android:layout_marginBottom="-8sp" android:layout_marginLeft="0sp"/>
+		             
+		             <TextView
+				            android:id="@+id/displayDistanciaLbl"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:text="@string/displayDistanciaLbl" 
+				            android:textSize="10sp"  android:layout_marginLeft="1sp"/>
+		 	</LinearLayout>   
+ 	
+            <TextView
+		    	android:id="@+id/separador1"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="10sp"
+		        android:text="      " /> 
+	      <LinearLayout 
+	        android:id="@+id/listasesionesrow"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" 
+	        android:padding="2sp" >           
+	            
+	             
+	        	<TextView
+		            android:id="@+id/puntoSesionDuracion"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="25sp"
+		            android:text="1:12" android:layout_marginBottom="-8sp" android:layout_marginLeft="0sp"/>
+	        	
+	        	<TextView
+			        android:id="@+id/displayTiempoLbl"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:textSize="10sp"
+			        android:text="@string/displayTiempoLbl" android:layout_marginLeft="1sp"/> 
+	        	
+	        </LinearLayout>   	
+        	<TextView
+		    	android:id="@+id/separador2"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="10sp"
+		        android:text="      " /> 
+		        
+	        <LinearLayout 
+	        android:id="@+id/listasesionesrow"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" 
+	        android:padding="2sp" >   	
+        	
+        	
+	        	<TextView
+		            android:id="@+id/puntoSesionVelocidad"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="25sp"
+		            android:text="5:25" 
+		            android:layout_marginLeft="0sp" 
+		            android:layout_marginBottom="-8sp"/>
+	        	
+	        	<TextView
+					android:id="@+id/displayVelocidadLblMms"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/displayVelocidadLblMms" 
+					android:textSize="10sp" android:layout_marginLeft="1sp"/>
+        	
+        	</LinearLayout>  
+	    
+	            <TextView
+		    	android:id="@+id/separador3"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="10sp"
+		        android:text="      " /> 
+		        
+	        <LinearLayout 
+	        android:id="@+id/listasesionesrow"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:orientation="vertical" 
+	        android:padding="2sp" >   	
+        	
+        	
+	        	<TextView
+		            android:id="@+id/puntoSesionDesnivelPos"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="20sp"
+		            android:text="+345" 
+		            android:layout_marginLeft="0sp" 
+		            android:layout_marginBottom="0sp"
+		            android:gravity="right"
+	            	android:layout_gravity="right" />
+	        	
+	        	<TextView
+		            android:id="@+id/puntoSesionDesnivelNeg"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:textSize="20sp"
+		            android:text="-345" 
+		            android:layout_marginLeft="0sp" 
+		            android:layout_marginBottom="-5sp"
+		            android:gravity="right"
+	            	android:layout_gravity="right" />
+	        	
+	        	
+	        	<TextView
+					android:id="@+id/displaydesnivelLbl"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/altAcumLbl" 
+					android:textSize="10sp" 
+					android:layout_marginLeft="1sp" />
+        	
+        	</LinearLayout>  
+	
+	            
+	    </LinearLayout> 
+	
+	    <TextView
+			android:id="@+id/numPuntosSesion"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="8sp"
+			android:text="13 puntos en la sesion" />
+	    
+	    
+	    
+	        
+	    
+	     <TableLayout 
+		        android:id="@+id/tablaPuntosSesionCabecera"
+		        android:layout_height="wrap_content" 
+		        android:layout_width="wrap_content" 
+		        xmlns:android="http://schemas.android.com/apk/res/android">
+	
+		    </TableLayout>
+	    
+	    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
+	     android:scrollbars="vertical" 
+	     android:layout_height="wrap_content" 
+	     android:layout_width="wrap_content">
+	    
+	    
+		    <TableLayout 
+		        android:id="@+id/tablaPuntosSesion"
+		        android:layout_height="fill_parent" 
+		        android:layout_width="fill_parent" 
+		        xmlns:android="http://schemas.android.com/apk/res/android">
+	
+		    </TableLayout>
+		</ScrollView>
+	</LinearLayout>
+	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:id="@+id/screensesion2"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:orientation="vertical" >       
+	  
+		<org.osmdroid.views.MapView 
+	    	android:layout_width="fill_parent" 
+	    	android:layout_height="fill_parent" 
+	    	android:enabled="true"
+	    	android:clickable="true"
+	    	android:id="@+id/mapaSesion"
+	    	android:layout_weight="1"  />
+		    
+	    <LinearLayout 
+	    	android:id="@+id/botonesKm"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content" > 
+	    
+			<Button
+		        android:id="@+id/anteriorKm"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Km anterior" />
+			    
+			<Button
+		    	android:id="@+id/siguienteKm"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="Km siguiente" />
+		</LinearLayout> 
+	   
+	
+	
+	</LinearLayout>
+	
+</ViewFlipper>

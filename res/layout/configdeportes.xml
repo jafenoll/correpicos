@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+		android:id="@+id/deporteNombreLbl"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="10sp"
+		android:text="@string/nombre" />
+    
+    <EditText
+        android:id="@+id/deporteNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+		android:id="@+id/deporteGPSgapDISTLbl"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="10sp"
+		android:text="@string/gapdist" />
+        
+    <EditText
+        android:id="@+id/deporteGPSgapDIST"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+		android:id="@+id/deporteGPSgapTMPLbl"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="10sp"
+		android:text="@string/gaptmp" />
+    <EditText
+        android:id="@+id/deporteGPSgapTMP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
+
+    <CheckBox
+        android:id="@+id/umbralAutoPauseChK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activarumbralAutoPauselbltxt" />
+	<TextView
+		android:id="@+id/umbralAutoPauseLbl"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="10sp"
+		android:text="@string/umbralAutoPauselbltxt" />
+    <EditText
+        android:id="@+id/umbralAutoPause"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/deportesOK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/salvar" />
+
+        <Button
+            android:id="@+id/deportesCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/volver" />
+
+    </LinearLayout>
+
+</LinearLayout>

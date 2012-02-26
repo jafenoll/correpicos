@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+   
+   
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/toobal"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:gravity="top|center_horizontal"
+            android:layout_margin="0dp"
+            android:background="@drawable/fondo_toolbar"
+            android:baselineAligned="false" >
+
+            <Button
+                android:id="@+id/cierra"
+                android:layout_margin="2dp"
+                android:background="@drawable/boton_menu_cancel_estados"
+                android:maxWidth="30dp" 
+                android:maxHeight="30dp" 
+                android:layout_height="30dp" 
+                android:layout_width="30dp"/>
+            
+		    <TextView
+		        android:id="@android:id/empty"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_margin="2dp"
+		        android:text="@string/startRegistraLbl"
+		        android:textColor="#aaaaaa"
+		        android:textSize="20dp"
+		        android:textStyle="bold"
+		        android:layout_weight="1" 
+		        android:gravity="center" />
+		    
+		     <ImageButton
+		         android:id="@+id/swipenext"
+		         android:layout_width="30dp"
+		         android:layout_height="30dp"
+		         android:layout_margin="2dp"
+		         android:layout_marginRight="10dp"
+		         android:background="@drawable/boton_menu_globe_estados"
+		         android:text="" 
+		         android:scaleType="centerInside" />
+    			
+    	</LinearLayout>
+        
+        
+        <ViewFlipper android:id="@+id/pantallasegistra"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_weight="1" >  
+        
+            
+        
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        		android:id="@+id/screenReloj"
+		        android:layout_width="wrap_content"
+		        android:layout_height="fill_parent"
+		        android:orientation="vertical"
+		        android:gravity="left" 
+		        android:layout_gravity="center_horizontal">
+               
+                
+                
+		        <LinearLayout
+		            android:id="@+id/tiempo"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" >
+	
+			        <TextView
+			            android:id="@+id/displayTiempo"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="80sp"
+			            android:text="0:00" android:layout_marginBottom="-15sp" android:layout_marginLeft="0sp"/>
+			        <TextView
+			            android:id="@+id/displayTiempoSS"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:textSize="40sp"
+			            android:text=":00" />
+			        
+			            
+			        
+		        </LinearLayout>
+		         
+		        <LinearLayout
+		            android:id="@+id/nulo"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" >   
+		            
+		      	<TextView
+		                android:id="@+id/displayTiempoLbl"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:textSize="20sp"
+		                android:text="@string/displayTiempoLbl" android:layout_marginLeft="2sp"/>
+			    
+		      	<TextView
+		                android:id="@+id/displayautopause"
+		                android:layout_width="wrap_content"
+		                android:layout_height="wrap_content"
+		                android:textSize="10sp"
+		                android:text="@string/autopauseLbl" 
+		                android:layout_marginLeft="20sp" 
+		                android:textColor="#ff0000"/>
+			        
+		      	
+		        </LinearLayout>
+		            
+		        <LinearLayout
+		            android:id="@+id/distanciaritmo"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content" android:paddingTop="10sp">
+		        
+		            <LinearLayout
+			            android:id="@+id/distancia"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content" 
+			            android:orientation="vertical" >
+		            
+				        	
+		            
+					        <LinearLayout
+						        android:id="@+id/distancia2"
+						        android:layout_width="wrap_content"
+						        android:layout_height="wrap_content" android:layout_marginLeft="0sp">
+					
+							    <TextView
+							        android:id="@+id/displayDistancia"
+							        android:layout_width="wrap_content"
+							        android:layout_height="wrap_content"
+							        android:inputType="numberDecimal" 
+							        android:textSize="80sp"
+							        android:text="0" android:layout_marginBottom="-15sp" android:layout_marginLeft="0sp"/>
+							    <TextView
+							        android:id="@+id/displayDistanciaM"
+							        android:layout_width="wrap_content"
+							        android:layout_height="wrap_content"
+							        android:inputType="numberDecimal" 
+							        android:textSize="40sp"
+							        android:text=".0" />
+							                
+						    </LinearLayout>
+						    
+					        <TextView
+					            android:id="@+id/displayDistanciaLbl"
+					            android:layout_width="wrap_content"
+					            android:layout_height="wrap_content"
+					            android:text="@string/displayDistanciaLbl" 
+					            android:textSize="20sp"  android:layout_marginLeft="2sp"/>
+				    </LinearLayout>
+				    
+		            <TextView
+				        android:id="@+id/separador"
+				        android:layout_width="wrap_content"
+				        android:layout_height="wrap_content"
+				        android:inputType="numberDecimal" 
+				        android:textSize="40sp"
+				        android:text="    "/>
+		                
+		                
+		            <LinearLayout
+			            android:id="@+id/ritmo"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content" 
+			            android:orientation="vertical" >
+		            
+				       
+			        
+				        <TextView
+				            android:id="@+id/displayvelocidadMms"
+				            android:layout_width="wrap_content"
+				            android:layout_height="wrap_content"
+				            android:inputType="numberDecimal" 
+				            android:textSize="80sp"
+				            android:text="0.00" android:layout_marginBottom="-15sp" android:layout_marginLeft="0sp"/>
+				         <TextView
+				                android:id="@+id/displayVelocidadLblMms"
+				                android:layout_width="wrap_content"
+				                android:layout_height="wrap_content"
+				                android:text="@string/displayVelocidadLblMms" 
+				                android:textSize="20sp" android:layout_marginLeft="2sp"/>
+				        
+				    </LinearLayout>
+				        
+		                
+		                
+		                
+		        </LinearLayout>
+		        
+		           
+		        
+		        <LinearLayout
+				         android:id="@+id/altitudes"
+				         android:layout_width="wrap_content"
+				         android:layout_height="wrap_content"
+				         android:gravity="right" 
+				         android:layout_gravity="right" > 
+						         
+		            
+		            
+			        <LinearLayout
+				         android:id="@+id/altitudes"
+				         android:layout_width="wrap_content"
+				         android:layout_height="wrap_content" 
+				         android:orientation="vertical" 
+				         android:gravity="right" 
+				         android:layout_gravity="right" >
+			            
+			            
+			            
+			            <TextView
+					    	android:id="@+id/displayAltitudAcumPos"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:inputType="numberDecimal" 
+					        android:textSize="40sp"
+					        android:text="0"
+					        android:layout_marginBottom="-15sp" 
+					        android:layout_marginLeft="0sp"
+					        android:gravity="right" />
+					       
+			            <TextView
+					    	android:id="@+id/displayAltitudAcumNeg"
+					        android:layout_width="wrap_content"
+					        android:layout_height="wrap_content"
+					        android:inputType="numberDecimal" 
+					        android:textSize="40sp"
+					        android:text="-0"
+					        android:layout_marginLeft="0sp"
+					        android:gravity="right"  />
+					          
+					            
+			            
+			            
+			            
+			        </LinearLayout> 
+			        <TextView
+				    		android:id="@+id/displayAltitudAcumLbl"
+				        	android:layout_width="wrap_content"
+				        	android:layout_height="wrap_content"
+				        	android:textSize="20sp"
+				        	android:text="@string/altAcumLbl"
+				        	android:layout_gravity="center_vertical|right" />
+			        
+			            
+			    </LinearLayout> 
+		                
+
+			</LinearLayout>
+			
+          	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        		android:id="@+id/screenMapa"
+		        android:layout_width="fill_parent"
+		        android:layout_height="fill_parent"
+		        android:orientation="vertical" > 
+		                 	    
+          	    <org.osmdroid.views.MapView 
+    				android:layout_width="fill_parent" 
+    				android:layout_height="fill_parent" 
+    				android:enabled="true"
+    				android:clickable="true"
+    				android:id="@+id/mapaRegistra"
+    				
+    			/>
+          	    
+          	    
+          	</LinearLayout>
+        
+        </ViewFlipper>    
+            
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp" >
+
+            <Button
+                android:id="@+id/startTracking"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="2dp"
+                android:text="@string/startTrakingLbl" 
+                android:textColor="#03be10"
+		        android:textSize="20dp"
+		        android:textStyle="bold"
+                android:background="@drawable/etados_botones" 
+                android:layout_weight="1">
+            	<requestFocus />
+            </Button>
+
+            <Button
+                android:id="@+id/paraRegistro"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="2dp"
+                android:layout_weight="2"
+                android:text="@string/paraRegistroLbl"
+                android:textColor="#be2203"
+		        android:textSize="20dp"
+		        android:textStyle="bold"
+                android:background="@drawable/etados_botones"  
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>

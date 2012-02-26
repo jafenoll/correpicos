@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PuntosFila" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:background">#9999CC</item>
+        <item name="android:paddingLeft">40dip</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">right</item>
+    </style>
+    
+    <style name="BotonesMain" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">#000000</item>
+        <item name="android:layout_marginLeft">70dp</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="EstadisticasFila" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:background">#9999CC</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:gravity">right</item>
+    </style>
+    
+    <style name="NombreTablas" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:background">#9999CC</item>
+        <item name="android:paddingLeft">40dip</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">right</item>
+            
+    </style>
+</resources>
+
+
+ 

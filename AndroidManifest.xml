@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="es.fenoll.javier"
+    android:versionCode="1"
+    android:versionName="0.1" 
+      >
+
+    <uses-sdk android:minSdkVersion="8" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" 
+        android:debuggable="true" >
+        
+        <activity
+            android:label="@string/app_name"
+            android:name=".correpicos" 
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <activity
+            android:label="@string/app_name"
+            android:name=".Registra"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        
+        <activity
+            android:label="@string/app_name"
+            android:name=".ListaSesiones"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        
+        <activity
+            android:label="@string/app_name"
+            android:name=".PuntosSesion"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        
+        <activity
+            android:label="@string/app_name"
+            android:name=".ConfigDeportes"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        
+        
+        <service android:name=".LocationRegisterService">
+            </service>
+            
+    </application>
+    
+        
+    
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+        
+</manifest>

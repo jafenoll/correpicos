@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+    
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" 
+            android:orientation="vertical" 
+            android:gravity="bottom|center_horizontal" 
+            android:background="@drawable/fondoprincipal">
+       
+            <Button
+                android:id="@+id/startRegistra"
+                android:layout_width="105dp"
+                android:layout_height="71dp"
+                android:background="@drawable/boton_registra_estados"
+                android:text="" 
+                style="@style/BotonesMain" />
+            
+            <TextView
+		    	android:id="@+id/startRegistraLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/startRegistraLbl" 
+		        style="@style/BotonesMain"
+		        android:layout_marginBottom="20dp"/>
+
+            <Button
+                android:id="@+id/listaSesiones"
+                android:layout_width="101dp"
+                android:layout_height="59dp"
+                android:background="@drawable/listados"
+                android:text="" 
+                style="@style/BotonesMain" />
+            
+            <TextView
+		    	android:id="@+id/listaSesionesLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/listaSesionesLbl"
+		        style="@style/BotonesMain" 
+		        android:layout_marginBottom="20dp" />
+
+            <Button
+                android:id="@+id/confDeportes"
+                android:layout_width="97dp"
+                android:layout_height="63dp"
+                android:background="@drawable/configura"
+                style="@style/BotonesMain"  />
+            
+            <TextView
+		    	android:id="@+id/confDeportesLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/confDeportesLbl" 
+		        style="@style/BotonesMain" 
+		        android:layout_marginBottom="30dp"/>
+            
+             <TextView
+		    	android:id="@+id/displayTiempoLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="10sp"
+		        android:textColor= "#aaaaaa"
+		        android:text="@string/app_version" 
+		        style="@style/BotonesMain" 
+		        android:layout_gravity="right"/>
+            
+
+     
+</LinearLayout>
+    

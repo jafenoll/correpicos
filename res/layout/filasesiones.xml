@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+    
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/linearLayoutfilasesion"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"  
+    android:padding="2sp" 
+    android:gravity="center_vertical"
+    > 
+    
+    <LinearLayout 
+        android:id="@+id/listasesionesfecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/filaSesionDiaSem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="23sp"
+            android:text="LUN" 
+            android:layout_marginBottom="-8sp" android:layout_marginLeft="0sp"/>
+        
+        
+        
+	    <TextView
+	        android:id="@+id/filaSesionDiaMes"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:textSize="12sp"
+	        android:text="15sept"
+	        android:layout_marginLeft="1sp" />
+	        
+        
+    </LinearLayout>        
+    
+        <TextView
+		    	android:id="@+id/separador0"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="8sp"
+		        android:text="      " /> 
+             
+    <LinearLayout 
+        android:id="@+id/listasesionesrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+        android:padding="2sp">        
+			            
+            
+             <TextView
+	            android:id="@+id/filaSesionDistancia"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="23sp"
+	            android:text="10.2" 
+	            android:layout_marginBottom="-8sp" 
+	            android:layout_marginLeft="0sp"
+	            android:gravity="right"
+	            android:layout_gravity="right"/>
+             
+             <TextView
+		            android:id="@+id/displayDistanciaLbl"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:text="@string/displayDistanciaLbl" 
+		            android:textSize="8sp"  android:layout_marginLeft="1sp"/>
+ 	</LinearLayout>   
+ 	
+            <TextView
+		    	android:id="@+id/separador1"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="10sp"
+		        android:text="      " /> 
+      <LinearLayout 
+        android:id="@+id/listasesionesrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+        android:padding="2sp" >           
+            
+             
+        	<TextView
+	            android:id="@+id/filaSesionDuracion"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="23sp"
+	            android:text="1:12" 
+	            android:layout_marginBottom="-8sp" 
+	            android:layout_marginLeft="0sp"
+	            android:gravity="right"
+	            android:layout_gravity="right"/>
+        	
+        	<TextView
+		        android:id="@+id/displayTiempoLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="8sp"
+		        android:text="@string/displayTiempoLbl" 
+		        android:layout_marginLeft="1sp"/> 
+        	
+        </LinearLayout>   	
+        	<TextView
+		    	android:id="@+id/separador2"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="8sp"
+		        android:text="      " /> 
+        <LinearLayout 
+        android:id="@+id/listasesionesrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+        android:padding="2sp" >   	
+        	
+        	
+        	<TextView
+	            android:id="@+id/filaSesionVelocidad"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="23sp"
+	            android:text="5:25" 
+	            android:layout_marginLeft="0sp" 
+	            android:layout_marginBottom="-8sp"
+	            android:gravity="right"
+	            android:layout_gravity="right"/>
+        	
+        	<TextView
+				android:id="@+id/displayVelocidadLblMms"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/displayVelocidadLblMms" 
+				android:textSize="8sp" android:layout_marginLeft="1sp"/>
+        	
+         </LinearLayout>       
+
+             	<TextView
+		    	android:id="@+id/separador3"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="8sp"
+		        android:text="      " /> 
+        <LinearLayout 
+        android:id="@+id/listasesionesrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" 
+        android:padding="2sp" >   	
+        	
+        	
+        	<TextView
+	            android:id="@+id/filaSesionDesnivel"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:textSize="23sp"
+	            android:text="345" 
+	            android:layout_marginLeft="0sp" 
+	            android:layout_marginBottom="-8sp"
+	            android:gravity="right"
+	            android:layout_gravity="right"/>
+        	
+        	<TextView
+				android:id="@+id/displayDesnivelLbl"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/altAcumLbl" 
+				android:textSize="8sp" android:layout_marginLeft="1sp"/>
+        	
+         </LinearLayout>       
+            
+            
+            
+</LinearLayout>
