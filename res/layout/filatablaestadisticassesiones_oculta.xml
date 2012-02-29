@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="0dp"
 	android:paddingBottom="2dip"
     android:background="#FFfba824"
     android:gravity="center"
@@ -12,30 +12,40 @@
 	<TextView 
 	    android:id="@+id/nombre"
 	    style="@style/EstadisticasFila" 
+	    android:layout_width="fill_parent"
+		android:layout_height="0dp"
 	    android:text="9/2012" >
 	</TextView>
 	
 	<TextView 
 	    android:id="@+id/num"
 	    style="@style/EstadisticasFila" 
+	    android:layout_width="fill_parent"
+		android:layout_height="0dp"
 	    android:text="1" >
 	</TextView>
 	
 	<TextView 
 	    android:id="@+id/km"
 	    style="@style/EstadisticasFila" 
+	    android:layout_width="fill_parent"
+		android:layout_height="0dp"
 	    android:text="24,72" >
 	</TextView>
 	
 	<TextView 
-	    android:id="@+id/dur"
+	    android:id="@+id/dur" 
 	    style="@style/EstadisticasFila" 
+	    android:layout_width="fill_parent"
+		android:layout_height="0dp"
 	    android:text="0:39" >
 	</TextView>
 	
 	<TextView 
-	    android:id="@+id/alt"
+	    android:id="@+id/alt" 
 	    style="@style/EstadisticasFila" 
+	    android:layout_width="fill_parent"
+		android:layout_height="0dp"
 	    android:text="1000" >
 	</TextView>
 	

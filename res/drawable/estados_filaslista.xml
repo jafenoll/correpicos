@@ -3,10 +3,10 @@
 
       
       <item android:state_pressed="true"  
-       android:drawable="@drawable/fondo_botones_pulsado"/>
+       android:drawable="@drawable/fondo_lista_pulsado"/>
       
       <item android:state_selected="true"  
-       android:drawable="@drawable/fondo_botones_pulsado"/>
+       android:drawable="@drawable/fondo_lista_pulsado"/>
         
        
      

@@ -28,7 +28,7 @@
                 android:id="@+id/listaSesiones"
                 android:layout_width="101dp"
                 android:layout_height="59dp"
-                android:background="@drawable/listados"
+                android:background="@drawable/boton_listados_estados"
                 android:text="" 
                 style="@style/BotonesMain" />
             
@@ -44,7 +44,7 @@
                 android:id="@+id/confDeportes"
                 android:layout_width="97dp"
                 android:layout_height="63dp"
-                android:background="@drawable/configura"
+                android:background="@drawable/boton_configura_estados"
                 style="@style/BotonesMain"  />
             
             <TextView

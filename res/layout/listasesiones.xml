@@ -10,31 +10,54 @@
 
     
       <LinearLayout
-            android:id="@+id/linearLayout1"
+            android:id="@+id/toobal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-             >
-    
-    
-	    <TextView android:id="@android:id/empty"
+            android:layout_height="45dp"
+            android:gravity="top|center_horizontal"
+            android:layout_margin="0dp"
+            android:background="@drawable/fondo_toolbar"
+            android:baselineAligned="false" >
+
+            <Button
+                android:id="@+id/cierra"
+                android:background="@drawable/boton_menu_cancel_estados"
+                android:layout_height="40dp" 
+                android:layout_width="40dp"/>
+            
+		    <TextView
+		        android:id="@android:id/empty"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
-		        android:text="meter botones para swipe"
-		        android:background="#FF0000"  />
-	    
-	     <TextView android:id="@android:id/empty"
+		        android:layout_margin="2dp"
+		        android:text="@string/listaSesionesLbl"
+		        android:textColor="#fba824"
+		        android:textSize="30dp"
+		        android:textStyle="bold"
+		        android:layout_weight="1" 
+		        android:gravity="center" />
+		    
+		    <TextView
+		        android:id="@android:id/empty"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
-		        android:text="meter botones para swipe"
-		        android:background="#FF0000"  />
-	    
-	    
-	    
-	    
-	    
-	    
+		        android:layout_margin="2dp"
+		        android:text="@string/listaSesionesLbl"
+		        android:textColor="#fba824"
+		        android:textSize="30dp"
+		        android:textStyle="bold"
+		        android:layout_weight="1" 
+		        android:gravity="center" />
+		    
+		     <ImageButton
+		         android:id="@+id/swipenext"
+		         android:layout_width="70dp"
+		         android:layout_height="35dp"
+		         android:background="@drawable/boton_menu_database_estados"
+		         android:text="" 
+		         android:scaleType="centerInside" />
     			
-    </LinearLayout>
+    	</LinearLayout>
+        
     
     
 	<ViewFlipper android:id="@+id/pantallasegistra"
@@ -46,7 +69,7 @@
 		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
-		    android:id="@+id/screensesiones1"
+		    android:id="@+id/screensesioneslista"
 		     >
 		
 		  <ListView android:id="@android:id/list"
@@ -64,12 +87,11 @@
 		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
-		    android:id="@+id/screensesiones2"
+		    android:id="@+id/screensesionestablasemanas"
 		    android:orientation="vertical"
+		    android:background="#ffffff"
 		      >
 		
-		   
-		    
 		  <TextView android:id="@android:id/empty"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
@@ -77,21 +99,23 @@
 		        style="@style/NombreTablas" />
 		  
 		  <TableLayout 
-		        android:id="@+id/tablaAcumuladoSemanaCabecera"
+		        android:id="@+id/tablaAcumuladoSemanaCab"
 		        android:layout_height="wrap_content" 
-		        android:layout_width="wrap_content" 
+		        android:layout_width="fill_parent" 
 		        xmlns:android="http://schemas.android.com/apk/res/android"
+		        
 		        />
 		  
 		  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
 	     	android:scrollbars="vertical" 
-	     	android:layout_height="wrap_content" 
-	     	android:layout_width="wrap_content">
+	     	android:id="@+id/tablaAcumuladoSemanaScroll"
+	     	android:layout_height="fill_parent" 
+	     	android:layout_width="fill_parent">
 	     	
 		    <TableLayout 
 		        android:id="@+id/tablaAcumuladoSemana"
 		        android:layout_height="fill_parent" 
-		        android:layout_width="wrap_content" 
+		        android:layout_width="fill_parent" 
 		        xmlns:android="http://schemas.android.com/apk/res/android"
 		        
 		        />
@@ -102,10 +126,11 @@
 		 
 		 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:id="@+id/screensesiones3"
+		    android:layout_height="fill_parent"
+		    android:id="@+id/screensesionestablasmes"
 		    android:orientation="vertical" 
-		    android:layout_weight="1" >
+		    android:background="#ffffff"
+		    >
 		      
 		  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 		    android:layout_width="fill_parent"
@@ -122,23 +147,23 @@
 		        style="@style/NombreTablas"/>
 		  
 		  <TableLayout 
-		        android:id="@+id/tablaAcumuladoMesCabecera"
+		        android:id="@+id/tablaAcumuladoMesCab"
 		        android:layout_height="wrap_content" 
-		        android:layout_width="wrap_content" 
+		        android:layout_width="fill_parent" 
 		        xmlns:android="http://schemas.android.com/apk/res/android"
 		        />
-		  
+		 		  
 		  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
 	     	android:scrollbars="vertical" 
-	     	android:layout_height="wrap_content" 
-	     	android:layout_width="wrap_content">
+	     	android:layout_height="fill_parent" 
+	     	android:layout_width="fill_parent"
+	     	android:id="@+id/tablaAcumuladoMesScroll">
 	     	
 		    <TableLayout 
 		        android:id="@+id/tablaAcumuladoMes"
 		        android:layout_height="fill_parent" 
-		        android:layout_width="wrap_content" 
+		        android:layout_width="fill_parent" 
 		        xmlns:android="http://schemas.android.com/apk/res/android"
-		        android:layout_weight="1"
 		        />
 	     
 		   </ScrollView>
@@ -150,7 +175,7 @@
 		    android:layout_height="fill_parent"
 		    android:id="@+id/tablas3"
 		    android:orientation="vertical"
-		    
+		    android:layout_weight="2"
 		      >   
 		      
 		  <TextView android:id="@android:id/empty"
@@ -158,27 +183,32 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/tablaAcumAnoLbl"
 		        style="@style/NombreTablas"/>
-		  <TableLayout 
-		        android:id="@+id/tablaAcumuladoAnoCabecera"
-		        android:layout_height="wrap_content" 
-		        android:layout_width="wrap_content" 
-		        xmlns:android="http://schemas.android.com/apk/res/android"
-		        />
 		  
+		  
+		  <TableLayout 
+		        android:id="@+id/tablaAcumuladoAnoCab"
+		        android:layout_height="wrap_content" 
+		        android:layout_width="fill_parent" 
+		        xmlns:android="http://schemas.android.com/apk/res/android"
+		        
+		        />
+		  	  
 		  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
 	     	android:scrollbars="vertical" 
-	     	android:layout_height="wrap_content" 
-	     	android:layout_width="wrap_content">
+	     	android:layout_height="fill_parent" 
+	     	android:layout_width="fill_parent"
+	     	android:id="@+id/tablaAcumuladoAnoScroll">
 	     	
 		    <TableLayout 
 		        android:id="@+id/tablaAcumuladoAno"
 		        android:layout_height="fill_parent" 
-		        android:layout_width="wrap_content" 
+		        android:layout_width="fill_parent" 
 		        xmlns:android="http://schemas.android.com/apk/res/android"
 		        
 		        />
 	     
 		   </ScrollView>
+		  
 	
 		</LinearLayout>     
 		    
@@ -188,19 +218,5 @@
 		        
 	</ViewFlipper>
 	
-	    <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#00FF00" >
-    
-    
-	    <TextView android:id="@android:id/empty"
-		        android:layout_width="fill_parent"
-		        android:layout_height="wrap_content"
-		        android:text="meter botones para swipe"
-		        android:background="#FF0000"/>
-    			
-    </LinearLayout>
-
+	  
 </LinearLayout>

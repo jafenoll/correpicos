@@ -6,13 +6,17 @@
     android:layout_height="wrap_content"  
     android:padding="2sp" 
     android:gravity="center_vertical"
+    android:background="@drawable/estados_filaslista" 
     > 
     
     <LinearLayout 
         android:id="@+id/listasesionesfecha"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:background="@drawable/estados_filaslista"
+        
+         >
 
         <TextView
             android:id="@+id/filaSesionDiaSem"
@@ -20,7 +24,10 @@
             android:layout_height="wrap_content"
             android:textSize="23sp"
             android:text="LUN" 
-            android:layout_marginBottom="-8sp" android:layout_marginLeft="0sp"/>
+            android:layout_marginBottom="-8sp" 
+            android:layout_marginLeft="0sp"
+            android:background="@drawable/estados_filaslista" 
+            />
         
         
         
@@ -30,24 +37,22 @@
 	        android:layout_height="wrap_content"
 	        android:textSize="12sp"
 	        android:text="15sept"
-	        android:layout_marginLeft="1sp" />
+	        android:layout_marginLeft="1sp"
+	        android:background="@drawable/estados_filaslista" />
 	        
         
     </LinearLayout>        
     
-        <TextView
-		    	android:id="@+id/separador0"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="8sp"
-		        android:text="      " /> 
+        
              
     <LinearLayout 
         android:id="@+id/listasesionesrow"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" 
-        android:padding="2sp">        
+        android:padding="2sp"
+        android:layout_weight="1" 
+        android:background="@drawable/estados_filaslista">        
 			            
             
              <TextView
@@ -59,28 +64,29 @@
 	            android:layout_marginBottom="-8sp" 
 	            android:layout_marginLeft="0sp"
 	            android:gravity="right"
-	            android:layout_gravity="right"/>
+	            android:layout_gravity="right"
+	            android:background="@drawable/estados_filaslista"/>
              
              <TextView
 		            android:id="@+id/displayDistanciaLbl"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
 		            android:text="@string/displayDistanciaLbl" 
-		            android:textSize="8sp"  android:layout_marginLeft="1sp"/>
+		            android:textSize="8sp"  
+		            android:layout_marginLeft="1sp"
+		            android:layout_gravity="right"
+		            android:background="@drawable/estados_filaslista"/>
  	</LinearLayout>   
  	
-            <TextView
-		    	android:id="@+id/separador1"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="10sp"
-		        android:text="      " /> 
+            
       <LinearLayout 
         android:id="@+id/listasesionesrow"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" 
-        android:padding="2sp" >           
+        android:padding="2sp" 
+        android:layout_weight="1" 
+        android:background="@drawable/estados_filaslista">           
             
              
         	<TextView
@@ -92,7 +98,8 @@
 	            android:layout_marginBottom="-8sp" 
 	            android:layout_marginLeft="0sp"
 	            android:gravity="right"
-	            android:layout_gravity="right"/>
+	            android:layout_gravity="right"
+	            android:background="@drawable/estados_filaslista"/>
         	
         	<TextView
 		        android:id="@+id/displayTiempoLbl"
@@ -100,21 +107,21 @@
 		        android:layout_height="wrap_content"
 		        android:textSize="8sp"
 		        android:text="@string/displayTiempoLbl" 
-		        android:layout_marginLeft="1sp"/> 
+		        android:layout_marginLeft="1sp"
+		        android:layout_gravity="right"
+		        android:background="@drawable/estados_filaslista"/> 
         	
         </LinearLayout>   	
-        	<TextView
-		    	android:id="@+id/separador2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="8sp"
-		        android:text="      " /> 
+        	
+          
         <LinearLayout 
         android:id="@+id/listasesionesrow"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" 
-        android:padding="2sp" >   	
+        android:padding="2sp" 
+        android:layout_weight="1"
+        android:background="@drawable/estados_filaslista" >   	
         	
         	
         	<TextView
@@ -126,29 +133,29 @@
 	            android:layout_marginLeft="0sp" 
 	            android:layout_marginBottom="-8sp"
 	            android:gravity="right"
-	            android:layout_gravity="right"/>
+	            android:layout_gravity="right"
+	            android:background="@drawable/estados_filaslista"/>
         	
         	<TextView
 				android:id="@+id/displayVelocidadLblMms"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/displayVelocidadLblMms" 
-				android:textSize="8sp" android:layout_marginLeft="1sp"/>
+				android:textSize="8sp" android:layout_marginLeft="1sp"
+				android:layout_gravity="right"
+				android:background="@drawable/estados_filaslista"/>
         	
          </LinearLayout>       
 
-             	<TextView
-		    	android:id="@+id/separador3"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="8sp"
-		        android:text="      " /> 
+             	
         <LinearLayout 
         android:id="@+id/listasesionesrow"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" 
-        android:padding="2sp" >   	
+        android:padding="2sp" 
+        android:layout_weight="1"
+        android:background="@drawable/estados_filaslista" >   	
         	
         	
         	<TextView
@@ -160,14 +167,17 @@
 	            android:layout_marginLeft="0sp" 
 	            android:layout_marginBottom="-8sp"
 	            android:gravity="right"
-	            android:layout_gravity="right"/>
+	            android:layout_gravity="right"
+	            android:background="@drawable/estados_filaslista"/>
         	
         	<TextView
 				android:id="@+id/displayDesnivelLbl"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/altAcumLbl" 
-				android:textSize="8sp" android:layout_marginLeft="1sp"/>
+				android:textSize="8sp" android:layout_marginLeft="1sp"
+				android:layout_gravity="right"
+				android:background="@drawable/estados_filaslista"/>
         	
          </LinearLayout>       
             

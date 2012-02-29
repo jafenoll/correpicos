@@ -127,12 +127,12 @@ public class ListaSesionesAdapter extends BaseAdapter  {
 			semanaNum = Integer.parseInt(df.format(lafecha));
 			if(semanaNum%2 == 0) {
 				//fondo claro
-				tvfila.setBackgroundColor(0xFF050505 );
-				colorTexto = 0xFFFFFFFF  ;
+				tvfila.setBackgroundColor(0xFFfed595 );
+				colorTexto = 0xFF000000  ;
 				}
 			else {
 				//fondo oscuro
-				tvfila.setBackgroundColor(0xFF999999 );
+				tvfila.setBackgroundColor(0xFFfba824 );
 				colorTexto = 0xFF000000 ;
 			}
 			

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,18 +23,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
-public class ListaSesiones extends ListActivity  {
+public class ListaSesiones extends ListActivity implements OnClickListener  {
 
 	private AlmacenDatos registroDB;
 	private GestureDetector gestureDetector;
+	private MyGestureDetector gestureListener;
+	
 	
 
 	// para controlar lso gestos y en un swipe pasar a la otra pantalla
@@ -45,24 +52,38 @@ public class ListaSesiones extends ListActivity  {
 	 		
 	 		@Override
 	 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-	 			
-	 			ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.pantallasegistra);
-	 			
+	 					
 	 			if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_in) );
-	 				viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_out) );
-	 				viewFlipper.showNext();
+	 				Mueve(true);
 	 				return true;
 	 				}
 	 			else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_in) );
-	 				viewFlipper.setOutAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_out) );
-	 				viewFlipper.showPrevious();
+	 				Mueve(false);
 	 				return true;
 	 				}
 	 		
 	 			return false;
 	 			}
+	 		
+	 		public void Mueve(boolean izquierda) {
+	 	 		
+	 			ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.pantallasegistra);
+	 			
+	 			if (izquierda) {
+	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_in) );
+	 				viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_out) );
+	 				viewFlipper.showNext();
+	 			}
+	 			else {
+	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_in) );
+	 				viewFlipper.setOutAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_out) );
+	 				viewFlipper.showPrevious();
+	 			}
+	 			
+	 			
+	 			
+	 		
+	 		}
 	 	}
 	 	
 	
@@ -80,28 +101,46 @@ public class ListaSesiones extends ListActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listasesiones);
        
+        ProgressDialog dialog = ProgressDialog.show(this, "", 
+                "", true);
+        
         // engancho para detectar el swipe
-     	MyGestureDetector gestureListener = new MyGestureDetector();
+     	gestureListener = new MyGestureDetector();
      	gestureDetector = new GestureDetector(gestureListener);
      	
-     	ListView lista = (ListView) findViewById(android.R.id.list);
-     	lista.setOnTouchListener(new View.OnTouchListener() {
+     	//añado el detector de swipe a todos lo controles que necesito para que funciona bien
+     	View swipeViews[] = {null,null,null,null};
+     	
+     	swipeViews[0] = findViewById(android.R.id.list);
+     	swipeViews[1] = findViewById(R.id.tablaAcumuladoSemanaScroll);
+     	swipeViews[2] = findViewById(R.id.tablaAcumuladoMesScroll);
+     	swipeViews[3] = findViewById(R.id.tablaAcumuladoAnoScroll);
+     	
+     	for (int i=0;i<4;i++){
+     		
+     		swipeViews[i].setOnTouchListener(new View.OnTouchListener() {
 
-     		@Override
-     		public boolean onTouch(View v, MotionEvent event) {
-     		if (gestureDetector.onTouchEvent(event))
-     		return true;
-     		else
-     		return false;
-     		}
-     		});
+         		@Override
+         		public boolean onTouch(View v, MotionEvent event) {
+         		if (gestureDetector.onTouchEvent(event))
+         			return true;
+         		else
+         			return false;
+         		}
+         		});
+     	}
      	
      	
-        
+     	
         // me quedo al tanto de long press para menus
         registerForContextMenu(getListView());
         getListView().setOnCreateContextMenuListener(this); 
 		
+
+        Button button = (Button)findViewById(R.id.cierra);
+        button.setOnClickListener(this);
+        ImageButton imgbutton = (ImageButton)findViewById(R.id.swipenext);
+        imgbutton.setOnClickListener(this);
 
      
      // creo la referencia a la BBDD
@@ -111,7 +150,8 @@ public class ListaSesiones extends ListActivity  {
      	
      	fillListData();
         
-    
+     	dialog.dismiss();
+     	
         //registerForContextMenu(getListView());
     }	
 	
@@ -123,16 +163,18 @@ public class ListaSesiones extends ListActivity  {
 		
 		//Las tablas para los acumulados
 		TableLayout tablaPuntos[] = {null,null,null};
+		TableLayout tablaPuntosCabecera[] = {null,null,null};
 		
 		// Pensar si poner o no cabeceras y temas de primera fila fija pero no se
 		// alinean bien las columnas
-		tablaPuntos[0] = (TableLayout)findViewById(R.id.tablaAcumuladoSemanaCabecera);
-		tablaPuntos[1] = (TableLayout)findViewById(R.id.tablaAcumuladoMesCabecera);
-		tablaPuntos[2] = (TableLayout)findViewById(R.id.tablaAcumuladoAnoCabecera);
 		
 		tablaPuntos[0] = (TableLayout)findViewById(R.id.tablaAcumuladoSemana);
 		tablaPuntos[1] = (TableLayout)findViewById(R.id.tablaAcumuladoMes);
 		tablaPuntos[2] = (TableLayout)findViewById(R.id.tablaAcumuladoAno);
+		
+		tablaPuntosCabecera[0] = (TableLayout)findViewById(R.id.tablaAcumuladoSemanaCab);
+		tablaPuntosCabecera[1] = (TableLayout)findViewById(R.id.tablaAcumuladoMesCab);
+		tablaPuntosCabecera[2] = (TableLayout)findViewById(R.id.tablaAcumuladoAnoCab);
 		
 		
 		//añado las cabeceras a las tablas
@@ -143,12 +185,23 @@ public class ListaSesiones extends ListActivity  {
 			valores.add(  getText(R.string.displayDistanciaLbl).toString()  );
 			valores.add(  getText(R.string.displayTiempoLbl).toString()  );
 			valores.add(  getText(R.string.altAcumLbl).toString()  );
-			creaFilaEstadisticas(valores,tablaPuntos[i]);
+			//creaFilaEstadisticas(valores,tablaPuntos[i], true);
+			creaFilaEstadisticas(valores,tablaPuntosCabecera[i], true);		
+			//creo la linea oculta en la tabla normal para que se alineen las celdas
+			creaFilaEstadisticas(valores,tablaPuntos[i], true, true);
+			
+			// lo mismo para la tabla cabecera y normal con un tamaño maximo tipico de la tabla normal
+			valores.clear();
+			valores.add("01/2012");
+			valores.add("10");
+			valores.add("10,10");
+			valores.add("10:10");
+			valores.add("11111");
+			creaFilaEstadisticas(valores,tablaPuntosCabecera[i], false, true);
+			creaFilaEstadisticas(valores,tablaPuntos[i], false, true);
 		}
 		
-		tablaPuntos[0] = (TableLayout)findViewById(R.id.tablaAcumuladoSemana);
-		tablaPuntos[1] = (TableLayout)findViewById(R.id.tablaAcumuladoMes);
-		tablaPuntos[2] = (TableLayout)findViewById(R.id.tablaAcumuladoAno);
+		
 		
 		Cursor c  = registroDB.recuperaSesiones(-1);
         startManagingCursor(c);
@@ -211,7 +264,7 @@ public class ListaSesiones extends ListActivity  {
         			valores.add(cambioFormatos.desdeMStoHHMM(tiempoAcum[0]));
         			valores.add( altitudAcum[0] + "" );
         			
-        			creaFilaEstadisticas(valores,tablaPuntos[0]);
+        			creaFilaEstadisticas(valores,tablaPuntos[0], false);
         			
         			numSesionesAcum[0] = 0;
         			distanciAcum[0] = 0;
@@ -228,7 +281,7 @@ public class ListaSesiones extends ListActivity  {
         			valores.add(cambioFormatos.desdeMStoHHMM(tiempoAcum[1]));
         			valores.add( altitudAcum[1] + "" );
         			
-        			creaFilaEstadisticas(valores,tablaPuntos[1]);
+        			creaFilaEstadisticas(valores,tablaPuntos[1], false);
         			
         			numSesionesAcum[1] = 0;
         			distanciAcum[1] = 0;
@@ -246,7 +299,7 @@ public class ListaSesiones extends ListActivity  {
         			valores.add(cambioFormatos.desdeMStoHHMM(tiempoAcum[2]));
         			valores.add( altitudAcum[2] + "" );
         			
-        			creaFilaEstadisticas(valores,tablaPuntos[2]);
+        			creaFilaEstadisticas(valores,tablaPuntos[2], false);
         			
         			numSesionesAcum[2] = 0;
         			distanciAcum[2] = 0;
@@ -272,6 +325,7 @@ public class ListaSesiones extends ListActivity  {
         	 } while (c.moveToNext());
         	
         	
+        	
         	//y añado lo que me queda sin poner
         	valores.clear();
 			valores.add(semanaNumAnt + "/" + anoNum);
@@ -279,7 +333,7 @@ public class ListaSesiones extends ListActivity  {
 			valores.add(formatter.format( (double) distanciAcum[0]/1000 ));
 			valores.add(cambioFormatos.desdeMStoHHMM(tiempoAcum[0]));
 			valores.add( altitudAcum[0] + "" );
-			creaFilaEstadisticas(valores,tablaPuntos[0]);
+			creaFilaEstadisticas(valores,tablaPuntos[0], false);
 			
 			valores.clear();
 			valores.add(mesNumAnt + "/" + anoNum);
@@ -287,7 +341,7 @@ public class ListaSesiones extends ListActivity  {
 			valores.add(formatter.format( (double) distanciAcum[1]/1000 ));
 			valores.add(cambioFormatos.desdeMStoHHMM(tiempoAcum[1]));
 			valores.add( altitudAcum[1] + "" );
-			creaFilaEstadisticas(valores,tablaPuntos[1]);
+			creaFilaEstadisticas(valores,tablaPuntos[1], false);
 			
 			valores.clear();
 			valores.add(anoNumAnt + "" );
@@ -295,38 +349,58 @@ public class ListaSesiones extends ListActivity  {
 			valores.add(formatter.format( (double) distanciAcum[2]/1000 ));
 			valores.add(cambioFormatos.desdeMStoHHMM(tiempoAcum[2]));
 			valores.add( altitudAcum[2] + "" );
-			creaFilaEstadisticas(valores,tablaPuntos[2]);
+			creaFilaEstadisticas(valores,tablaPuntos[2], false);
+        	
         	
         }
         
         c.close();
         
-		
-		
+        
 	}
 	
+	
+	private void creaFilaEstadisticas(List<String> valores, TableLayout tabla, boolean cabecera) {
+		
+		creaFilaEstadisticas(valores, tabla, cabecera, false); 
+	}
 
-    private void creaFilaEstadisticas(List<String> valores, TableLayout tabla) {
+    private void creaFilaEstadisticas(List<String> valores, TableLayout tabla, boolean cabecera, boolean oculta) {
     	
     	//Create a new row to be added.
     	//TableRow tr = new TableRow(this);
     	final LayoutInflater inflater = LayoutInflater.from(this);
-    	TableRow tr = (TableRow) inflater.inflate(R.layout.filatablaestadisticassesiones, tabla, false);
+    	TableRow tr;
     	
-    	TextView tv = (TextView) tr.findViewById(R.id.nombre);
-    	tv.setText(valores.get(0));
+    	if (oculta) 
+    		tr = (TableRow) inflater.inflate(R.layout.filatablaestadisticassesiones_oculta, tabla, false);
+    	else
+    		tr = (TableRow) inflater.inflate(R.layout.filatablaestadisticassesiones, tabla, false);
+    	   
     	
-    	tv = (TextView) tr.findViewById(R.id.num);
-    	tv.setText(valores.get(1));
     	
-    	tv = (TextView) tr.findViewById(R.id.km);
-    	tv.setText(valores.get(2));
     	
-    	tv = (TextView) tr.findViewById(R.id.dur);
-    	tv.setText(valores.get(3));
-    	 
-    	tv = (TextView) tr.findViewById(R.id.alt);
-    	tv.setText(valores.get(4));
+    	TextView tv[] = {null,null,null,null,null};
+    	tv[0] = (TextView) tr.findViewById(R.id.nombre);
+    	tv[1] = (TextView) tr.findViewById(R.id.num);
+    	tv[2] = (TextView) tr.findViewById(R.id.km);
+    	tv[3] = (TextView) tr.findViewById(R.id.dur);
+    	tv[4] = (TextView) tr.findViewById(R.id.alt);
+    	
+    	for(int i=0;i<5;i++) {
+    		tv[i].setText(valores.get(i));
+        	if (cabecera) {
+        		tv[i].setTextSize(15);
+        		tv[i].setBackgroundColor(0xFFfba824);
+        	}
+        	
+    	}
+    	
+    	
+    	
+    	
+    	
+    	
     	
     	
     	
@@ -393,6 +467,19 @@ public class ListaSesiones extends ListActivity  {
 
 	   return true;
 	 }
+
+	@Override
+	public void onClick(View v) {
+		if( v.getId() == R.id.cierra) {
+			finish();	
+		}
+		else if( v.getId() == R.id.swipenext) {
+			
+			gestureListener.Mueve(true);
+			
+		}
+		
+	}
 
 	
 }
