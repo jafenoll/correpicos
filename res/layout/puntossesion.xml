@@ -1,12 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/relativeLayout111"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" 
+        >
+
+	<LinearLayout
+            android:id="@+id/toobal"
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:gravity="top|center_horizontal"
+            android:layout_margin="0dp"
+            android:background="@drawable/fondo_toolbar"
+            android:baselineAligned="false" >
+
+            <Button
+                android:id="@+id/cierra"
+                android:background="@drawable/boton_menu_cancel_estados"
+                android:layout_height="40dp" 
+                android:layout_width="40dp"/>
+            
+		      
+		    <TextView
+		        android:id="@android:id/empty"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_margin="2dp"
+		        android:text="@string/listaSesionesLbl"
+		        android:textColor="#fba824"
+		        android:textSize="30dp"
+		        android:textStyle="bold"
+		        android:layout_weight="1" 
+		        android:gravity="center" />
+		    
+		     <ImageButton
+		         android:id="@+id/swipenext"
+		         android:layout_width="70dp"
+		         android:layout_height="35dp"
+		         android:background="@drawable/boton_menu_globe_estados"
+		         android:text="" 
+		         android:scaleType="centerInside" />
+    			
+    	</LinearLayout>
+        
+    
+
+
 <ViewFlipper xmlns:android="http://schemas.android.com/apk/res/android" 
     	android:id="@+id/pantallasegistra"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">  
+        android:layout_height="fill_parent"
+        android:background="#ffffff">  
 
 	
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:id="@+id/screensesion1"
+	    android:id="@+id/screentabla"
 	    android:layout_width="match_parent"
 	    android:layout_height="match_parent"
 	    android:orientation="vertical" >
@@ -28,21 +77,24 @@
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
 		            android:textSize="20sp"
-		            android:text="lun" />
+		            android:text="lun" 
+		            android:textColor="#fba824"/>
 		        
 		        <TextView
 		            android:id="@+id/puntoSesionDiaNum"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
 		            android:textSize="20sp"
-		            android:text="15" />
+		            android:text="15"
+		            android:textColor="#fba824" />
 		        
 		        <TextView
 		            android:id="@+id/puntoSesionDiaMes"
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
 		            android:textSize="20sp"
-		            android:text="feb" />
+		            android:text="feb"
+		            android:textColor="#fba824" />
 		        
 		    </LinearLayout>   
 	    
@@ -51,7 +103,8 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textSize="10sp"
-		        android:text="      " /> 
+		        android:text="      " 
+		        android:textColor="#fba824"/> 
              
 		    <LinearLayout 
 		        android:id="@+id/listasesionesrow"
@@ -66,14 +119,19 @@
 			            android:layout_width="wrap_content"
 			            android:layout_height="wrap_content"
 			            android:textSize="25sp"
-			            android:text="10.2" android:layout_marginBottom="-8sp" android:layout_marginLeft="0sp"/>
+			            android:text="10.2" 
+			            android:layout_marginBottom="-8sp" 
+			            android:layout_marginLeft="0sp"
+			            android:textColor="#fba824"/>
 		             
 		             <TextView
 				            android:id="@+id/displayDistanciaLbl"
 				            android:layout_width="wrap_content"
 				            android:layout_height="wrap_content"
 				            android:text="@string/displayDistanciaLbl" 
-				            android:textSize="10sp"  android:layout_marginLeft="1sp"/>
+				            android:textSize="10sp"  
+				            android:layout_marginLeft="1sp"
+				            android:textColor="#fba824"/>
 		 	</LinearLayout>   
  	
             <TextView
@@ -81,7 +139,8 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textSize="10sp"
-		        android:text="      " /> 
+		        android:text="      " 
+		        android:textColor="#fba824"/> 
 	      <LinearLayout 
 	        android:id="@+id/listasesionesrow"
 	        android:layout_width="wrap_content"
@@ -95,14 +154,19 @@
 		            android:layout_width="wrap_content"
 		            android:layout_height="wrap_content"
 		            android:textSize="25sp"
-		            android:text="1:12" android:layout_marginBottom="-8sp" android:layout_marginLeft="0sp"/>
+		            android:text="1:12" 
+		            android:layout_marginBottom="-8sp" 
+		            android:layout_marginLeft="0sp" 
+		            android:textColor="#fba824"/>
 	        	
 	        	<TextView
 			        android:id="@+id/displayTiempoLbl"
 			        android:layout_width="wrap_content"
 			        android:layout_height="wrap_content"
 			        android:textSize="10sp"
-			        android:text="@string/displayTiempoLbl" android:layout_marginLeft="1sp"/> 
+			        android:text="@string/displayTiempoLbl" 
+			        android:layout_marginLeft="1sp"
+			        android:textColor="#fba824"/> 
 	        	
 	        </LinearLayout>   	
         	<TextView
@@ -110,7 +174,9 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textSize="10sp"
-		        android:text="      " /> 
+		        android:text="      " 
+		        android:textColor="#fba824"
+		        /> 
 		        
 	        <LinearLayout 
 	        android:id="@+id/listasesionesrow"
@@ -127,14 +193,17 @@
 		            android:textSize="25sp"
 		            android:text="5:25" 
 		            android:layout_marginLeft="0sp" 
-		            android:layout_marginBottom="-8sp"/>
+		            android:layout_marginBottom="-8sp"
+		            android:textColor="#fba824"/>
 	        	
 	        	<TextView
 					android:id="@+id/displayVelocidadLblMms"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="@string/displayVelocidadLblMms" 
-					android:textSize="10sp" android:layout_marginLeft="1sp"/>
+					android:textSize="10sp" 
+					android:layout_marginLeft="1sp"
+					android:textColor="#fba824"/>
         	
         	</LinearLayout>  
 	    
@@ -143,7 +212,8 @@
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 		        android:textSize="10sp"
-		        android:text="      " /> 
+		        android:text="      " 
+		        android:textColor="#fba824"/> 
 		        
 	        <LinearLayout 
 	        android:id="@+id/listasesionesrow"
@@ -162,7 +232,8 @@
 		            android:layout_marginLeft="0sp" 
 		            android:layout_marginBottom="0sp"
 		            android:gravity="right"
-	            	android:layout_gravity="right" />
+	            	android:layout_gravity="right"
+	            	android:textColor="#fba824" />
 	        	
 	        	<TextView
 		            android:id="@+id/puntoSesionDesnivelNeg"
@@ -173,7 +244,8 @@
 		            android:layout_marginLeft="0sp" 
 		            android:layout_marginBottom="-5sp"
 		            android:gravity="right"
-	            	android:layout_gravity="right" />
+	            	android:layout_gravity="right"
+	            	android:textColor="#fba824" />
 	        	
 	        	
 	        	<TextView
@@ -182,7 +254,8 @@
 					android:layout_height="wrap_content"
 					android:text="@string/altAcumLbl" 
 					android:textSize="10sp" 
-					android:layout_marginLeft="1sp" />
+					android:layout_marginLeft="1sp"
+					android:textColor="#fba824" />
         	
         	</LinearLayout>  
 	
@@ -194,7 +267,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="8sp"
-			android:text="13 puntos en la sesion" />
+			android:text="13 puntos en la sesion"
+			android:textColor="#fba824" />
 	    
 	    
 	    
@@ -203,7 +277,7 @@
 	     <TableLayout 
 		        android:id="@+id/tablaPuntosSesionCabecera"
 		        android:layout_height="wrap_content" 
-		        android:layout_width="wrap_content" 
+		        android:layout_width="fill_parent" 
 		        xmlns:android="http://schemas.android.com/apk/res/android">
 	
 		    </TableLayout>
@@ -211,7 +285,8 @@
 	    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android" 
 	     android:scrollbars="vertical" 
 	     android:layout_height="wrap_content" 
-	     android:layout_width="wrap_content">
+	     android:layout_width="fill_parent"
+	     android:id="@+id/tablaPuntosScroll" >
 	    
 	    
 		    <TableLayout 
@@ -224,11 +299,14 @@
 		</ScrollView>
 	</LinearLayout>
 	
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    	android:id="@+id/screensesion2"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:orientation="vertical" >       
+	<RelativeLayout 
+		  xmlns:android="http://schemas.android.com/apk/res/android"
+		  android:id="@+id/screenMapa"
+		  android:layout_width="fill_parent"
+		  android:layout_height="fill_parent">
+	    
+	    
+	    
 	  
 		<org.osmdroid.views.MapView 
 	    	android:layout_width="fill_parent" 
@@ -236,28 +314,49 @@
 	    	android:enabled="true"
 	    	android:clickable="true"
 	    	android:id="@+id/mapaSesion"
-	    	android:layout_weight="1"  />
-		    
-	    <LinearLayout 
-	    	android:id="@+id/botonesKm"
+	    	android:layout_weight="1"  >
+  
+		</org.osmdroid.views.MapView> 
+		  
+		<LinearLayout
+		    android:id="@+id/botonesKm"
 			android:layout_width="wrap_content"
-			android:layout_height="wrap_content" > 
-	    
-			<Button
+			android:layout_height="wrap_content" 
+			android:scaleType="fitXY"
+    		android:layout_alignBottom="@id/mapaSesion"
+			>
+		    
+		    
+		     <Button
 		        android:id="@+id/anteriorKm"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="Km anterior" />
+		        android:text="" 
+		        android:background="@drawable/ic_km_anterior_estados"/>
+			    
+		    <TextView
+		    	android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+				android:id="@+id/displaydesnivelLbl"
+				android:text="@string/parcial" 
+				android:textSize="15sp" 
+				android:background="#ffffff"
+				android:padding="2dp"/>
 			    
 			<Button
 		    	android:id="@+id/siguienteKm"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="Km siguiente" />
-		</LinearLayout> 
-	   
+		        android:text=""
+		        android:background="@drawable/ic_km_siguiente_estados" />
+		    
+		</LinearLayout>    
+		    
+		
 	
 	
-	</LinearLayout>
+	</RelativeLayout>
 	
 </ViewFlipper>
+
+</LinearLayout>

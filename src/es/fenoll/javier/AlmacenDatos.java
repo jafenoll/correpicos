@@ -20,6 +20,8 @@ public class AlmacenDatos  {
 	/**
      * The database that the provider uses as its underlying data store
      */
+    // TODO: Hacer que la BBDD este en la SD y asi no ocupo memoria del telefono
+    // ya que previsiblemente la BBDD puede crecer mucho
     private static final String DATABASE_NAME = "correcaminos.db";
 
     /**
@@ -239,6 +241,9 @@ public class AlmacenDatos  {
      * 
      * @return Cursor over all puntos de una sesion
      */
+	//TODO: hacer que los puntos se guarden en u fiechro en la SD
+	// para no llenar la memoria del telefono
+	// o valorar si con la BBDD en SD ya esta bien
 	public Cursor recuperaPuntosSesion(long sesionId) {
 		
 		// Opens the database object in "read" mode.

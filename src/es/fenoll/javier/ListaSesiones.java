@@ -29,7 +29,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -79,10 +78,7 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	 				viewFlipper.setOutAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_out) );
 	 				viewFlipper.showPrevious();
 	 			}
-	 			
-	 			
-	 			
-	 		
+
 	 		}
 	 	}
 	 	
@@ -376,10 +372,7 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
     		tr = (TableRow) inflater.inflate(R.layout.filatablaestadisticassesiones_oculta, tabla, false);
     	else
     		tr = (TableRow) inflater.inflate(R.layout.filatablaestadisticassesiones, tabla, false);
-    	   
-    	
-    	
-    	
+
     	TextView tv[] = {null,null,null,null,null};
     	tv[0] = (TextView) tr.findViewById(R.id.nombre);
     	tv[1] = (TextView) tr.findViewById(R.id.num);

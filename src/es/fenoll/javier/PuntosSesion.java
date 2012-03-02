@@ -40,10 +40,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -55,6 +55,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	private Cursor cPuntosSesion;
 	private long sesionId;
 	private GestureDetector gestureDetector;
+	private MyGestureDetector gestureListener;
 	
 	private MapView map;
 	private CorrepicosItemizedIconOverlay<OverlayItem> mPointsOverlay;
@@ -71,23 +72,52 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	 		@Override
 	 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 	 			
-	 			ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.pantallasegistra);
 	 			
 	 			if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_in) );
-	 				viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_out) );
-	 				viewFlipper.showNext();
+	 				Mueve(true);
 	 				return true;
 	 				}
 	 			else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_in) );
-	 				viewFlipper.setOutAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_out) );
-	 				viewFlipper.showPrevious();
+	 				Mueve(false);
 	 				return true;
 	 				}
 	 		
 	 			return false;
 	 			}
+	 		
+	 		public void Mueve(boolean izquierda) {
+	 	 		
+	 			ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.pantallasegistra);
+	 			int viewid = viewFlipper.getCurrentView().getId();
+	 			
+	 			if (izquierda) {
+	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_in) );
+	 				viewFlipper.setOutAnimation(AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_out) );
+	 				viewFlipper.showNext();
+	 			}
+	 			else {
+	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_in) );
+	 				viewFlipper.setOutAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_right_out) );
+	 				viewFlipper.showPrevious();
+	 			}
+	 			
+	 			ImageView imgButton = ((ImageView)findViewById(R.id.swipenext));
+	 			
+	 			// su estoy en el reloj voy a apsar la mapa, cambio icono
+	 			if ( viewid == R.id.screentabla ) {
+	 				
+	 				imgButton.setImageResource(R.drawable.boton_menu_database_estados);
+	 				
+	 			}
+	 			else if ( viewid == R.id.screenMapa ) {
+	 				
+	 				imgButton.setImageResource(R.drawable.boton_menu_globe_estados);
+	 				
+	 			}
+	 			
+	 			
+	 		
+	 		}
 	 	}
 	 		
 	
@@ -98,7 +128,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
         setContentView(R.layout.puntossesion); 
         
         // engancho para detectar el swipe
-     	MyGestureDetector gestureListener = new MyGestureDetector();
+     	gestureListener = new MyGestureDetector();
      	gestureDetector = new GestureDetector(gestureListener);
      	
      	//engancho los botones
@@ -106,7 +136,33 @@ public class PuntosSesion extends Activity implements OnClickListener {
          button.setOnClickListener(this);
          button = (Button)findViewById(R.id.siguienteKm);
          button.setOnClickListener(this);
-        
+         
+         button = (Button)findViewById(R.id.cierra);
+         button.setOnClickListener(this);
+         ImageButton imgbutton = (ImageButton)findViewById(R.id.swipenext);
+         imgbutton.setOnClickListener(this);
+
+       //añado el detector de swipe a todos lo controles que necesito para que funciona bien
+      	View swipeViews[] = {null,null,null,null};
+      	
+        swipeViews[0] = findViewById(R.id.tablaPuntosScroll);
+      	swipeViews[1] = findViewById(R.id.mapaSesion);
+      	
+      	
+      	for (int i=0;i<2;i++){
+      		
+      		swipeViews[i].setOnTouchListener(new View.OnTouchListener() {
+
+          		@Override
+          		public boolean onTouch(View v, MotionEvent event) {
+          		if (gestureDetector.onTouchEvent(event))
+          			return true;
+          		else
+          			return false;
+          		}
+          		});
+      	}
+         
 		// recupero el id que llega desde quien lo llama
 		Bundle extras = getIntent().getExtras();
 		if(extras !=null) {
@@ -448,14 +504,23 @@ public class PuntosSesion extends Activity implements OnClickListener {
         tablaPuntos.removeAllViews();
         
         
-        //pongo las cabeceras
+        //pongo las cabeceras, en la tabla normal oculta
         List<String> valores = new ArrayList<String>();
         valores.add(  getText(R.string.displayDistanciaLbl).toString() );
         valores.add(  getText(R.string.displayVelocidadLblMms).toString() );
         valores.add( getText(R.string.altAcumLbl).toString() );
-        rellenaCabecer(valores);
+        valores.add("subida_vacio");
+        creaFilaPuntos(valores,tablaPuntosCabecera,true, false);
+        creaFilaPuntos(valores,tablaPuntos,true, true);
+       
         valores.clear();
-   
+        valores.add("0,00");
+		valores.add("10:10");
+		valores.add("-100");
+		valores.add("subida_vacio");
+		creaFilaPuntos(valores,tablaPuntosCabecera,true, true);
+		valores.clear();
+        
         if (c.getCount() > 0) {
         	c.moveToFirst();
         	
@@ -524,7 +589,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	        		
 	        		// pngo al altitud acumulada y lo vuelvo a dejar a cero para el siguiente acumulado
 		        	addValoresAltitud(valores,AltitudAcumulada,AltitudAcumuladaBajada);
-	        		creaFilaPuntos(valores);
+		        	creaFilaPuntos(valores,tablaPuntos,false, false);
 	        		valores.clear();
 	        		
 	        		//cierro el tramo y lo añado al mapa
@@ -554,7 +619,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
     		addValoresAltitud(valores,AltitudAcumulada,AltitudAcumuladaBajada);
         	
         	
-        	creaFilaPuntos(valores);
+    		creaFilaPuntos(valores,tablaPuntos,false, false);
     		valores.clear();
     		
     		//pongo elúltimo tramo
@@ -692,49 +757,44 @@ public class PuntosSesion extends Activity implements OnClickListener {
     */
     
 
-    private void rellenaCabecer(List<String> valores) {
-    	
-    	//Create a new row to be added.
-    	TableRow tr = new TableRow(this);
-    	TextView tv1;
-    	//Create text views to be added to the row.
-    	Iterator<String> iter = valores.iterator();
-    	while (iter.hasNext()){
-    		tv1 = new TextView(this);
-    		createViewCabecera(tr, tv1, iter.next());
-    	  
-    	}
-  
-    	//Add the new row to our tableLayout 
-    	tablaPuntosCabecera.addView(tr);
-    }
     
-    private void creaFilaPuntos(List<String> valores) {
+    private void creaFilaPuntos(List<String> valores, TableLayout tabla, boolean cabecera, boolean oculta) {
     	
     	//Create a new row to be added.
     	//TableRow tr = new TableRow(this);
     	final LayoutInflater inflater = LayoutInflater.from(this);
-    	TableRow tr = (TableRow) inflater.inflate(R.layout.filatablapuntos, tablaPuntos, false);
+    	TableRow tr ;
+    	if (oculta) 
+    		tr = (TableRow) inflater.inflate(R.layout.filatablapuntos_oculta, tabla, false);
+    	else
+    		tr = (TableRow) inflater.inflate(R.layout.filatablapuntos, tablaPuntos, false);
+
+    	TextView tv[] = {null,null,null};
+    	tv[0] = (TextView) tr.findViewById(R.id.km);
+    	tv[1] = (TextView) tr.findViewById(R.id.ritmo);
+    	tv[2] = (TextView) tr.findViewById(R.id.altitud);
     	
-    	TextView tv = (TextView) tr.findViewById(R.id.km);
-    	tv.setText(valores.get(0));
+    	for(int i=0;i<3;i++) {
+    		tv[i].setText(valores.get(i));
+        	if (cabecera) {
+        		tv[i].setTextSize(15);
+        		tv[i].setBackgroundColor(0xFFfba824);
+        	}
+        	
+    	}
     	
-    	tv = (TextView) tr.findViewById(R.id.ritmo);
-    	tv.setText(valores.get(1));
-    	
-    	tv = (TextView) tr.findViewById(R.id.altitud);
-    	tv.setText(valores.get(2));
-    	  
-    	ImageView iv = (ImageView) tr.findViewById(R.id.altitud_img);
-    	// obtengo el id del recurso conociendo su nombre y tipo
-    	int id = getResources().getIdentifier(valores.get(3) , "drawable", getPackageName());
-    	iv.setImageResource(id);
-    	
-    	
-    	
-    	
+    	  	
+	    ImageView iv = (ImageView) tr.findViewById(R.id.altitud_img);
+	    // obtengo el id del recurso conociendo su nombre y tipo
+	    int id = getResources().getIdentifier(valores.get(3) , "drawable", getPackageName());
+	    iv.setImageResource(id);
+	    if (cabecera) {
+	    	iv.setBackgroundColor(0xFFfba824);
+	    }
+    		
+
     	//Add the new row to our tableLayout 
-    	tablaPuntos.addView(tr);
+    	tabla.addView(tr);
     	
     }
     
@@ -742,18 +802,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
     
    
 
-    private void createViewCabecera(TableRow tr, TextView t, String viewdata) {
-    	t.setText(viewdata);
-    	//adjust the porperties of the textView
-    	t.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
-    	t.setTextColor(Color.WHITE);
-    	t.setBackgroundColor(Color.DKGRAY);
-    	t.setPadding(20, 0, 0, 0);
-    	tr.setPadding(0, 1, 0, 1);
-    	tr.setBackgroundColor(Color.BLACK);
-    	tr.addView(t); // add TextView to row.
-    	}
-
+    
     // Para el menu de la activity
     
     @Override
@@ -882,6 +931,14 @@ public class PuntosSesion extends Activity implements OnClickListener {
 			mPointsOverlay.setFocusNext();
 			highliteLineaMapa();
 			map.getController().setCenter( mPointsOverlay.getFocusedGeoPoint() );
+		}
+		else if( v.getId() == R.id.cierra) {
+			finish();	
+		}
+		else if( v.getId() == R.id.swipenext) {
+			
+			gestureListener.Mueve(true);
+			
 		}
 		
 	}

@@ -275,13 +275,13 @@ public class LocationRegisterService extends Service implements LocationListener
 			
 			
 			numPuntos ++ ;
-			//TODO: Hacer que semaforo en verde rojo si el gps no pilla puntos
-			
+						
 			if (posicionAnterior != null) {
 				double distanciaTramo = location.distanceTo(posicionAnterior);	
 				distanciaTotal += distanciaTramo;
 				
 				// si los puntos tiene altitud voi acumulando su variacion
+				//TODO:la precision de la altitud es muy mala, ver como hacer para que el acumulado valga para algo
 				if ( location.hasAltitude() && posicionAnterior.hasAltitude())  {
 					double cambioAltid = location.getAltitude() - posicionAnterior.getAltitude();
 					if ( cambioAltid > 0  ) {

@@ -3,6 +3,7 @@
     <string name="app_name">correpicos</string>
     <string name="app_version">0.1</string>
     <string name="startTrakingLbl">empezar</string>
+    <string name="parcial">parcial</string>
     <string name="noinit">no iniciado</string>
     <string name="init">inicializado</string>
     <string name="GPSUpdateTimelbl">act (s)</string>

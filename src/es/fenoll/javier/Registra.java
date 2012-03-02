@@ -134,7 +134,7 @@ public class Registra extends Activity implements OnClickListener{
 			((TextView)findViewById(R.id.displayvelocidadMms)).setText( cambioFormatos.desdeMsaMKM(location.getSpeed())  );
 		}
  		
- 		double Km = (double) distanciaTotal/1000;
+ 		int Km = (int) distanciaTotal/1000;
 		double Dm = (distanciaTotal/1000-Km)*10;
 		
 		NumberFormat formatter = new DecimalFormat("#");

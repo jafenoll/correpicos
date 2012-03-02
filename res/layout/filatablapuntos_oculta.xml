@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-	android:layout_height="wrap_content"
+	android:layout_height="0dp"
 	android:paddingBottom="2dip"
     android:background="#FFfba824"
     android:gravity="center"
@@ -12,16 +12,18 @@
 	<TextView 
 	    android:id="@+id/km"
 	    style="@style/EstadisticasFila"
+	    android:layout_height="0dp"
 	    android:text="1" >
 	</TextView>
 	
 	<TextView 
 	    android:id="@+id/ritmo"
 	    style="@style/EstadisticasFila"
+	    android:layout_height="0dp"
 	    android:text="12:04" >
 	</TextView>
 
-	<ImageView xmlns:android="http://schemas.android.com/apk/res/android" 
+	 <ImageView xmlns:android="http://schemas.android.com/apk/res/android" 
 	   android:id="@+id/altitud_img"
 	   android:src="@drawable/subida_fuerte"
 	   style="@style/EstadisticasFila"
@@ -35,8 +37,8 @@
 	    android:text="-128" 
 	    android:paddingLeft="0dip"
 	    android:textSize = "10sp"
-	    android:layout_height="fill_parent"
 	    android:gravity="bottom"
+	    android:layout_height="0dp"
 	    >
 	</TextView>
 	    
