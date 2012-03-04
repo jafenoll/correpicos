@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item android:id="@+id/salvaSesionKML"
-          android:icon="@drawable/exportsesion"
+          android:icon="@drawable/ic_menu_export"
           android:title="@string/salvaSesionKMLlbl" />
     
 

@@ -22,12 +22,15 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -61,6 +64,9 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	private CorrepicosItemizedIconOverlay<OverlayItem> mPointsOverlay;
 	private Paint estiloLinea, estiloLineaResaltado, estiloLineaPocoResaltado;
 	
+	// como cargo todo el cabecera pues ya preparo el nombre y asi no tengo que releer el cursor
+	private String nomFicheroExport;
+	private ProgressDialog dialog;
 	
 	// para controlar lso gestos y en un swipe pasar a la otra pantalla
 	 private	class MyGestureDetector extends SimpleOnGestureListener {
@@ -251,6 +257,8 @@ public class PuntosSesion extends Activity implements OnClickListener {
 					fechaFormateadaDiaNum = df.format(lafecha);
 					df = new SimpleDateFormat("MMM");
 					fechaFormateadaDiaMes = df.format(lafecha);
+					df = new SimpleDateFormat("yyyy-M-dd_HH_mm");
+					nomFicheroExport = df.format(lafecha);
 														
 					} catch (ParseException e) {
 						e.printStackTrace();
@@ -265,7 +273,8 @@ public class PuntosSesion extends Activity implements OnClickListener {
 				long desnivelAcumPos = cSesiones.getLong( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_ALTITUD_POS)  );
 				long desnivelAcumNeg = cSesiones.getLong( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_ALTITUD_NEG)  );
 				
-				
+				//termino el nombre del fichero
+				nomFicheroExport += "_" + distanciaTotal + "m";
 				
 				//pongo la distancia en Km y un decimal
 				TextView tv = (TextView) findViewById(R.id.puntoSesionDistancia);   
@@ -818,104 +827,158 @@ public class PuntosSesion extends Activity implements OnClickListener {
         switch (item.getItemId()) {
         case R.id.salvaSesionKML:
             
-        	String text = "";
-        	//TODO: poner el nombre que dependa de la sesion
-        	//TODO: añadir un control de progreso al exportar ya que tarda un poco e igual hacerlo en segundo plano
-        	String nomficheroExport = "aa.kml";
-        	if ( salvaKML(nomficheroExport) ) {
-        		text = getText(R.string.archexportadotxt).toString();
-        	} else {
-        		text = getText(R.string.errorarchexportadotxt).toString() + getText(R.string.archexportadotxt).toString();
-        	}
+        	//saco el dialogo
+        	dialog = new ProgressDialog(this);
+        	dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        	dialog.setMessage( getText(R.string.exportando).toString() );
+        	dialog.setCancelable(false);
+        	dialog.setProgress(0);
+        	dialog.show();
         	
-        	Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
-        	toast.show();
         	
+        	// TODO_meter en export en otra thread y enseñar el dialogo
+        	String nomficheroExportKml = nomFicheroExport + ".kml";
+        	
+            ExportThread exportThread = new ExportThread(nomficheroExportKml);
+            exportThread.start();
+
+        	        	
             return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
     
-    private boolean salvaKML(String nomfichero) {
-    
-    	//compruebo si la SD esta bien
-    	String state = Environment.getExternalStorageState();
-    	if (! Environment.MEDIA_MOUNTED.equals(state)) {
-    	    // MEDIA_MOUNTED means we can read and write the media
-    	    return false;
-    	} 
-    	
-    	//cojo handler al fichero
-    	/*String pathToExternalStorage = Environment.getExternalStorageDirectory().toString();
-    	File appDirectory = new File(pathToExternalStorage + "/" + "AppName");   
-    	// have the object build the directory structure, if needed.
-    	appDirectory.mkdirs();
-*/
-    	
-    	
-    	
-    	
-    	File path = new File(Environment.getExternalStorageDirectory()+ File.separator  + "correcaminos");
-    	File file = new File(path, nomfichero);
+    private class ExportThread extends Thread {
 
-    	//recorro todos los puntos y los meto en un string
-    	// recorro y escribo los puntos
-    	String coords = "";
-        cPuntosSesion.moveToFirst();
-    	
+        private String nomfichero;
+        private boolean resultado;
+
+        public ExportThread(String nomfichero) {
+            this.nomfichero = nomfichero;
+        }
+
+        @Override
+        public void run() {         
+        	salvaKML( nomfichero);
+            handler.sendEmptyMessage(0);
+        }
+
+        private Handler handler = new Handler() {
+
+            @Override
+            public void handleMessage(Message msg) {
+                
+            	String text = "";
+            	// TODO_meter en export en otra thread y enseñar el dialogo
+            	String nomficheroExportKml = nomFicheroExport + ".kml";
+            	
+            	
+            	if ( resultado ) {
+            		text = getText(R.string.archexportadotxt).toString() + nomficheroExportKml;
+            	} else {
+            		text = getText(R.string.errorarchexportadotxt).toString() + getText(R.string.archexportadotxt).toString();
+            	}
+            	
+            	dialog.dismiss();
+            	Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+            	toast.show();
+            }
+        };
         
-    	do {
-    		
-    		coords = coords +       Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LONG)) );
-    		coords = coords + "," + Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LAT)) );
-    		coords = coords + "," +  Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_ALTITUD)) );
-    		coords = coords + " "	;
-         	
-         	
-         } while (cPuntosSesion.moveToNext() );
-         	
-    	
-    	try {
-    	
-	    	path.mkdirs();
-	    	FileWriter gpxwriter = new FileWriter(file);
-	        BufferedWriter out = new BufferedWriter(gpxwriter);
-	        
-	        //escribo las cabeceras del kml
-	        
-	        out.write("<?xml version='1.0' encoding='UTF-8'?>\n");
-	        out.write("<kml xmlns='http://www.opengis.net/kml/2.2' xmlns:gx='http://www.google.com/kml/ext/2.2' xmlns:kml='http://www.opengis.net/kml/2.2' xmlns:atom='http://www.w3.org/2005/Atom'>\n");
-	        out.write("<Document>\n");
-	        out.write("\t <name>ruta de ejemplo</name>\n");
-	        
-	        
-	        out.write("\t <Placemark>\n");
-	        out.write("\t\t <name>Ruta sin tÃ­tulo</name>\n");
-			
-	        out.write("\t\t <LineString>\n");
-	        out.write("\t\t\t <tessellate>1</tessellate>\n");
-	        out.write("\t\t\t <coordinates>\n");
-	        
-	        out.write("\t\t\t\t " + coords + "\n");
-	        
-			//		-3.908026479611976,40.61936190368323,0 -3.908449529672289,40.61930266352579,0 -3.90853864355761,40.61946631188167,0 -3.907507299478171,40.61986960863751,0 -3.907408342236161,40.61952847272852,0 -3.907940205371154,40.6193797270107,0 
-			out.write("\t\t\t </coordinates>\n");
-			out.write("\t\t </LineString>\n");
-			out.write("\t </Placemark>\n");
-			out.write("</Document>\n");
-			out.write("</kml>");
-	        
-	        out.close();
-    	
-    	}catch (IOException e) {
-    	    Log.e("salvaKML", "Could not write file " + e.getMessage());
-    	    return false;
-    	}
+        private void salvaKML(String nomfichero) {
+            
+        	//compruebo si la SD esta bien
+        	String state = Environment.getExternalStorageState();
+        	if (! Environment.MEDIA_MOUNTED.equals(state)) {
+        	    // MEDIA_MOUNTED means we can read and write the media
+        		resultado = false;
+        		return;
+        	} 
+        	
+        	//cojo handler al fichero
+        	/*String pathToExternalStorage = Environment.getExternalStorageDirectory().toString();
+        	File appDirectory = new File(pathToExternalStorage + "/" + "AppName");   
+        	// have the object build the directory structure, if needed.
+        	appDirectory.mkdirs();
+    */
+        	
+        	
+        	File path = new File(Environment.getExternalStorageDirectory()+ File.separator  + "correpicos");
+        	File file = new File(path, nomfichero);
+
+        	//recorro todos los puntos y los meto en un string
+        	// recorro y escribo los puntos
+        	String coords = "";
+            cPuntosSesion.moveToFirst();
+        	
+            //float total = (float)100 / cPuntosSesion.getCount();
+            
+            dialog.setMax( cPuntosSesion.getCount() );
+            
+            try {
+            	
+            	path.mkdirs();
+    	    	FileWriter gpxwriter = new FileWriter(file);
+    	        BufferedWriter out = new BufferedWriter(gpxwriter);
+    	        
+    	        //escribo las cabeceras del kml
+    	        
+    	        out.write("<?xml version='1.0' encoding='UTF-8'?>\n");
+    	        out.write("<kml xmlns='http://www.opengis.net/kml/2.2' xmlns:gx='http://www.google.com/kml/ext/2.2' xmlns:kml='http://www.opengis.net/kml/2.2' xmlns:atom='http://www.w3.org/2005/Atom'>\n");
+    	        out.write("<Document>\n");
+    	        out.write("\t <name>ruta de ejemplo</name>\n");
+    	        
+    	        
+    	        out.write("\t <Placemark>\n");
+    	        out.write("\t\t <name>Ruta sin tÃ­tulo</name>\n");
+    			
+    	        out.write("\t\t <LineString>\n");
+    	        out.write("\t\t\t <tessellate>1</tessellate>\n");
+    	        out.write("\t\t\t <coordinates>\n");
+            
+    	        out.write("\t\t\t\t ");
+    	        
+	        	do {
+	        		
+	        		dialog.setProgress( cPuntosSesion.getPosition() );
+	        		
+	        		coords = Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LONG)) );
+	        		coords = coords + "," + Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LAT)) );
+	        		coords = coords + "," +  Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_ALTITUD)) );
+	        		coords = coords + " "	;
+	        		
+	        		out.write( coords );
+	             	
+	             	
+	             } while (cPuntosSesion.moveToNext() );
+	             	
+	        	out.write("\n");
+	        	
+    			//		-3.908026479611976,40.61936190368323,0 -3.908449529672289,40.61930266352579,0 -3.90853864355761,40.61946631188167,0 -3.907507299478171,40.61986960863751,0 -3.907408342236161,40.61952847272852,0 -3.907940205371154,40.6193797270107,0 
+    			out.write("\t\t\t </coordinates>\n");
+    			out.write("\t\t </LineString>\n");
+    			out.write("\t </Placemark>\n");
+    			out.write("</Document>\n");
+    			out.write("</kml>");
+    	        
+    	        out.close();
+        	
+        	}catch (IOException e) {
+        	    Log.e("salvaKML", "Could not write file " + e.getMessage());
+        	    resultado = false;
+        	    return;
+        	}
+            
+        	resultado = true;
+        	return;
         
-    	return true;
-    
+        }
     }
+
+    
+    
+    
 
 	@Override
 	public void onClick(View v) {

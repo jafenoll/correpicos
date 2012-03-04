@@ -31,7 +31,7 @@
         <item >Borrar</item>
     </string-array>
     <string name="salvaSesionKMLlbl">Exportar</string>
-    <string name="archexportadotxt">Archivo exportado</string>
+    <string name="archexportadotxt">Archivo exportado :</string>
     <string name="errorarchexportadotxt">ERROR exportando archivo</string>
     <string name="CCServiceLocationListener">correPicos registrando...</string>
     <string name="CCServiceLocationListenerLabel">Animo</string>
@@ -46,5 +46,6 @@
     <string name="startRegistraLbl">registra</string>
     <string name="listaSesionesLbl">analiza</string>
     <string name="confDeportesLbl">configura</string>
+    <string name="exportando">Generando fichero</string>
         
 </resources>

@@ -26,11 +26,14 @@ TODO
      > poder cargar tracks para seguirlos verlos en el mapa principal
      >  poder poner un track como activo en el mapa y que si me alejo mas de una distancia de el
         avise, o si voy en direccion contraria
-     > uan vez registrada, pasar la sesion a una BBDD en la SD
+     ***> uan vez registrada, pasar la sesion a una BBDD en la SD
+          poner directamente la BBDD en la SD
      > soportar entrenamiento por intervalos, registrando los ritmos de cada intervalo
      > solo registra un punto cuando esta mas lejos que la acuracy del anterior
-     > al dar a parar, que salga un resumen general de la sesion y botones para grabar o eliminar direcatmente
+     ***> al dar a parar, que salga un resumen general de la sesion y botones para grabar o eliminar direcatmente
+          llamar al activity de puntossesion
      > seleccionar el deporte antes de empezar a registrar
+     
 
 - Listas
   > Saca lista de sesiones
@@ -46,6 +49,8 @@ TODO
      > varios gráficos...
      > si tengo laps cargadas, sacar tambien una lista por laps
      > exportar una sesiona GPX o TRX
+     ***> poder meter un campo texto descripcion de la sesion y editarlo
+     ***> poder marcar sesion como hito, y tener una lista especial de hitos en algun sitio ( a modo de mejores marcas)
     
      
      
@@ -63,8 +68,7 @@ TODO
        
 
 - Pruebas:
-  > ver que el autopause ba bien
-  > ver que pause y resume lo hace bien
+  >
   > revisar la navegación entre pantallas, en espacial registrando y al volver de la notificacion
   
 - conclusiones

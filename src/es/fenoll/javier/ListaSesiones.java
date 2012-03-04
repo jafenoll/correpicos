@@ -94,12 +94,13 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.listasesiones);
-       
-        ProgressDialog dialog = ProgressDialog.show(this, "", 
-                "", true);
         
+		 ProgressDialog dialog = ProgressDialog.show(this, "", 
+	                "", true);
+		
+		super.onCreate(savedInstanceState);
+        setContentView(R.layout.listasesiones);
+              
         // engancho para detectar el swipe
      	gestureListener = new MyGestureDetector();
      	gestureDetector = new GestureDetector(gestureListener);

@@ -45,7 +45,6 @@ public class AlmacenDatos  {
 	static class DatabaseHelper extends SQLiteOpenHelper {
 
 	       DatabaseHelper(Context context) {
-
 	           // calls the super constructor, requesting the default cursor factory.
 	           super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	       }
@@ -111,7 +110,7 @@ public class AlmacenDatos  {
 
 	           
 	           
-	           
+	           /*
                db.execSQL("ALTER TABLE " + EstructuraDB.Sesion.TABLE_NAME
        		   		+ " ADD COLUMN " + EstructuraDB.Sesion.COLUMN_ALTITUD_POS + " INTEGER"
        		   		+ ";"
@@ -121,7 +120,7 @@ public class AlmacenDatos  {
           		   		+ " ADD COLUMN " + EstructuraDB.Sesion.COLUMN_ALTITUD_NEG + " INTEGER"
           		   		+ ";"
           		   );
-               
+               */
 	           /*
 	           db.execSQL("ALTER TABLE " + EstructuraDB.Deportes.TABLE_NAME
 	        		   		+ " ADD COLUMN " + EstructuraDB.Deportes.COLUMN_NAME_UMBRAL_AUTOPAUSE + " DOUBLE"

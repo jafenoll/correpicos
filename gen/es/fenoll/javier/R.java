@@ -73,17 +73,18 @@ public final class R {
         public static final int ic_menu_cancel_pulsado=0x7f02001c;
         public static final int ic_menu_database=0x7f02001d;
         public static final int ic_menu_database_pulsado=0x7f02001e;
-        public static final int ic_menu_globe=0x7f02001f;
-        public static final int ic_menu_globe_pulsado=0x7f020020;
-        public static final int listados=0x7f020021;
-        public static final int listados_pulsado=0x7f020022;
-        public static final int pospnt=0x7f020023;
-        public static final int registra=0x7f020024;
-        public static final int registra_pulsado=0x7f020025;
-        public static final int subida_fuerte=0x7f020026;
-        public static final int subida_llano=0x7f020027;
-        public static final int subida_media=0x7f020028;
-        public static final int subida_vacio=0x7f020029;
+        public static final int ic_menu_export=0x7f02001f;
+        public static final int ic_menu_globe=0x7f020020;
+        public static final int ic_menu_globe_pulsado=0x7f020021;
+        public static final int listados=0x7f020022;
+        public static final int listados_pulsado=0x7f020023;
+        public static final int pospnt=0x7f020024;
+        public static final int registra=0x7f020025;
+        public static final int registra_pulsado=0x7f020026;
+        public static final int subida_fuerte=0x7f020027;
+        public static final int subida_llano=0x7f020028;
+        public static final int subida_media=0x7f020029;
+        public static final int subida_vacio=0x7f02002a;
     }
     public static final class id {
         public static final int alt=0x7f09001e;
@@ -228,6 +229,7 @@ public final class R {
         public static final int displayVelocidadLblKmh=0x7f05000d;
         public static final int displayVelocidadLblMms=0x7f05000e;
         public static final int errorarchexportadotxt=0x7f05001d;
+        public static final int exportando=0x7f05002b;
         public static final int gapdist=0x7f050018;
         public static final int gaptmp=0x7f050019;
         public static final int init=0x7f050005;
