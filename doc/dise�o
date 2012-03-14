@@ -4,8 +4,6 @@ BUGS:
 TODO 
 
 - General :
-  > Diseño grafico
-  > Diseño de navegacion por pantallas
   > Diseño de clases
   
 
@@ -18,6 +16,7 @@ TODO
   > adquiere un partial_wake_lock para que siga registrando (ver si funciona)
   > autopause con umbral de volocidad configurable y feeback en pantalla cuando activo
   > Presenta las altitudes acumuladas
+  > al terminar la sesion se guarda en un GPX en la SD y se boran los puntos de la BBDD
   
   
   todo:
@@ -26,8 +25,9 @@ TODO
      > poder cargar tracks para seguirlos verlos en el mapa principal
      >  poder poner un track como activo en el mapa y que si me alejo mas de una distancia de el
         avise, o si voy en direccion contraria
-     ***> uan vez registrada, pasar la sesion a una BBDD en la SD
-          poner directamente la BBDD en la SD
+     
+     		
+     
      > soportar entrenamiento por intervalos, registrando los ritmos de cada intervalo
      > solo registra un punto cuando esta mas lejos que la acuracy del anterior
      ***> al dar a parar, que salga un resumen general de la sesion y botones para grabar o eliminar direcatmente

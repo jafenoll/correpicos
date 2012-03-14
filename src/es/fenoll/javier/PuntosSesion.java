@@ -20,6 +20,9 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.Overlay;
 import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
+import org.xmlpull.v1.XmlPullParser;
+
+import es.fenoll.javier.AlmacenDatos.PuntoGPX;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -138,15 +141,15 @@ public class PuntosSesion extends Activity implements OnClickListener {
      	gestureDetector = new GestureDetector(gestureListener);
      	
      	//engancho los botones
-     	 Button button = (Button)findViewById(R.id.anteriorKm);
-         button.setOnClickListener(this);
-         button = (Button)findViewById(R.id.siguienteKm);
-         button.setOnClickListener(this);
+     	Button button = (Button)findViewById(R.id.anteriorKm);
+        button.setOnClickListener(this);
+        button = (Button)findViewById(R.id.siguienteKm);
+        button.setOnClickListener(this);
          
-         button = (Button)findViewById(R.id.cierra);
-         button.setOnClickListener(this);
-         ImageButton imgbutton = (ImageButton)findViewById(R.id.swipenext);
-         imgbutton.setOnClickListener(this);
+        button = (Button)findViewById(R.id.cierra);
+        button.setOnClickListener(this);
+        ImageButton imgbutton = (ImageButton)findViewById(R.id.swipenext);
+        imgbutton.setOnClickListener(this);
 
        //añado el detector de swipe a todos lo controles que necesito para que funciona bien
       	View swipeViews[] = {null,null,null,null};
@@ -192,11 +195,15 @@ public class PuntosSesion extends Activity implements OnClickListener {
         
         //preparo el mapa
         preparaMapa();
-              
+           
+        
+        XmlPullParser parserPuntos =  registroDB.PreparaRecuperaPuntosSesionGpx(sesionId);
         
         //Al principio cargo por Km
         //cargaTodosLosPuntos(cPuntosSesion);
-        cargaCadaParcial(cPuntosSesion,1000);
+        cargaCadaParcial(parserPuntos,1000);
+        
+        registroDB = null;
         
        
         
@@ -314,14 +321,6 @@ public class PuntosSesion extends Activity implements OnClickListener {
 
         //INICIALIZO EL MAPA
                 
-        // obtengo l aposición del primer punto
-        cPuntosSesion.moveToFirst();
-        GeoPoint elpunto = new GeoPoint(
-        		cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LAT)),
-        		cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LONG))
-        		);
-        
-
         // y creo el mapa y me centro en el
         map = (MapView)findViewById(R.id.mapaSesion);
         
@@ -349,7 +348,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
         
         //con 14 me caba mas o menos un km bien en la pantalla
     	map.getController().setZoom(14);
-        map.getController().setCenter( elpunto );
+        
         
         map.setBuiltInZoomControls(true);
         map.setMultiTouchControls(true);
@@ -488,7 +487,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	// CONTROLA LA TABLA DE PUNTOS
 	
     // Parcial es cada cuantos metros agrupo
-    private void cargaCadaParcial(Cursor c, long cortesParcial){
+    private void cargaCadaParcial(XmlPullParser parserPuntos, long cortesParcial){
 
         long AltitudAcumulada  = 0;
         long AltitudAcumuladaBajada = 0;
@@ -530,9 +529,14 @@ public class PuntosSesion extends Activity implements OnClickListener {
 		creaFilaPuntos(valores,tablaPuntosCabecera,true, true);
 		valores.clear();
         
-        if (c.getCount() > 0) {
-        	c.moveToFirst();
-        	
+		if (parserPuntos == null) {
+			return;
+		}
+		
+		PuntoGPX elPuntoGPX =  registroDB.RecuperaPuntoSesionGpx ( parserPuntos);
+		
+        if (elPuntoGPX != null) {
+        	        	
         	long tramo  = 1;
         	
         	//creo el path 
@@ -545,24 +549,24 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	        do {
 	        	
 	        	//añado el punto a path
-	        	elpunto = new GeoPoint(
-	            		c.getDouble( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LAT)),
-	            		c.getDouble( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LONG))
-	            		);
-	            lineaCarrera.addPoint(elpunto);
+	        	elpunto = elPuntoGPX.posicion;
 	            
-	            if ( c.getPosition() == 0) {
+	        	lineaCarrera.addPoint(elpunto);
+	            
+	            if ( elPuntoGPX.index == 1) {
 	            	//añado el punto
 	            	items.add(new OverlayItem("Inicio"  , "", elpunto));
+	            	// y centro el mapa en ese punto
+	            	map.getController().setCenter( elpunto );
 	            }
 	            
 	        	// es la distancia desde el principio
-	        	distActual =  c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA)) ;
+	        	distActual =  elPuntoGPX.distancia;
 	        	// sumo la distancia del tramo a la parcial, hago esto por que en la tabla me vallegando los acumulados
 	        	distParcial = distActual - distAcmulada;
 	        	
         		// calculo la altitud acumulada
-	        	AltitudActual = c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_ALTITUD)) ;
+	        	AltitudActual = elPuntoGPX.altitud;
 	        	// si ya tengo una altitud anterior, y he subido, sumo
 	        	if (AltitudAnterior < AltitudActual && AltitudAnterior != 0){
 	        		AltitudAcumulada += AltitudActual - AltitudAnterior;
@@ -573,7 +577,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	        	}
 	        	AltitudAnterior = AltitudActual ;
 	        	
-	        	tiempoActual = c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS)) ;
+	        	tiempoActual = elPuntoGPX.tiempo;
 	        	
 	        	// Si ya llevo la cantidadque me dice el parametro
 	        	if (  distActual >= tramo * cortesParcial ) {
@@ -613,9 +617,10 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	        		
 	        		tramo++;
 	        	}
+	        
+	        	elPuntoGPX =  registroDB.RecuperaPuntoSesionGpx ( parserPuntos) ;
 	        	
-	        	
-	        } while (c.moveToNext());
+	        } while ( elPuntoGPX != null   );
 	        
 	        
 	        

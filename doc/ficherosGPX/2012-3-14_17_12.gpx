@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gpx
+version='1.1'
+creator='Correpicos - http://www.corepicos.es/'
+xmlns='http://www.topografix.com/GPX/1/1'
+xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+xmlns:cpc='http://www.corepicos.es/gpx/CpcExtension/v1'
+xsi:schemaLocation='http://www.topografix.com/GPX/1/1
+http://www.topografix.com/GPX/1/1/gpx.xsd
+http://www.corepicos.es/gpx/CpcExtension/v1
+http://www.corepicos.es/gpx/CpcExtension/v1/CpcExtensionv1.xsd'>
+<trk>
+<name>Sesion CorrePicos ID 45</name>
+<cmt>nullKm - Duracion null - cuando 2012-3-14_17_12</cmt>
+<trkseg>
+<trkpt lat='40.61943233013153' lon='-3.908037543296814'>
+<ele>1036.0</ele>
+<hdop>3.0</hdop>
+<extensions>
+<cpc:CrcExtension>
+<cpc:seq>1.0</cpc:seq>
+<cpc:dist>0.0</cpc:dist>
+<cpc:vel>1.0</cpc:vel>
+<cpc:tmpt>0.0</cpc:tmpt>
+</cpc:CrcExtension>
+</extensions>
+</trkpt>
+<trkpt lat='40.61943233013153' lon='-3.907908797264099'>
+<ele>1033.0</ele>
+<hdop>4.0</hdop>
+<extensions>
+<cpc:CrcExtension>
+<cpc:seq>2.0</cpc:seq>
+<cpc:dist>10.894135475158691</cpc:dist>
+<cpc:vel>1.0</cpc:vel>
+<cpc:tmpt>7035.0</cpc:tmpt>
+</cpc:CrcExtension>
+</extensions>
+</trkpt>
+<trkpt lat='40.61945915222168' lon='-3.907790780067444'>
+<ele>1032.0</ele>
+<hdop>3.0</hdop>
+<extensions>
+<cpc:CrcExtension>
+<cpc:seq>3.0</cpc:seq>
+<cpc:dist>21.315144538879395</cpc:dist>
+<cpc:vel>1.346291184425354</cpc:vel>
+<cpc:tmpt>14068.0</cpc:tmpt>
+</cpc:CrcExtension>
+</extensions>
+</trkpt>
+<trkpt lat='40.61949133872986' lon='-3.9076781272888184'>
+<ele>1033.0</ele>
+<hdop>4.0</hdop>
+<extensions>
+<cpc:CrcExtension>
+<cpc:seq>4.0</cpc:seq>
+<cpc:dist>31.495559692382813</cpc:dist>
+<cpc:vel>0.5</cpc:vel>
+<cpc:tmpt>23094.0</cpc:tmpt>
+</cpc:CrcExtension>
+</extensions>
+</trkpt>
+<trkpt lat='40.61943769454956' lon='-3.9077746868133545'>
+<ele>1035.0</ele>
+<hdop>3.0</hdop>
+<extensions>
+<cpc:CrcExtension>
+<cpc:seq>5.0</cpc:seq>
+<cpc:dist>41.607163429260254</cpc:dist>
+<cpc:vel>1.25</cpc:vel>
+<cpc:tmpt>38128.0</cpc:tmpt>
+</cpc:CrcExtension>
+</extensions>
+</trkpt>
+<trkpt lat='40.61941087245941' lon='-3.9079034328460693'>
+<ele>1033.0</ele>
+<hdop>2.0</hdop>
+<extensions>
+<cpc:CrcExtension>
+<cpc:seq>6.0</cpc:seq>
+<cpc:dist>52.901129722595215</cpc:dist>
+<cpc:vel>1.25</cpc:vel>
+<cpc:tmpt>47165.0</cpc:tmpt>
+</cpc:CrcExtension>
+</extensions>
+</trkpt>
+<trkpt lat='40.61940014362335' lon='-3.9080214500427246'>
+<ele>1033.0</ele>
+<hdop>3.0</hdop>
+<extensions>
+<cpc:CrcExtension>
+<cpc:seq>7.0</cpc:seq>
+<cpc:dist>62.958242416381836</cpc:dist>
+<cpc:vel>1.0</cpc:vel>
+<cpc:tmpt>54186.0</cpc:tmpt>
+</cpc:CrcExtension>
+</extensions>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>

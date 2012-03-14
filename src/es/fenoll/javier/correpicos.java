@@ -31,6 +31,9 @@ public class correpicos extends Activity  implements OnClickListener {
         //actualizo la DB si fuese necesario
         AlmacenDatos registroDB = new AlmacenDatos( (Context) this.getApplication() );   
         registroDB.ForceUpgradeDB();
+        // paso sesiones a la SD si tengo alguna todabia en la memoria interna (por un cuelgue etc...)
+        registroDB.PasaSesionesSD();
+        
         
     }
 

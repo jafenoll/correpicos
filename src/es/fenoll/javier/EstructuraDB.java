@@ -44,6 +44,8 @@ public final class EstructuraDB {
         
         public static final String COLUMN_ALTITUD_NEG = "altitudneg";
         
+        public static final String COLUMN_NAME_FICHERO = "ficheropuntos";
+        
     	
     	
     }
