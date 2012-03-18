@@ -46,6 +46,8 @@ public final class EstructuraDB {
         
         public static final String COLUMN_NAME_FICHERO = "ficheropuntos";
         
+        public static final String COLUMN_NAME_DESC = "desc";
+        
     	
     	
     }

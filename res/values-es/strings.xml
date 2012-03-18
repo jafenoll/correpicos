@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">correpicos</string>
+    <string name="app_version">0.1</string>
+    <string name="startTrakingLbl">empezar</string>
+    <string name="parcial">parcial</string>
+    <string name="noinit">no iniciado</string>
+    <string name="init">inicializado</string>
+    <string name="GPSUpdateTimelbl">act (s)</string>
+    <string name="GPSUpdateDistlbl">act (m)</string>
+    <string name="numPnts"> puntos</string>
+    <string name="ResumeTrackingLbl">reanudar</string>
+    <string name="PauseTrackingLbl">pausar</string>
+    <string name="startRegistra">Registrar</string>
+    <string name="displayTiempoLbl">duración</string>
+    <string name="displayVelocidadLblKmh">Km/h: </string>
+    <string name="displayVelocidadLblMms">ritmo</string>
+    <string name="displayDistanciaLbl">Km</string>
+    <string name="paraRegistroLbl">detener</string>
+    <string name="listaSesiones">Sesiones anteriores</string>
+    <string name="sin_sesiones">Sin sesiones almacenadas</string>
+    <string name="verTodosPuntosLbl">Todos</string>
+    <string name="verPorKmLbl">Cada Km</string>
+    <string name="confDeportes">Configuracion</string>
+    <string name="salvar">Salvar</string>
+    <string name="volver">Volver</string>
+    <string name="gapdist">Registro GPS cada (metros)</string>
+    <string name="gaptmp">Registro GPS cada (segundos)</string>
+    <string name="nombre">Nombre:</string>
+    <string-array name="listasesionesmenu">
+        <item >Borrar</item>
+    </string-array>
+    <string name="salvaSesionKMLlbl">Exportar</string>
+    <string name="archexportadotxt">Archivo exportado :</string>
+    <string name="errorarchexportadotxt">ERROR exportando archivo</string>
+    <string name="CCServiceLocationListener">correPicos registrando...</string>
+    <string name="CCServiceLocationListenerLabel">Animo</string>
+    <string name="umbralAutoPauselbltxt">Umbral Pausa automatica de registro (km/h)</string>
+    <string name="activarumbralAutoPauselbltxt">Activar pausa automatica de registro</string>
+    <string name="tablaAcumSemLbl">Semanas</string>
+    <string name="tablaAcumMesLbl">Meses</string>
+    <string name="tablaAcumAnoLbl">Años</string>
+    <string name="altAcumLbl">desnivel</string>
+    <string name="autopauseLbl">pausado automatico activado</string>
+    <string name="numero">#</string>
+    <string name="startRegistraLbl">registra</string>
+    <string name="listaSesionesLbl">analiza</string>
+    <string name="confDeportesLbl">configura</string>
+    <string name="exportando">Generando fichero...</string>
+    <string name="cargando">Cargando Puntos...</string>
+    <string name="noDesc">Sin descripcion</string>
+    <string name="SesionSalvada">Sesion salvada</string>
+    
+        
+</resources>

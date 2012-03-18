@@ -42,7 +42,7 @@ public class AlmacenDatos  {
     /**
      * The database version
      */
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 	
     // Handle to a new DatabaseHelper.
     private DatabaseHelper mOpenHelper;
@@ -91,8 +91,9 @@ public class AlmacenDatos  {
 	                   + EstructuraDB.Sesion.COLUMN_NAME_DISTANCIA + " LONG,"
 	                   + EstructuraDB.Sesion.COLUMN_NAME_DURACION + " DOUBLE,"
 	                   + EstructuraDB.Sesion.COLUMN_ALTITUD_POS + " INTEGER,"
-	                   + EstructuraDB.Sesion.COLUMN_ALTITUD_NEG + " INTEGER"
-	                   + EstructuraDB.Sesion.COLUMN_NAME_FICHERO + " TEXT"
+	                   + EstructuraDB.Sesion.COLUMN_ALTITUD_NEG + " INTEGER,"
+	                   + EstructuraDB.Sesion.COLUMN_NAME_FICHERO + " TEXT,"
+	                   + EstructuraDB.Sesion.COLUMN_NAME_DESC + " TEXT"
 	                   + ");");
 	           
 	           db.execSQL("CREATE TABLE " + EstructuraDB.Deportes.TABLE_NAME + " ("
@@ -129,7 +130,7 @@ public class AlmacenDatos  {
 	           
     
                db.execSQL("ALTER TABLE " + EstructuraDB.Sesion.TABLE_NAME
-       		   		+ " ADD COLUMN " + EstructuraDB.Sesion.COLUMN_NAME_FICHERO + " TEXT"
+       		   		+ " ADD COLUMN " + EstructuraDB.Sesion.COLUMN_NAME_DESC + " TEXT"
        		   		+ ";"
        		   );
                /*
@@ -196,9 +197,24 @@ public class AlmacenDatos  {
 		
 		db.close();
 		
-		//al terminar la sesion guarda los puntos en un fichero en al SD y pone en
-		// la sesion el nombre del fichero
+		
 	}
+	
+	//actualiza la sesion con la distancia y tiempototales al terminar
+	public void actualizaDescSesion(long rowid, String desc) {
+			
+			
+			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+			
+			ContentValues  valores = new ContentValues();
+	        valores.put(EstructuraDB.Sesion.COLUMN_NAME_DESC, desc );
+	       
+	        
+			db.update(EstructuraDB.Sesion.TABLE_NAME,valores,EstructuraDB.Sesion._ID + "=" + rowid, null);
+			
+			db.close();
+			
+		}
 	
 	// crea una sesion nueva y devuelve su rowid, automatimente pone la fecha de inicio
 	public long insertaSesion() {
@@ -254,7 +270,8 @@ public class AlmacenDatos  {
 								EstructuraDB.Sesion.COLUMN_NAME_DISTANCIA ,
 								EstructuraDB.Sesion.COLUMN_NAME_DURACION,
 								EstructuraDB.Sesion.COLUMN_ALTITUD_POS,
-								EstructuraDB.Sesion.COLUMN_ALTITUD_NEG}
+								EstructuraDB.Sesion.COLUMN_ALTITUD_NEG,
+								EstructuraDB.Sesion.COLUMN_NAME_DESC}
 		 		, strQuery, null, null, null, strOrder
 		 		);
 		
@@ -303,6 +320,7 @@ public class AlmacenDatos  {
 			String etiqueta = null;
 			PuntoGPX elPunto = null;
 			String valor="";
+			long puntosSesion=0;
 			
 			try {
 				
@@ -333,8 +351,8 @@ public class AlmacenDatos  {
 	                    if (etiqueta.equals("trkpt"))  {
 	                    	
 	                    	elPunto = new PuntoGPX();
+	                    	elPunto.puntosSesion = puntosSesion;
 	                    	elPunto.posicion = new GeoPoint( Double.valueOf( parser.getAttributeValue(0))  , Double.valueOf( parser.getAttributeValue(1) ) );
-	                    	
 	                    	
 	                        }
 	                    
@@ -365,6 +383,9 @@ public class AlmacenDatos  {
 	                    }
 	                    else if(etiqueta.equals("seq")) {
 	                    	elPunto.index = Double.valueOf(valor).longValue();
+	                    }
+	                    else if(etiqueta.equals("numpuntos")) {
+	                    	puntosSesion = Double.valueOf(valor).longValue();
 	                    }
 	                    
 	                    valor = "";
@@ -494,6 +515,7 @@ public class AlmacenDatos  {
 		public Long altitud;
 		public Long index;
 		public Long tiempo;
+		public Long puntosSesion;
 		
 	}
 	
@@ -653,12 +675,22 @@ public class AlmacenDatos  {
  	    	
  	    	 out.write("<trkseg>\n");
  	    	
- 	    	 if ( cPuntos.getCount() > 0 ) {
+ 	    	 long numPuntos = cPuntos.getCount();
+ 	    	 lat = ""; lon=""; alt=""; hdop=""; seq=""; dist="0"; vel="0"; tmpt="0";
+ 	    	 
+ 	    	 out.write("<extensions>\n");
+        	 out.write("<cpc:CrcExtension>\n");
+        	 out.write("<cpc:numpuntos>" + numPuntos + "</cpc:numpuntos>\n");  	
+        	 out.write("</cpc:CrcExtension>\n");
+        	 out.write("</extensions>\n");
+ 	    	 
+ 	    	 
+ 	    	 if ( numPuntos > 0 ) {
  	    		 
  	    	 
  	       
 	 	         do {
-	 	        	lat = ""; lon=""; alt=""; hdop=""; seq=""; dist=""; vel=""; tmpt="";
+	 	        	
 	 	        	 
 	 	        	 lat = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LAT)) );
 	 	        	 lon =  Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LONG)) );
@@ -765,6 +797,7 @@ public class AlmacenDatos  {
 		
 		if (cSesiones.getCount() == 0) {
 			
+			db.close();
 			return;
 		}
 		
@@ -788,7 +821,8 @@ public class AlmacenDatos  {
 			
 		}while(cSesiones.moveToNext());
 	
-			db.close();
+		
+		db.close();
 			
 		}
 		

@@ -34,6 +34,7 @@ public class correpicos extends Activity  implements OnClickListener {
         // paso sesiones a la SD si tengo alguna todabia en la memoria interna (por un cuelgue etc...)
         registroDB.PasaSesionesSD();
         
+                
         
     }
 

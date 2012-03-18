@@ -13,7 +13,7 @@
             android:id="@+id/toobal"
             android:layout_width="fill_parent"
             android:layout_height="45dp"
-            android:gravity="top|center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
             android:layout_margin="0dp"
             android:background="@drawable/fondo_toolbar"
             android:baselineAligned="false" >
@@ -89,7 +89,7 @@
 		    android:layout_height="fill_parent"
 		    android:id="@+id/screensesionestablasemanas"
 		    android:orientation="vertical"
-		    android:background="#ffffff"
+		    
 		      >
 		
 		  <TextView android:id="@android:id/empty"
@@ -129,7 +129,7 @@
 		    android:layout_height="fill_parent"
 		    android:id="@+id/screensesionestablasmes"
 		    android:orientation="vertical" 
-		    android:background="#ffffff"
+		    
 		    >
 		      
 		  <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

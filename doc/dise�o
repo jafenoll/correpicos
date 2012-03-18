@@ -25,12 +25,9 @@ TODO
      > poder cargar tracks para seguirlos verlos en el mapa principal
      >  poder poner un track como activo en el mapa y que si me alejo mas de una distancia de el
         avise, o si voy en direccion contraria
-     
-     		
-     
      > soportar entrenamiento por intervalos, registrando los ritmos de cada intervalo
      > solo registra un punto cuando esta mas lejos que la acuracy del anterior
-     ***> al dar a parar, que salga un resumen general de la sesion y botones para grabar o eliminar direcatmente
+     > al dar a parar, que salga un resumen general de la sesion y botones para grabar o eliminar direcatmente
           llamar al activity de puntossesion
      > seleccionar el deporte antes de empezar a registrar
      
@@ -45,12 +42,12 @@ TODO
   > en mapa, tramos por km con etiqueta de ritmo y botones para ir de un km a otro
   > lista de km, tiempo, sesion y altitud por semana, mes y año
   > las altitues acumuladas en las cabeceras
+  > poder meter un campo texto descripcion de la sesion y editarlo
   todo:
      > varios gráficos...
      > si tengo laps cargadas, sacar tambien una lista por laps
      > exportar una sesiona GPX o TRX
-     ***> poder meter un campo texto descripcion de la sesion y editarlo
-     ***> poder marcar sesion como hito, y tener una lista especial de hitos en algun sitio ( a modo de mejores marcas)
+     > poder marcar sesion como hito, y tener una lista especial de hitos en algun sitio ( a modo de mejores marcas)
     
      
      

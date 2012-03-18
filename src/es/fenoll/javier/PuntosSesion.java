@@ -22,8 +22,6 @@ import org.osmdroid.views.overlay.OverlayItem;
 import org.osmdroid.views.overlay.PathOverlay;
 import org.xmlpull.v1.XmlPullParser;
 
-import es.fenoll.javier.AlmacenDatos.PuntoGPX;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -53,12 +51,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+import es.fenoll.javier.AlmacenDatos.PuntoGPX;
 
 public class PuntosSesion extends Activity implements OnClickListener {
 
 	private AlmacenDatos registroDB;
 	private TableLayout tablaPuntos, tablaPuntosCabecera;
-	private Cursor cPuntosSesion;
+	
+	private String loadedSesionDesc;
 	private long sesionId;
 	private GestureDetector gestureDetector;
 	private MyGestureDetector gestureListener;
@@ -129,7 +129,27 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	 		}
 	 	}
 	 		
-	
+	@Override
+	protected void onPause() {
+		
+		super.onPause();
+		
+		
+		// si ha cambiado la descripcion lo salvo
+		
+		TextView tv = (TextView) findViewById(R.id.descPuntosSesion) ; 
+		
+		if ( tv.getText().toString().compareTo(loadedSesionDesc) != 0) {
+			
+			if ( !(loadedSesionDesc.length() == 0 && tv.getText().toString().length() == 0)  ) {
+				salvaSesion();
+			}
+		}
+		
+	}
+
+
+		 
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -178,16 +198,16 @@ public class PuntosSesion extends Activity implements OnClickListener {
 			sesionId = extras.getLong("sesionId");
 		}
 
+
+	     // creo la referencia a la BBDD
+	     registroDB = new AlmacenDatos( (Context) this.getApplication() );        
+	       
 		//CARGO LA TABLA DE PUNTOS
 		
 		// cargo algunos controles para luego referenciarlos mas rápido
         tablaPuntos = (TableLayout)findViewById(R.id.tablaPuntosSesion);
         tablaPuntosCabecera =  (TableLayout)findViewById(R.id.tablaPuntosSesionCabecera);
         
-        // Prepar el cursor con los puntos
-        registroDB = new AlmacenDatos( (Context) this.getApplication() );   
-        cPuntosSesion = registroDB.recuperaPuntosSesion(sesionId);
-        startManagingCursor(cPuntosSesion);
         
         // pongo el textode la cabecera
         cargaCebecera();
@@ -195,17 +215,22 @@ public class PuntosSesion extends Activity implements OnClickListener {
         
         //preparo el mapa
         preparaMapa();
-           
         
         XmlPullParser parserPuntos =  registroDB.PreparaRecuperaPuntosSesionGpx(sesionId);
         
         //Al principio cargo por Km
         //cargaTodosLosPuntos(cPuntosSesion);
-        cargaCadaParcial(parserPuntos,1000);
         
-        registroDB = null;
-        
-       
+      //saco el dialogo
+    	dialog = new ProgressDialog(this);
+    	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+    	dialog.setMessage( getText(R.string.cargando).toString() );
+    	dialog.setCancelable(false);
+    	dialog.show();
+    	
+    	
+        CargaPuntosThread cargaParcialThread = new CargaPuntosThread(parserPuntos,1000);
+        cargaParcialThread.start();     
         
     }
     
@@ -225,8 +250,6 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	//CARGA DATOS GENERALES DE LA SESION
 	// TODO: este metodo es casi iguakl que el de ListaSesionesAdapter, mejorar con el rediseño de clases
 	private void cargaCebecera(){
-		
-		((TextView)findViewById(R.id.numPuntosSesion)).setText( String.valueOf(cPuntosSesion.getCount() ) + " puntos en la sesion" );
 		
 		//obtengo la sesion que necesito
 		// TODO: esto tampoco es muy optimo, pero como este método igual cambia....
@@ -248,8 +271,6 @@ public class PuntosSesion extends Activity implements OnClickListener {
 				String fechaFormateadaDiaSem = "--error--";
 				String fechaFormateadaDiaNum = "--error--";
 				String fechaFormateadaDiaMes = "--error--";
-				
-				
 				
 				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
@@ -310,6 +331,15 @@ public class PuntosSesion extends Activity implements OnClickListener {
 				tv.setText(  "+" + desnivelAcumPos );
 				tv = (TextView) findViewById(R.id.puntoSesionDesnivelNeg);   
 				tv.setText(  "-" + desnivelAcumNeg );
+				
+				//pongo al descripcion
+				tv = (TextView) findViewById(R.id.descPuntosSesion); 
+				loadedSesionDesc = cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_DESC)  ) ;
+				if (loadedSesionDesc != null)
+					tv.setText( loadedSesionDesc );
+				else
+					loadedSesionDesc = "";
+					
 		
 	}
 	
@@ -484,8 +514,222 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	
 	
 	
-	// CONTROLA LA TABLA DE PUNTOS
+	// CONTROLA LA TABLA DE PUNTOS se lanza como un thread por q tarda un poco
 	
+	 private class CargaPuntosThread extends Thread {
+
+	        private XmlPullParser m_parserPuntos;
+	        private long m_cortesParcial;
+	        
+	        public CargaPuntosThread(XmlPullParser parserPuntos, long cortesParcial) {
+	            this.m_parserPuntos = parserPuntos;
+	            this.m_cortesParcial = cortesParcial;
+	        }
+
+	        @Override
+	        public void run() {         
+	        	cargaCadaParcial( m_parserPuntos, m_cortesParcial );
+	            handler.sendEmptyMessage(0);
+	        }
+
+	        private Handler handler = new Handler() {
+
+	            @Override
+	            public void handleMessage(Message msg) {
+	                
+	            	dialog.dismiss();
+	            	
+	            }
+	        };
+	
+	 }
+    
+    
+    private void addValoresAltitud(List<String> valores, long subida, long bajada) {
+    	
+    	String texto = "";
+    	String imagen = "";
+    	
+    	if ( subida > -1 * bajada) {
+    		
+    		texto = String.valueOf(subida);
+    		
+    		if (subida > 150) {
+    			imagen = "subida_fuerte";
+    		}
+    		else if (subida > -1* bajada + 30 ) {
+    			imagen = "subida_media";
+    		}
+    		else {
+    			imagen = "subida_llano";
+    		}
+    		
+    		
+    	}
+    	else {
+    		texto = String.valueOf(bajada);
+    		
+    		if (-1 * bajada > 150) {
+    			imagen = "bajada_fuerte";
+    		}
+    		else if (-1 * bajada > subida + 30 ) {
+    			imagen = "bajada_media";
+    		}
+    		else {
+    			imagen = "bajada_llano";
+    		}
+    	}
+    	
+    	
+    	valores.add(texto);
+    	valores.add(imagen);
+    	
+    }
+	
+    
+    /* cargaTodosLosPuntos
+    // esto realmente no tiene sentido, b´´asicamente solo vale para depurar 
+    // y de hecho con muchos puntos la tabla durectamente no puede con ello
+    private void cargaTodosLosPuntos(Cursor c) {
+
+    	
+        //long AltitudAcumulada  = 0;
+        //long AltitudAnterior = 0;
+        long precision =0;
+        //long AltitudActual;
+        FormatosDisplay cambioFormatos = new FormatosDisplay();
+        
+      //borro si hay algo en las tablas
+        tablaPuntosCabecera.removeAllViews();
+        tablaPuntos.removeAllViews();
+        
+        //pongo las cabeceras
+        List<String> valores = new ArrayList<String>();
+        valores.add("orden");
+        valores.add("tiempo");
+        valores.add("distancia");
+        //valores.add("Km/h");
+        //valores.add("mmKm");
+        //valores.add("desnivelAcum");
+        valores.add("precision");
+        rellenaCabecer(valores);
+   
+        if (c.getCount() > 0) {
+        	c.moveToFirst();
+	        
+	        do {
+	        	
+	        	valores.clear();
+	        	
+	        	//orden
+	        	String valor  = String.valueOf( c.getInt( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_SECUENCIA))  );
+	        	valores.add(valor);
+	        	
+	        	//tiempo
+	        	valor  = cambioFormatos.desdeMStoHHMM( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS))  );
+	        	valor = valor  + cambioFormatos.desdeMSobtenSS( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS))  );
+	        	valores.add(valor);
+	        	
+	        	//distancia
+	        	NumberFormat formatter = new DecimalFormat("#.#");
+	        	valor  = formatter.format( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA))  );
+	        	valores.add(valor);
+	        	
+	        	//velocidades
+	        	valor  = cambioFormatos.desdeMsaKh( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD))  );
+	        	valores.add(valor);
+	        	valor  = cambioFormatos.desdeMsaMKM( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD))  );
+	        	valores.add(valor);
+	        	
+	        	// calculo la altitud acumulada
+	        	AltitudActual = c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_ALTITUD)) ;
+	        	// si ya tengo una altitud anterior, y he subido, sumo
+	        	if (AltitudAnterior < AltitudActual && AltitudAnterior != 0){
+	        		AltitudAcumulada += AltitudActual - AltitudAnterior;
+	        	}
+	        	AltitudAnterior = AltitudActual ;
+	        	valores.add(String.valueOf( AltitudAcumulada ));
+				
+	        	//precision
+	        	precision = c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_PRECISION));
+	        	valores.add(String.valueOf( precision ));
+	        	
+	        	rellenaPuntos(valores);
+	        } while (c.moveToNext());
+        }
+
+    	
+    }
+    */
+    
+
+    // todo lo pongo como final para poder correlo en la UI thread
+    private void creaFilaPuntos(List<String> valores, TableLayout tabla, boolean cabecera, boolean oculta) {
+    	
+    	//Create a new row to be added.
+    	//TableRow tr = new TableRow(this);
+    	
+    	//Tenemos que lanzar esto en la thread de la UI si no da problemas
+    	
+    	
+    	final LayoutInflater inflater = LayoutInflater.from(this);
+    	
+    	final boolean fcabecera = cabecera;
+    	final String[] fvalores = {valores.get(0),valores.get(1),valores.get(2),valores.get(3)};
+    	final TableLayout ftabla = tabla;
+    	final boolean foculta = oculta;
+    	
+    	runOnUiThread( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+            	TableRow tr ;
+            	if (foculta) 
+            		tr = (TableRow) inflater.inflate(R.layout.filatablapuntos_oculta, ftabla, false);
+            	else
+            		tr = (TableRow) inflater.inflate(R.layout.filatablapuntos, tablaPuntos, false);
+
+
+            	TextView tv[] = {null,null,null};
+            	tv[0] = (TextView) tr.findViewById(R.id.km);
+            	tv[1] = (TextView) tr.findViewById(R.id.ritmo);
+            	tv[2] = (TextView) tr.findViewById(R.id.altitud);
+                
+            	for(int i=0;i<3;i++) {
+            		tv[i].setText(fvalores[i]);
+                	if (fcabecera) {
+                		tv[i].setTextSize(15);
+                		tv[i].setBackgroundColor(0xFFfba824);
+                	}
+                	
+            	}
+            	
+            	  	
+        	    ImageView iv = (ImageView) tr.findViewById(R.id.altitud_img);
+        	    // obtengo el id del recurso conociendo su nombre y tipo
+        	    int id = getResources().getIdentifier(fvalores[3] , "drawable", getPackageName());
+        	    iv.setImageResource(id);
+        	    if (fcabecera) {
+        	    	iv.setBackgroundColor(0xFFfba824);
+        	    }
+            		
+
+            	//Add the new row to our tableLayout 
+            	ftabla.addView(tr);
+
+            	
+            	
+            	
+            	
+            }
+        } );
+    	
+    	    	
+    }
+    
+    
+
     // Parcial es cada cuantos metros agrupo
     private void cargaCadaParcial(XmlPullParser parserPuntos, long cortesParcial){
 
@@ -647,173 +891,8 @@ public class PuntosSesion extends Activity implements OnClickListener {
         }
         
 
-    	
-    	
-    	
-    }
-    
-    
-    private void addValoresAltitud(List<String> valores, long subida, long bajada) {
-    	
-    	String texto = "";
-    	String imagen = "";
-    	
-    	if ( subida > -1 * bajada) {
-    		
-    		texto = String.valueOf(subida);
-    		
-    		if (subida > 150) {
-    			imagen = "subida_fuerte";
-    		}
-    		else if (subida > -1* bajada + 30 ) {
-    			imagen = "subida_media";
-    		}
-    		else {
-    			imagen = "subida_llano";
-    		}
-    		
-    		
-    	}
-    	else {
-    		texto = String.valueOf(bajada);
-    		
-    		if (-1 * bajada > 150) {
-    			imagen = "bajada_fuerte";
-    		}
-    		else if (-1 * bajada > subida + 30 ) {
-    			imagen = "bajada_media";
-    		}
-    		else {
-    			imagen = "bajada_llano";
-    		}
-    	}
-    	
-    	
-    	valores.add(texto);
-    	valores.add(imagen);
-    	
-    }
-	
-    
-    /* cargaTodosLosPuntos
-    // esto realmente no tiene sentido, b´´asicamente solo vale para depurar 
-    // y de hecho con muchos puntos la tabla durectamente no puede con ello
-    private void cargaTodosLosPuntos(Cursor c) {
+    }  // termina cargaCadaParcial
 
-    	
-        //long AltitudAcumulada  = 0;
-        //long AltitudAnterior = 0;
-        long precision =0;
-        //long AltitudActual;
-        FormatosDisplay cambioFormatos = new FormatosDisplay();
-        
-      //borro si hay algo en las tablas
-        tablaPuntosCabecera.removeAllViews();
-        tablaPuntos.removeAllViews();
-        
-        //pongo las cabeceras
-        List<String> valores = new ArrayList<String>();
-        valores.add("orden");
-        valores.add("tiempo");
-        valores.add("distancia");
-        //valores.add("Km/h");
-        //valores.add("mmKm");
-        //valores.add("desnivelAcum");
-        valores.add("precision");
-        rellenaCabecer(valores);
-   
-        if (c.getCount() > 0) {
-        	c.moveToFirst();
-	        
-	        do {
-	        	
-	        	valores.clear();
-	        	
-	        	//orden
-	        	String valor  = String.valueOf( c.getInt( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_SECUENCIA))  );
-	        	valores.add(valor);
-	        	
-	        	//tiempo
-	        	valor  = cambioFormatos.desdeMStoHHMM( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS))  );
-	        	valor = valor  + cambioFormatos.desdeMSobtenSS( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS))  );
-	        	valores.add(valor);
-	        	
-	        	//distancia
-	        	NumberFormat formatter = new DecimalFormat("#.#");
-	        	valor  = formatter.format( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA))  );
-	        	valores.add(valor);
-	        	
-	        	//velocidades
-	        	valor  = cambioFormatos.desdeMsaKh( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD))  );
-	        	valores.add(valor);
-	        	valor  = cambioFormatos.desdeMsaMKM( c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD))  );
-	        	valores.add(valor);
-	        	
-	        	// calculo la altitud acumulada
-	        	AltitudActual = c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_ALTITUD)) ;
-	        	// si ya tengo una altitud anterior, y he subido, sumo
-	        	if (AltitudAnterior < AltitudActual && AltitudAnterior != 0){
-	        		AltitudAcumulada += AltitudActual - AltitudAnterior;
-	        	}
-	        	AltitudAnterior = AltitudActual ;
-	        	valores.add(String.valueOf( AltitudAcumulada ));
-				
-	        	//precision
-	        	precision = c.getLong( c.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_PRECISION));
-	        	valores.add(String.valueOf( precision ));
-	        	
-	        	rellenaPuntos(valores);
-	        } while (c.moveToNext());
-        }
-
-    	
-    }
-    */
-    
-
-    
-    private void creaFilaPuntos(List<String> valores, TableLayout tabla, boolean cabecera, boolean oculta) {
-    	
-    	//Create a new row to be added.
-    	//TableRow tr = new TableRow(this);
-    	final LayoutInflater inflater = LayoutInflater.from(this);
-    	TableRow tr ;
-    	if (oculta) 
-    		tr = (TableRow) inflater.inflate(R.layout.filatablapuntos_oculta, tabla, false);
-    	else
-    		tr = (TableRow) inflater.inflate(R.layout.filatablapuntos, tablaPuntos, false);
-
-    	TextView tv[] = {null,null,null};
-    	tv[0] = (TextView) tr.findViewById(R.id.km);
-    	tv[1] = (TextView) tr.findViewById(R.id.ritmo);
-    	tv[2] = (TextView) tr.findViewById(R.id.altitud);
-    	
-    	for(int i=0;i<3;i++) {
-    		tv[i].setText(valores.get(i));
-        	if (cabecera) {
-        		tv[i].setTextSize(15);
-        		tv[i].setBackgroundColor(0xFFfba824);
-        	}
-        	
-    	}
-    	
-    	  	
-	    ImageView iv = (ImageView) tr.findViewById(R.id.altitud_img);
-	    // obtengo el id del recurso conociendo su nombre y tipo
-	    int id = getResources().getIdentifier(valores.get(3) , "drawable", getPackageName());
-	    iv.setImageResource(id);
-	    if (cabecera) {
-	    	iv.setBackgroundColor(0xFFfba824);
-	    }
-    		
-
-    	//Add the new row to our tableLayout 
-    	tabla.addView(tr);
-    	
-    }
-    
-    
-    
    
 
     
@@ -824,6 +903,21 @@ public class PuntosSesion extends Activity implements OnClickListener {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.puntossesionmenu, menu);
         return true;
+    }
+    
+    private void salvaSesion() {
+	    TextView tv = (TextView) findViewById(R.id.descPuntosSesion); 
+		
+		registroDB.actualizaDescSesion( sesionId, tv.getText().toString() );
+		
+		// almaceno en la variable lo ya guardado para que on pause no quiera guardar otra vez
+		loadedSesionDesc =  tv.getText().toString();
+	
+		findViewById(R.id.main).requestFocus();
+		
+		String text =  getText(R.string.SesionSalvada).toString();
+		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+    	toast.show();
     }
     
     @Override
@@ -849,6 +943,13 @@ public class PuntosSesion extends Activity implements OnClickListener {
 
         	        	
             return true;
+            
+        case R.id.salvaSesion:
+        	
+        	salvaSesion();
+        	
+        	return true;
+            
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -915,11 +1016,16 @@ public class PuntosSesion extends Activity implements OnClickListener {
         	//recorro todos los puntos y los meto en un string
         	// recorro y escribo los puntos
         	String coords = "";
-            cPuntosSesion.moveToFirst();
+
+            XmlPullParser parserPuntos =  registroDB.PreparaRecuperaPuntosSesionGpx(sesionId);
+            
         	
             //float total = (float)100 / cPuntosSesion.getCount();
-            
-            dialog.setMax( cPuntosSesion.getCount() );
+
+			PuntoGPX elPuntoGPX =  registroDB.RecuperaPuntoSesionGpx ( parserPuntos);
+			
+            if (elPuntoGPX.puntosSesion > 0)
+            	dialog.setMax( elPuntoGPX.puntosSesion.intValue() );
             
             try {
             	
@@ -946,17 +1052,18 @@ public class PuntosSesion extends Activity implements OnClickListener {
     	        
 	        	do {
 	        		
-	        		dialog.setProgress( cPuntosSesion.getPosition() );
-	        		
-	        		coords = Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LONG)) );
-	        		coords = coords + "," + Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LAT)) );
-	        		coords = coords + "," +  Double.toString( cPuntosSesion.getDouble( cPuntosSesion.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_ALTITUD)) );
+	        		dialog.setProgress( elPuntoGPX.index.intValue() );
+	        		     		
+	        		coords = Double.toString( elPuntoGPX.posicion.getLongitudeE6()/1E6 );
+	        		coords = coords + "," + Double.toString( elPuntoGPX.posicion.getLatitudeE6()/1E6 );
+	        		coords = coords + "," +  Double.toString( elPuntoGPX.altitud );
 	        		coords = coords + " "	;
 	        		
 	        		out.write( coords );
-	             	
-	             	
-	             } while (cPuntosSesion.moveToNext() );
+	        		
+		        	elPuntoGPX =  registroDB.RecuperaPuntoSesionGpx ( parserPuntos) ;
+		        	
+	             } while ( elPuntoGPX != null );
 	             	
 	        	out.write("\n");
 	        	

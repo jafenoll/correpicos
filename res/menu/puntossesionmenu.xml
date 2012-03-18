@@ -5,5 +5,9 @@
           android:icon="@drawable/ic_menu_export"
           android:title="@string/salvaSesionKMLlbl" />
     
+    <item android:id="@+id/salvaSesion"
+          android:icon="@drawable/save"
+          android:title="@string/salvar" />
+    
 
 </menu>

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/relativeLayout111"
+        android:id="@+id/main"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical" 
+        android:descendantFocusability="beforeDescendants"
+		android:focusableInTouchMode="true"
         >
 
 	<LinearLayout
             android:id="@+id/toobal"
             android:layout_width="fill_parent"
             android:layout_height="45dp"
-            android:gravity="top|center_horizontal"
+            android:gravity="center_vertical|center_horizontal"
             android:layout_margin="0dp"
             android:background="@drawable/fondo_toolbar"
             android:baselineAligned="false" >
@@ -51,26 +53,27 @@
     	android:id="@+id/pantallasegistra"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#ffffff">  
+        >  
 
 	
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	    android:id="@+id/screentabla"
 	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical" android:background="#ffffff">
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
 	    
 	    <LinearLayout 
 	        android:id="@+id/puntosesionCabecera"
-	        android:layout_width="wrap_content"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:gravity="center_vertical">
+	       >
 	    
 		     <LinearLayout 
 		        android:id="@+id/listasesionesrow"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:orientation="vertical" android:gravity="center">
+		        android:orientation="vertical" 
+		        android:gravity="center">
 	
 		        <TextView
 		            android:id="@+id/puntoSesionDiaSem"
@@ -98,20 +101,14 @@
 		        
 		    </LinearLayout>   
 	    
-	         <TextView
-		    	android:id="@+id/separador0"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="10sp"
-		        android:text="      " 
-		        android:textColor="#fba824"/> 
-             
+	        
 		    <LinearLayout 
 		        android:id="@+id/listasesionesrow"
-		        android:layout_width="wrap_content"
+		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
 		        android:orientation="vertical" 
-		        android:padding="2sp">        
+		        android:padding="2sp"
+		        android:layout_weight="1" android:layout_marginLeft="10sp">        
 					            
 		            
 		             <TextView
@@ -134,19 +131,14 @@
 				            android:textColor="#fba824"/>
 		 	</LinearLayout>   
  	
-            <TextView
-		    	android:id="@+id/separador1"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="10sp"
-		        android:text="      " 
-		        android:textColor="#fba824"/> 
+           
 	      <LinearLayout 
 	        android:id="@+id/listasesionesrow"
-	        android:layout_width="wrap_content"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical" 
-	        android:padding="2sp" >           
+	        android:padding="2sp"
+	        android:layout_weight="1"  >           
 	            
 	             
 	        	<TextView
@@ -169,21 +161,15 @@
 			        android:textColor="#fba824"/> 
 	        	
 	        </LinearLayout>   	
-        	<TextView
-		    	android:id="@+id/separador2"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="10sp"
-		        android:text="      " 
-		        android:textColor="#fba824"
-		        /> 
+        	
 		        
 	        <LinearLayout 
 	        android:id="@+id/listasesionesrow"
-	        android:layout_width="wrap_content"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical" 
-	        android:padding="2sp" >   	
+	        android:padding="2sp" 
+	        android:layout_weight="1" >   	
         	
         	
 	        	<TextView
@@ -207,20 +193,15 @@
         	
         	</LinearLayout>  
 	    
-	            <TextView
-		    	android:id="@+id/separador3"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:textSize="10sp"
-		        android:text="      " 
-		        android:textColor="#fba824"/> 
+	            
 		        
 	        <LinearLayout 
 	        android:id="@+id/listasesionesrow"
-	        android:layout_width="wrap_content"
+	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:orientation="vertical" 
-	        android:padding="2sp" >   	
+	        android:padding="2sp" 
+	        android:layout_weight="1" >   	
         	
         	
 	        	<TextView
@@ -231,8 +212,7 @@
 		            android:text="+345" 
 		            android:layout_marginLeft="0sp" 
 		            android:layout_marginBottom="0sp"
-		            android:gravity="right"
-	            	android:layout_gravity="right"
+		            
 	            	android:textColor="#fba824" />
 	        	
 	        	<TextView
@@ -243,8 +223,7 @@
 		            android:text="-345" 
 		            android:layout_marginLeft="0sp" 
 		            android:layout_marginBottom="-5sp"
-		            android:gravity="right"
-	            	android:layout_gravity="right"
+		            
 	            	android:textColor="#fba824" />
 	        	
 	        	
@@ -262,17 +241,14 @@
 	            
 	    </LinearLayout> 
 	
-	    <TextView
-			android:id="@+id/numPuntosSesion"
+	    <EditText
+			android:id="@+id/descPuntosSesion"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="8sp"
-			android:text="13 puntos en la sesion"
-			android:textColor="#fba824" />
-	    
-	    
-	    
-	        
+			android:textSize="14sp"
+			android:hint="@string/noDesc"
+			android:textColor="#fba824" android:paddingLeft="40sp" android:background="#000000"/>
+
 	    
 	     <TableLayout 
 		        android:id="@+id/tablaPuntosSesionCabecera"
@@ -324,7 +300,7 @@
 			android:layout_height="wrap_content" 
 			android:scaleType="fitXY"
     		android:layout_alignBottom="@id/mapaSesion"
-			>
+			android:layout_margin="10sp">
 		    
 		    
 		     <Button
