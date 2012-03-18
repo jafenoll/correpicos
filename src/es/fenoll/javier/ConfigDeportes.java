@@ -47,6 +47,10 @@ public class ConfigDeportes extends Activity implements OnClickListener{
         button.setOnClickListener(this);
         button = (Button)findViewById(R.id.deportesCancel);
         button.setOnClickListener(this);
+        button = (Button)findViewById(R.id.deportesDefault);
+        button.setOnClickListener(this);
+        button = (Button)findViewById(R.id.cierra);
+        button.setOnClickListener(this);
         
     }
 
@@ -65,9 +69,24 @@ public class ConfigDeportes extends Activity implements OnClickListener{
 			
 			registroDB.actualizaDeporte(0,elDeporte);
 		}
-		// termino la activity
-		// y me vuelvo a la pantalla anterior
-		finish();
+		else if( v.getId() == R.id.cierra) {
+			finish();	
+		}
+		else if( v.getId() == R.id.deportesCancel) {
+			finish();	
+		}
+		else if( v.getId() == R.id.deportesDefault) {
+
+	        ((TextView)findViewById(R.id.deporteNombre)).setText("correr");
+	        ((TextView)findViewById(R.id.deporteGPSgapDIST)).setText( Integer.toString(10) );
+	        ((TextView)findViewById(R.id.deporteGPSgapTMP)).setText( Integer.toString(6) );
+	        ((CheckBox)findViewById(R.id.umbralAutoPauseChK)).setChecked( true );
+	        ((TextView)findViewById(R.id.umbralAutoPause)).setText( Double.toString(0.5) );
+	        
+	        	
+		}
+		
+		
 	}
 	
 }

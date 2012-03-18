@@ -3,9 +3,9 @@
 
     
 <item android:state_pressed="true"  
-       android:drawable="@drawable/ic_menu_database_pulsado"/> 
+       android:drawable="@drawable/ic_menu_follow_pulsado"/> 
         
-       <item android:drawable="@drawable/ic_menu_database"/>  
+       <item android:drawable="@drawable/ic_menu_follow"/>  
      
     
 </selector>

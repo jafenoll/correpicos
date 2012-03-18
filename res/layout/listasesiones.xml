@@ -36,7 +36,7 @@
 		        android:layout_weight="1" 
 		        android:gravity="center" />
 		    
-		    <TextView
+		     <TextView
 		        android:id="@android:id/empty"
 		        android:layout_width="fill_parent"
 		        android:layout_height="wrap_content"
@@ -50,9 +50,9 @@
 		    
 		     <ImageButton
 		         android:id="@+id/swipenext"
-		         android:layout_width="70dp"
+		         android:layout_width="35dp"
 		         android:layout_height="35dp"
-		         android:background="@drawable/boton_menu_database_estados"
+		         android:background="@drawable/boton_menu_follow_estados"
 		         android:text="" 
 		         android:scaleType="centerInside" />
     			

@@ -413,10 +413,13 @@ public class LocationRegisterService extends Service implements LocationListener
         // Set the icon, scrolling text and timestamp
         Notification notification = new Notification(R.drawable.cclocationlistenernotification, text,
                 System.currentTimeMillis());
-
+     
+        
         // The PendingIntent to launch our activity if the user selects this notification
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, Registra.class), PendingIntent.FLAG_UPDATE_CURRENT );
+
+        notification.contentIntent = contentIntent;
 
         // Set the info for the views that show in the notification panel.
         notification.setLatestEventInfo(this, getText(R.string.CCServiceLocationListenerLabel),

@@ -97,7 +97,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	 		public void Mueve(boolean izquierda) {
 	 	 		
 	 			ViewFlipper viewFlipper = (ViewFlipper) findViewById(R.id.pantallasegistra);
-	 			int viewid = viewFlipper.getCurrentView().getId();
+	 			
 	 			
 	 			if (izquierda) {
 	 				viewFlipper.setInAnimation( AnimationUtils.loadAnimation(viewFlipper.getContext(), R.anim.push_left_in) );
@@ -110,19 +110,6 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	 				viewFlipper.showPrevious();
 	 			}
 	 			
-	 			ImageView imgButton = ((ImageView)findViewById(R.id.swipenext));
-	 			
-	 			// su estoy en el reloj voy a apsar la mapa, cambio icono
-	 			if ( viewid == R.id.screentabla ) {
-	 				
-	 				imgButton.setImageResource(R.drawable.boton_menu_database_estados);
-	 				
-	 			}
-	 			else if ( viewid == R.id.screenMapa ) {
-	 				
-	 				imgButton.setImageResource(R.drawable.boton_menu_globe_estados);
-	 				
-	 			}
 	 			
 	 			
 	 		

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">correpicos</string>
-    <string name="app_version">0.1</string>
+    <string name="app_version">correpicos 1.0 - correpicos@gmail.com</string>
     <string name="startTrakingLbl">start</string>
     <string name="parcial">partial</string>
     <string name="noinit">not started</string>
@@ -23,7 +23,7 @@
     <string name="verPorKmLbl">Each Km</string>
     <string name="confDeportes">Configuration</string>
     <string name="salvar">Save</string>
-    <string name="volver">Back</string>
+    <string name="volver">Cancel</string>
     <string name="gapdist">GPS point each (meters)</string>
     <string name="gaptmp">GPS point each (seconds)</string>
     <string name="nombre">Name:</string>
@@ -50,6 +50,7 @@
     <string name="cargando">Loading points...</string>
     <string name="noDesc">No description</string>
     <string name="SesionSalvada">Session saved</string>
+    <string name="defaultConfig">Default values</string>
     
         
 </resources>

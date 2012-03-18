@@ -4,6 +4,41 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    
+    <LinearLayout
+            android:id="@+id/toobal"
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_margin="0dp"
+            android:background="@drawable/fondo_toolbar"
+            android:baselineAligned="false" >
+
+            <Button
+                android:id="@+id/cierra"
+                android:background="@drawable/boton_menu_cancel_estados"
+                android:layout_height="40dp" 
+                android:layout_width="40dp"/>
+            
+		    <TextView
+		        android:id="@android:id/empty"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_margin="2dp"
+		        android:text="@string/confDeportesLbl"
+		        android:textColor="#fba824"
+		        android:textSize="30dp"
+		        android:textStyle="bold"
+		        android:layout_weight="1" 
+		        android:gravity="center" />
+		    
+		     
+    			
+    	</LinearLayout>
+        
+    
+    
+    
     <TextView
 		android:id="@+id/deporteNombreLbl"
 		android:layout_width="wrap_content"
@@ -58,23 +93,43 @@
         android:id="@+id/umbralAutoPause"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+    
+    <Button
+            android:id="@+id/deportesDefault"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/defaultConfig" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:layout_marginTop="10sp">
 
         <Button
             android:id="@+id/deportesOK"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/salvar" />
+            android:text="@string/salvar"
+            android:layout_weight="1" 
+            android:textColor="#03be10"
+		    android:textSize="30dp"
+		    android:textStyle="bold"
+            android:background="@drawable/etados_botones" 
+            />
 
         <Button
             android:id="@+id/deportesCancel"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/volver" />
+            android:text="@string/volver" 
+            android:layout_weight="2"
+            android:textColor="#be2203"
+		    android:textSize="20dp"
+		    android:textStyle="bold"
+            android:background="@drawable/etados_botones" />
+        
+        
 
     </LinearLayout>
 
