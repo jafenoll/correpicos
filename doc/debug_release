@@ -1,0 +1,8 @@
+Para pasar de debug a release:
+
+ 1.- en el manifest
+ 
+<application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" 
+        *** quitar esta linea *** android:debuggable="true" >
