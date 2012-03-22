@@ -137,7 +137,7 @@ public class ListaSesionesAdapter extends BaseAdapter  {
 			}
 			
 			} catch (ParseException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 							} 
 		tvdiasem.setText( fechaFormateadaDiaSem );
 		tvdiasem.setTextColor(colorTexto);

@@ -32,7 +32,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
@@ -276,7 +275,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
 					nomFicheroExport = df.format(lafecha);
 														
 					} catch (ParseException e) {
-						e.printStackTrace();
+						//e.printStackTrace();
 									} 
 				tvdiasem.setText( fechaFormateadaDiaSem );
 				tvdianum.setText( fechaFormateadaDiaNum );
@@ -1064,7 +1063,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
     	        out.close();
         	
         	}catch (IOException e) {
-        	    Log.e("salvaKML", "Could not write file " + e.getMessage());
+        	    //Log.e("salvaKML", "Could not write file " + e.getMessage());
         	    resultado = false;
         	    return;
         	}

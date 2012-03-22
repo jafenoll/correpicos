@@ -301,10 +301,10 @@ public class AlmacenDatos  {
 			parser.setInput(gpxreader, null);
 			
     	} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		} catch (XmlPullParserException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
     	
@@ -400,10 +400,10 @@ public class AlmacenDatos  {
 				
 	
 			} catch (XmlPullParserException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				return null;
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				return null;
 			}
 			
@@ -632,7 +632,7 @@ public class AlmacenDatos  {
 			
         }
         catch (ParseException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 						} 
         
     	File path = new File(Environment.getExternalStorageDirectory()+ File.separator  + pathSesiones);
@@ -752,7 +752,7 @@ public class AlmacenDatos  {
  	        
     	 }
     	 catch (IOException e) {
-     	    Log.e("salvaSesion", "Could not write file " + e.getMessage());
+     	    //Log.e("salvaSesion", "Could not write file " + e.getMessage());
      	    return null;
      	 }
     	 

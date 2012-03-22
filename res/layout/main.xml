@@ -14,7 +14,8 @@
                 android:layout_height="71dp"
                 android:background="@drawable/boton_registra_estados"
                 android:text="" 
-                style="@style/BotonesMain" />
+                style="@style/BotonesMain" 
+                android:layout_marginTop="50dp"/>
             
             <TextView
 		    	android:id="@+id/startRegistraLbl"
@@ -22,7 +23,7 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/startRegistraLbl" 
 		        style="@style/BotonesMain"
-		        android:layout_marginBottom="20dp"/>
+		        android:layout_marginBottom="10dp"/>
 
             <Button
                 android:id="@+id/listaSesiones"
@@ -38,7 +39,7 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/listaSesionesLbl"
 		        style="@style/BotonesMain" 
-		        android:layout_marginBottom="20dp" />
+		        android:layout_marginBottom="10dp" />
 
             <Button
                 android:id="@+id/confDeportes"
@@ -53,7 +54,7 @@
 		        android:layout_height="wrap_content"
 		        android:text="@string/confDeportesLbl" 
 		        style="@style/BotonesMain" 
-		        android:layout_marginBottom="30dp"/>
+		        android:layout_marginBottom="5dp"/>
             
              <TextView
 		    	android:id="@+id/displayTiempoLbl"
@@ -64,6 +65,16 @@
 		        android:text="@string/app_version" 
 		        style="@style/BotonesMain" 
 		        android:layout_gravity="right"/>
+             <TextView
+		    	android:id="@+id/displayTiempoLbl"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:textSize="10sp"
+		        android:textColor= "#aaaaaa"
+		        android:text="@string/OSM_credits" 
+		        style="@style/BotonesMain" 
+		        android:layout_gravity="right"
+		        android:gravity="right"/>
             
 
      

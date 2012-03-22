@@ -242,7 +242,7 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
      				anoNum = Integer.parseInt(df.format(fechaSesion));
            		 
         		} catch (ParseException e) {
-    				e.printStackTrace();
+    				//e.printStackTrace();
 				} 
         		 
         		 

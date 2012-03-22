@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">correpicos</string>
     <string name="app_version">correpicos 1.0 - correpicos@gmail.com</string>
+    <string name="OSM_credits">powered by osmdroid lib and OSM data \n © OpenStreetMap contributors, CC BY-SA</string>
     <string name="startTrakingLbl">start</string>
     <string name="parcial">partial</string>
     <string name="noinit">not started</string>
