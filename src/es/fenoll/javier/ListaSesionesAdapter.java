@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 public class ListaSesionesAdapter extends BaseAdapter  {
@@ -194,6 +195,15 @@ public class ListaSesionesAdapter extends BaseAdapter  {
 		tv = (TextView) view.findViewById(R.id.filaSesionDesnivel);   
 		tv.setText(  "+" + desnivelAcum );
 		tv.setTextColor(colorTexto);
+		
+		//pongo al descripcion
+		tv = (TextView) view.findViewById(R.id.filaSesionDesc);   
+		tv.setText(  cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_DESC)  ) );
+		tv.setTextColor(colorTexto);
+		
+		RatingBar miRB = (RatingBar) view.findViewById(R.id.filaSesionRating);
+		float valor = (float) cSesiones.getLong( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_RATING)  ) ;
+		miRB.setRating( valor );
 		
 		// return the final view object   
 		return view;      

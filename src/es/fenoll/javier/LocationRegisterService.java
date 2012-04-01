@@ -157,7 +157,7 @@ public class LocationRegisterService extends Service implements LocationListener
 			wl.acquire();
 			
 			if ( sesionId == -1) {
-				sesionId = registroDB.insertaSesion();
+				sesionId = registroDB.insertaSesion(null);
 			}
 			
 			

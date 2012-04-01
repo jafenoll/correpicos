@@ -25,6 +25,7 @@ import org.xmlpull.v1.XmlPullParser;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -34,6 +35,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,6 +47,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -58,6 +61,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	private TableLayout tablaPuntos, tablaPuntosCabecera;
 	
 	private String loadedSesionDesc;
+	private int loadedSesionRating;
 	private long sesionId;
 	private GestureDetector gestureDetector;
 	private MyGestureDetector gestureListener;
@@ -114,26 +118,52 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	 		
 	 		}
 	 	}
+	 
+	 
+	 // hago esto para que al pulsar el back no vuelva con 
+	 // el codigo de CANCEL y la intent a null
+	 @Override
+	 public boolean onKeyDown(int keyCode, KeyEvent event) {
+	     if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+	    	 testCambioSalva();
+	    	 finish();
+	    	 return true;
+
+	     } else { 
+	         return super.onKeyDown(keyCode, event);
+	     }
+	 }
+
 	 		
 	@Override
 	protected void onPause() {
 		
 		super.onPause();
 		
-		
+		testCambioSalva();
+
+	}
+
+	private void testCambioSalva(){
+
 		// si ha cambiado la descripcion lo salvo
-		
 		TextView tv = (TextView) findViewById(R.id.descPuntosSesion) ; 
-		
+				
 		if ( tv.getText().toString().compareTo(loadedSesionDesc) != 0) {
 			
 			if ( !(loadedSesionDesc.length() == 0 && tv.getText().toString().length() == 0)  ) {
 				salvaSesion();
 			}
 		}
+				
+		// si ha cambiado el rating, salvo
+		RatingBar miRB = (RatingBar) findViewById(R.id.ratingPuntosSesion);
+		int valor = (int) miRB.getRating();
+		if (valor != loadedSesionRating) {
+			salvaSesion();
+		}		
 		
 	}
-
 
 		 
 	/** Called when the activity is first created. */
@@ -326,7 +356,14 @@ public class PuntosSesion extends Activity implements OnClickListener {
 				else
 					loadedSesionDesc = "";
 					
-		
+				//pongo el rating
+				RatingBar miRB = (RatingBar) findViewById(R.id.ratingPuntosSesion);
+				loadedSesionRating = (int) cSesiones.getLong( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_RATING)  ) ;
+				miRB.setRating( (float) loadedSesionRating );
+				
+				
+				
+				
 	}
 	
 	
@@ -892,14 +929,25 @@ public class PuntosSesion extends Activity implements OnClickListener {
     }
     
     private void salvaSesion() {
-	    TextView tv = (TextView) findViewById(R.id.descPuntosSesion); 
-		
+	    
+    	TextView tv = (TextView) findViewById(R.id.descPuntosSesion); 
 		registroDB.actualizaDescSesion( sesionId, tv.getText().toString() );
+		
+		RatingBar miRB = (RatingBar) findViewById(R.id.ratingPuntosSesion);
+		loadedSesionRating = (int) miRB.getRating();
+		registroDB.actualizaRatingSesion( sesionId, loadedSesionRating );
 		
 		// almaceno en la variable lo ya guardado para que on pause no quiera guardar otra vez
 		loadedSesionDesc =  tv.getText().toString();
 	
 		findViewById(R.id.main).requestFocus();
+		
+		
+		//pongo que hay sesion salvada en el resuktado
+		Intent intent = new Intent(this, PuntosSesion.class);
+		intent.putExtra("salvado", true);
+		setResult(RESULT_OK,intent);
+		
 		
 		String text =  getText(R.string.SesionSalvada).toString();
 		Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
@@ -1094,6 +1142,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
 			map.getController().setCenter( mPointsOverlay.getFocusedGeoPoint() );
 		}
 		else if( v.getId() == R.id.cierra) {
+			testCambioSalva();
 			finish();	
 		}
 		else if( v.getId() == R.id.swipenext) {

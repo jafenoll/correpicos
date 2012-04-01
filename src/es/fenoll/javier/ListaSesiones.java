@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -20,6 +21,7 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,6 +41,8 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	private AlmacenDatos registroDB;
 	private GestureDetector gestureDetector;
 	private MyGestureDetector gestureListener;
+	
+	private static int ADD_MOD_SESION_REQUEST = 1;
 	
 	
 
@@ -95,7 +99,7 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         
-		 ProgressDialog dialog = ProgressDialog.show(this, "", 
+		ProgressDialog dialog = ProgressDialog.show(this, "", 
 	                "", true);
 		
 		super.onCreate(savedInstanceState);
@@ -151,6 +155,30 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
      	
         //registerForContextMenu(getListView());
     }	
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    
+		boolean valor = false;
+		
+		// If the request went well (OK) and the request was PICK_CONTACT_REQUEST
+		// quito del if 
+		// por que si vengo de editar puntos y doy al back hace autosave y quiero refrescar
+		// realmente lo que me importar es que el intent tenga el salvado a true
+	    if ( resultCode == Activity.RESULT_OK && requestCode == ADD_MOD_SESION_REQUEST) {  
+	    	
+	    	// recupero el id que llega desde quien lo llama
+			Bundle extras = data.getExtras();
+			if(extras !=null) {
+				valor = extras.getBoolean("salvado");
+			}
+	    	
+	    }
+	    
+	    if (valor)
+	    	fillListData();
+	}
 	
 		
 	private void rellenaEstadisticas() {
@@ -424,7 +452,7 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 		
 		intent.putExtra("sesionId", getListAdapter().getItemId(position));
 		
-		startActivity(intent);
+		startActivityForResult(intent,ADD_MOD_SESION_REQUEST);
 		
 		//String item = String.valueOf ( getListAdapter().getItemId(position) );
 		//Toast.makeText(this, item + " selected", Toast.LENGTH_LONG).show();
@@ -434,7 +462,7 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	
 	 @Override
 	 public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-	   
+	    
 	     AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
 	     menu.setHeaderTitle( ((ListaSesionesAdapter) getListAdapter()).getItemName(info.position) );
 	     String[] menuItems = getResources().getStringArray(R.array.listasesionesmenu);
@@ -462,6 +490,28 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	   return true;
 	 }
 
+	 @Override
+	 public boolean onCreateOptionsMenu(Menu menu) {
+	        MenuInflater inflater = getMenuInflater();
+	        inflater.inflate(R.menu.listasesionesmenu, menu);
+	        return true;
+	    }
+	 
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem item) {
+	        // Handle item selection
+	        switch (item.getItemId()) {
+	        case R.id.addsesion:
+	            
+	        	Intent intent = new Intent(this, addSesion.class);
+	        	startActivityForResult(intent,ADD_MOD_SESION_REQUEST);
+	        	
+	        	return true;
+	        }
+	        
+	        return true;
+	 }
+	 
 	@Override
 	public void onClick(View v) {
 		if( v.getId() == R.id.cierra) {

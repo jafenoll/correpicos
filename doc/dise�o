@@ -43,11 +43,16 @@ TODO
   > lista de km, tiempo, sesion y altitud por semana, mes y año
   > las altitues acumuladas en las cabeceras
   > poder meter un campo texto descripcion de la sesion y editarlo
+  > es posible añadir sesiones  no registradas
+  > las sesiones se guardan como TRX, no hace falta exportar
+  > poder marcar sesion como hito
   todo:
      > varios gráficos...
      > si tengo laps cargadas, sacar tambien una lista por laps
-     > exportar una sesiona GPX o TRX
-     > poder marcar sesion como hito, y tener una lista especial de hitos en algun sitio ( a modo de mejores marcas)
+     ***> en las lista de sesiones poder pasar de entre la de todas a la de hitos
+     > cargar track en KML para sesiones no registradas 
+     > poder asociar una sesion a otra que ester marcada como hito, para asi poder comparar sesiones
+     > en lista de sesiones asociadas, poder cambiar de entre ellas cual es el hito sin perder la asociacion
     
      
      
@@ -55,6 +60,7 @@ TODO
 - Config
   > se pueden configurar cada cuanto tiempo y distancia se activa el GPS
   > se puede configurar el autopause y su umbral
+  > boton para volver a config por defecto
 
   todo:
      > meter lista para tener varias config, y que luego se elijan al registrar

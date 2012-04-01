@@ -241,14 +241,34 @@
 	            
 	    </LinearLayout> 
 	
-	    <EditText
-			android:id="@+id/descPuntosSesion"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="14sp"
-			android:hint="@string/noDesc"
-			android:textColor="#fba824" android:paddingLeft="40sp" android:background="#000000"/>
+	     <LinearLayout 
+	        android:id="@+id/listasesionesrow"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:padding="2sp" 
+	        android:gravity="top" android:layout_gravity="top">   	
+	        
+		    <EditText
+				android:id="@+id/descPuntosSesion"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:textSize="14sp"
+				android:hint="@string/noDesc"
+				android:textColor="#fba824" 
+				android:paddingLeft="5sp" 
+				android:background="#000000"
+				android:layout_weight="1"
+				/>
 
+		    <RatingBar
+		        android:id="@+id/ratingPuntosSesion"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:numStars = "1"	        
+				android:layout_gravity="top"/>
+		    
+	    </LinearLayout> 
+	    
 	    
 	     <TableLayout 
 		        android:id="@+id/tablaPuntosSesionCabecera"

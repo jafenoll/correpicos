@@ -48,6 +48,8 @@ public final class EstructuraDB {
         
         public static final String COLUMN_NAME_DESC = "desc";
         
+        public static final String COLUMN_NAME_RATING = "rating";
+        
     	
     	
     }

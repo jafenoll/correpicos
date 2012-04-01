@@ -42,7 +42,7 @@ public class AlmacenDatos  {
     /**
      * The database version
      */
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 15;
 	
     // Handle to a new DatabaseHelper.
     private DatabaseHelper mOpenHelper;
@@ -93,7 +93,8 @@ public class AlmacenDatos  {
 	                   + EstructuraDB.Sesion.COLUMN_ALTITUD_POS + " INTEGER,"
 	                   + EstructuraDB.Sesion.COLUMN_ALTITUD_NEG + " INTEGER,"
 	                   + EstructuraDB.Sesion.COLUMN_NAME_FICHERO + " TEXT,"
-	                   + EstructuraDB.Sesion.COLUMN_NAME_DESC + " TEXT"
+	                   + EstructuraDB.Sesion.COLUMN_NAME_DESC + " TEXT,"
+	                   + EstructuraDB.Sesion.COLUMN_NAME_RATING + " INTEGER"
 	                   + ");");
 	           
 	           db.execSQL("CREATE TABLE " + EstructuraDB.Deportes.TABLE_NAME + " ("
@@ -128,11 +129,15 @@ public class AlmacenDatos  {
 	                   + newVersion + ", which will destroy all old data");
 
 	           
-    
+	           /*
                db.execSQL("ALTER TABLE " + EstructuraDB.Sesion.TABLE_NAME
-       		   		+ " ADD COLUMN " + EstructuraDB.Sesion.COLUMN_NAME_DESC + " TEXT"
+       		   		+ " ADD COLUMN " + EstructuraDB.Sesion.COLUMN_NAME_RATING + " INTEGER"
        		   		+ ";"
        		   );
+               
+               db.execSQL("UPDATE " + EstructuraDB.Sesion.TABLE_NAME
+            		   + " SET " +  EstructuraDB.Sesion.COLUMN_NAME_RATING + "= 0;"
+            		   );
                /*
                db.execSQL("ALTER TABLE " + EstructuraDB.Sesion.TABLE_NAME
           		   		+ " ADD COLUMN " + EstructuraDB.Sesion.COLUMN_ALTITUD_NEG + " INTEGER"
@@ -179,6 +184,9 @@ public class AlmacenDatos  {
 		}
 	
 	//actualiza la sesion con la distancia y tiempototales al terminar
+	// distancia en metros
+	// duracion en ms
+	// desniveles en metros
 	public void terminaSesion(long rowid, double distancia, double duracion, int altitudPos, int altitudNeg) {
 		
 		//Al tyerminar la sesion la guerdo en el gpx
@@ -192,6 +200,7 @@ public class AlmacenDatos  {
         valores.put(EstructuraDB.Sesion.COLUMN_ALTITUD_POS, altitudPos );
         valores.put(EstructuraDB.Sesion.COLUMN_ALTITUD_NEG, altitudNeg );
         valores.put(EstructuraDB.Sesion.COLUMN_NAME_FICHERO,nomFicheroSesion);
+        valores.put(EstructuraDB.Sesion.COLUMN_NAME_RATING,0);
         
 		db.update(EstructuraDB.Sesion.TABLE_NAME,valores,EstructuraDB.Sesion._ID + "=" + rowid, null);
 		
@@ -216,15 +225,37 @@ public class AlmacenDatos  {
 			
 		}
 	
+	
+	public void actualizaRatingSesion(long rowid, int rating) {
+		
+		
+		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		
+		ContentValues  valores = new ContentValues();
+        valores.put(EstructuraDB.Sesion.COLUMN_NAME_RATING, rating );
+       
+        
+		db.update(EstructuraDB.Sesion.TABLE_NAME,valores,EstructuraDB.Sesion._ID + "=" + rowid, null);
+		
+		db.close();
+		
+	}
+	
 	// crea una sesion nueva y devuelve su rowid, automatimente pone la fecha de inicio
-	public long insertaSesion() {
+	public long insertaSesion(Date laFecha) {
 		
 		// Opens the database object in "write" mode.
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
           
-        Calendar c = Calendar.getInstance();
+        
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = df.format(c.getTime());
+        
+        if (laFecha == null) {
+        	Calendar c = Calendar.getInstance();
+        	laFecha = c.getTime();
+        }
+        
+        String formattedDate = df.format(laFecha);
 
         ContentValues  valores = new ContentValues();
         valores.put(EstructuraDB.Sesion.COLUMN_NAME_FECHA, formattedDate );
@@ -271,7 +302,8 @@ public class AlmacenDatos  {
 								EstructuraDB.Sesion.COLUMN_NAME_DURACION,
 								EstructuraDB.Sesion.COLUMN_ALTITUD_POS,
 								EstructuraDB.Sesion.COLUMN_ALTITUD_NEG,
-								EstructuraDB.Sesion.COLUMN_NAME_DESC}
+								EstructuraDB.Sesion.COLUMN_NAME_DESC,
+								EstructuraDB.Sesion.COLUMN_NAME_RATING}
 		 		, strQuery, null, null, null, strOrder
 		 		);
 		

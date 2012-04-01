@@ -13,6 +13,7 @@
     <string name="PauseTrackingLbl">pausar</string>
     <string name="startRegistra">Registrar</string>
     <string name="displayTiempoLbl">duración</string>
+    <string name="displayTiempoFormatoLbl">duración (hh:mm)</string>
     <string name="displayVelocidadLblKmh">Km/h: </string>
     <string name="displayVelocidadLblMms">ritmo</string>
     <string name="displayDistanciaLbl">Km</string>
@@ -51,6 +52,14 @@
     <string name="noDesc">Sin descripcion</string>
     <string name="SesionSalvada">Sesion salvada</string>
     <string name="defaultConfig">Valores por defecto</string>
+    <string name="addSesionlbl">Añadir</string>
+    <string name="addSesionFulllbl">añadir sesion</string>
+    <string name="date">Fecha</string>
+    <string name="sesionDesnivelPosLbl">Desnivel positivo acumulado</string>
+    <string name="sesionDesnivelNegLbl">Desnivel negativo acumulado</string>
+    <string name="sesionDurError">Por favor revise el valor de la duracion</string>
+    <string name="sesionKmError">Por favor revise el valor de la distancia</string>
+    <string name="sesiondesc">Descripcion</string>
     
         
 </resources>
