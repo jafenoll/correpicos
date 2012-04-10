@@ -106,7 +106,7 @@ public class AlmacenDatos  {
 	                   
 	                   + ");");
 	           db.execSQL("INSERT INTO " + EstructuraDB.Deportes.TABLE_NAME 
-	        		   + " VALUES (0,'correr',1,1);");
+	        		   + " VALUES (0,'correr',10,6, 'true', 0.5);");
 	        		   
 	           
 	           
