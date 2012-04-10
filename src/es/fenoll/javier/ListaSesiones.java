@@ -10,7 +10,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -44,7 +43,7 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	
 	private static int ADD_MOD_SESION_REQUEST = 1;
 	
-	
+	private int menuEstado;
 
 	// para controlar lso gestos y en un swipe pasar a la otra pantalla
 	 private class MyGestureDetector extends SimpleOnGestureListener {
@@ -99,9 +98,7 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         
-		ProgressDialog dialog = ProgressDialog.show(this, "", 
-	                "", true);
-		
+				
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.listasesiones);
               
@@ -149,10 +146,9 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
        
      	rellenaEstadisticas();
      	
-     	fillListData();
+     	menuEstado = 1;  // todas las sesiones cargadas
+     	fillListData(false);
         
-     	dialog.dismiss();
-     	
         //registerForContextMenu(getListView());
     }	
 	
@@ -176,8 +172,11 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	    	
 	    }
 	    
-	    if (valor)
-	    	fillListData();
+	    if (valor) {
+	    	rellenaEstadisticas();
+	    	fillListData(false);
+	    }
+	    	
 	}
 	
 		
@@ -431,14 +430,27 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
     	
     }
 	
-	 private void fillListData() {
+	 private void fillListData(boolean stared) {
 	        // Get all of the notes from the database and create the item list
-		 	Cursor cSesiones  = registroDB.recuperaSesiones(-1);
-	        startManagingCursor(cSesiones);
+		 	
+		Cursor cSesiones = null;
+		if (stared) {
+			cSesiones  = registroDB.recuperaSesionesDestacadas(); 
+		}
+		else {
+			//quiero todas
+			cSesiones  = registroDB.recuperaSesiones(-1);
+		}
+		 	
+		 		
+		 
 	        
-	        ListaSesionesAdapter adptrSesiones = new ListaSesionesAdapter(this, R.layout.filasesiones, cSesiones);
+		 	
+		startManagingCursor(cSesiones);
+	        
+	    ListaSesionesAdapter adptrSesiones = new ListaSesionesAdapter(this, R.layout.filasesiones, cSesiones);
 	         
-	        setListAdapter(adptrSesiones);
+	    setListAdapter(adptrSesiones);
 	        
 	    }
 	 
@@ -482,7 +494,8 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 		   registroDB.borraSesion( getListAdapter().getItemId(info.position) );
 		   
 		   // requery esta deprecado lo que tengo que hacer es cargar todo de nuevo
-		   fillListData();
+		   fillListData(false);
+		   rellenaEstadisticas();
 		   
 		   
 	   }
@@ -491,11 +504,21 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	 }
 
 	 @Override
-	 public boolean onCreateOptionsMenu(Menu menu) {
+	 public boolean onPrepareOptionsMenu(Menu menu) {
 	        MenuInflater inflater = getMenuInflater();
-	        inflater.inflate(R.menu.listasesionesmenu, menu);
+	        
+	        menu.clear();
+	        
+	        if (menuEstado==1) {
+	        	inflater.inflate(R.menu.listasesionesmenustared, menu);
+	        }
+	        else {
+	        	inflater.inflate(R.menu.listasesionesmenuall, menu);
+	        }
 	        return true;
 	    }
+	 
+	 
 	 
 	 @Override
 	 public boolean onOptionsItemSelected(MenuItem item) {
@@ -505,8 +528,17 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	            
 	        	Intent intent = new Intent(this, addSesion.class);
 	        	startActivityForResult(intent,ADD_MOD_SESION_REQUEST);
+	        	break;
+	       
+	        case R.id.showall :
+	        	menuEstado = 1;
+	        	fillListData(false);
+	        	break;
 	        	
-	        	return true;
+	        case R.id.showstared:
+	        	menuEstado = 2;
+	        	fillListData(true);
+	        	break;
 	        }
 	        
 	        return true;

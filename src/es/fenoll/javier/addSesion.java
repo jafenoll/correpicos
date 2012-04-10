@@ -36,7 +36,6 @@ public class addSesion extends Activity implements OnClickListener{
 	private int mHour;
     private int mMinute;
     private Date mDate; 
-
     
     private TextView mTimeDisplay;
 	private TextView mDateDisplay;
@@ -250,7 +249,7 @@ public class addSesion extends Activity implements OnClickListener{
 			registroDB.actualizaRatingSesion( sesionId, intvalor );
 			
 			//pongo que hay sesion salvada en el resuktado
-			Intent intent = new Intent(this, PuntosSesion.class);
+			Intent intent = new Intent(this, addSesion.class);
 			intent.putExtra("salvado", true);
 			setResult(RESULT_OK,intent);
 			

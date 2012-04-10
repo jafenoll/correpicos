@@ -1,5 +1,7 @@
 package es.fenoll.javier;
 
+import java.util.ArrayList;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +49,14 @@ public class LocationRegisterService extends Service implements LocationListener
 		private int altitudAcumNeg;
 		private Location posicionAnterior;
 		
+		//para lso intervalos
+		private ArrayList<Intervalo> intervalos;
+		private int enIntervalo;
+		private long tiempoComienzoIntervalo;
+		private double distanciaComienzoIntervalo;
+		private String flagGuardaIntervalo;
+		
+		
 		//sesion
 		private long sesionId;
 		
@@ -72,7 +83,62 @@ public class LocationRegisterService extends Service implements LocationListener
 		//para gestionar el cronometro
 	 	private Runnable startTimer = new Runnable() {
 	 	   public void run() {
+	 		    		   
 	 		   tiempoTranscurrido = System.currentTimeMillis() - tiempoInicial;
+	 		   
+	 		   // si he comenzado con los intervalos
+	 		   if (enIntervalo >= 0) {
+	 			   
+	 			  //y  este intervalo esta fijado por el tiempo 
+	 			  if (intervalos.get(enIntervalo).unidad == "ms") {
+	 				  
+	 				  
+	 				  //comprueba si ha pasado el tiempo del intervalo desde que se iniciaron lso intervalos
+	 				  // si es asi pasa al siguienet tramo y pone el flag de almacenar
+	 				 
+	 				 Long tiempoIntervalo = tiempoTranscurrido - tiempoComienzoIntervalo;
+	 				 Long tiempoRestaIntervalo = intervalos.get(enIntervalo).duracion - tiempoIntervalo;
+	 				
+	 				 // como solo se llama a esta funcion cada segundo solo suano 1 vez por segundo
+	 				 // suena 3 segundos antes de acabar
+	 				 //TODO: Hacer que el num de segundos antes sea configurable
+	 				 if (tiempoRestaIntervalo <= 3) {
+	 					//preparo para hecer ruido
+	 					//MediaPlayer intervalosMediaPlayer = MediaPlayer.create(this, R.raw.tick);
+	 					//intervalosMediaPlayer.start(); // no need to call prepare(); create() does that for you
+	 					//intervalosMediaPlayer.release();
+	 				 }
+	 				 
+	 				 // acaba de terminar este intervalo
+	 				 if (tiempoRestaIntervalo <= 0) {
+	 					
+	 					//pongo la cedena para guardar 
+	 					flagGuardaIntervalo = intervalos.get(enIntervalo).etiqueta;
+	 					//pongo a cero el tiempo 
+	 					tiempoComienzoIntervalo = tiempoTranscurrido;
+	 					//paso al siguiente intervalo o termino
+	 					if (enIntervalo < intervalos.size() ) {
+	 						enIntervalo +=1;
+	 						//TODO: hacer que este sonido sea diferente
+	 						//MediaPlayer intervalosMediaPlayer = MediaPlayer.create(this, R.raw.tick);
+		 					//intervalosMediaPlayer.start(); // no need to call prepare(); create() does that for you
+		 					//intervalosMediaPlayer.release();
+	 					}
+	 					else {
+	 						enIntervalo = -1;
+	 						//TODO: hacer que este sonido sea diferente
+	 						//MediaPlayer intervalosMediaPlayer = MediaPlayer.create(this, R.raw.tick);
+		 					//intervalosMediaPlayer.start(); // no need to call prepare(); create() does that for you
+		 					//intervalosMediaPlayer.release();
+	 					}
+	 						
+	 					
+	 					
+	 				 }
+	 				  
+	 			  }
+	 		   }
+
 	 		   updateTimer(tiempoTranscurrido);
 	 		   
 	 		   
@@ -92,20 +158,6 @@ public class LocationRegisterService extends Service implements LocationListener
 	 				   return;
 	 			   }
 	 		   }
-	 		   
-	 		   /*
-	 		   //para debug por que se me para el registro hago un log
-	 		   try {
-		 		   File path = new File(Environment.getExternalStorageDirectory()+ File.separator  + "correcaminos");
-		 		   File file = new File(path, "sesion.log");
-		 		   FileWriter gpxwriter = new FileWriter(file);
-			       BufferedWriter out = new BufferedWriter(gpxwriter);
-			       out.write("tiempo :" + tiempoTranscurrido + "\n" );
-			       out.close();
-	 		   }catch (IOException e) {
-		    	    Log.e("salvaKML", "Could not write file " + e.getMessage());
-	 		   }
-	 		   */
 	 		   
 	 		   mHandler.postDelayed(this,REFRESH_RATE);
 	 		   
@@ -127,6 +179,11 @@ public class LocationRegisterService extends Service implements LocationListener
 	 		sesionId = -1;
 	 		tiempoInicial = 0;
 	 		numPuntos = 0;
+	 		
+	 		//inicializo la parte de intervalos
+	    	intervalos = null;
+	    	enIntervalo = -1;
+	    	flagGuardaIntervalo = null;
 	 		
 	 	}
 	 	
@@ -222,6 +279,20 @@ public class LocationRegisterService extends Service implements LocationListener
 
 		}
 		
+		
+		public void startIntervalos( ArrayList<Intervalo> lintervalos) {
+			
+			intervalos = lintervalos;
+	    	// lo pongo en 0m para que el timer sepa que debe empezar
+			enIntervalo = 0;
+			
+			tiempoComienzoIntervalo = tiempoTranscurrido;
+			distanciaComienzoIntervalo = distanciaTotal;
+			
+			
+			
+		}
+		
 		// ininia el que el servicio se enganche a los GPS
 		// recibe el automause en m/s
 		public void startListeningLoc(int timeRegLoc,int distRegLoc, double autopause_entrada) {
@@ -313,6 +384,19 @@ public class LocationRegisterService extends Service implements LocationListener
 			}
 			
 			valores.put(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS, tiempoTranscurrido );
+			
+			//si llegael flag de que ha terminado el intervalo guardo 
+			if( flagGuardaIntervalo != null) {
+				
+				valores.put(EstructuraDB.Punto.COLUMN_NAME_INTERVALO, flagGuardaIntervalo );
+				
+				// lo dejo a null para no volver a guardar hasta el siguiente
+				flagGuardaIntervalo = null;
+			}
+			
+			//TODO: si flagGuardaIntervalo entonces guarda algun dato del intervalo anterior
+			// que ha terminado
+			
 			registroDB.insertaPunto(valores);
 			
 			

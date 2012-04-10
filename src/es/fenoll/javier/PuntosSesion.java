@@ -407,9 +407,6 @@ public class PuntosSesion extends Activity implements OnClickListener {
         map.setMultiTouchControls(true);
         
         
-        // TODO: por lo menos para debug poner la resolucion de cada punto
-           
-
         // creo el overlay de puntos con el array que he generado
         // el icono que quiero para los marker
         //Drawable iconoPunto = this.getResources().getDrawable(R.drawable.pospnt);

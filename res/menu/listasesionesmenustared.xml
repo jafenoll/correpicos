@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:id="@+id/addsesion"
+          android:icon="@drawable/ic_menu_add"
+          android:title="@string/addSesionlbl" />
+    
+    <item android:id="@+id/showstared"
+          android:icon="@drawable/ic_menu_showstared"
+          android:title="@string/showStaredlbl" />
+
+</menu>

@@ -42,7 +42,7 @@ public class AlmacenDatos  {
     /**
      * The database version
      */
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 	
     // Handle to a new DatabaseHelper.
     private DatabaseHelper mOpenHelper;
@@ -82,7 +82,8 @@ public class AlmacenDatos  {
 	                   + EstructuraDB.Punto.COLUMN_NAME_ALTITUD + " DOUBLE,"
 	                   + EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS + " DOUBLE,"
 	                   + EstructuraDB.Punto.COLUMN_NAME_SESION + " INTEGER,"
-	                   + EstructuraDB.Punto.COLUMN_NAME_PRECISION + " LONG"
+	                   + EstructuraDB.Punto.COLUMN_NAME_PRECISION + " LONG,"
+	                   + EstructuraDB.Punto.COLUMN_NAME_INTERVALO + " TEXT"
 	                   + ");");
 	           
 	           db.execSQL("CREATE TABLE " + EstructuraDB.Sesion.TABLE_NAME + " ("
@@ -107,7 +108,7 @@ public class AlmacenDatos  {
 	                   
 	                   + ");");
 	           db.execSQL("INSERT INTO " + EstructuraDB.Deportes.TABLE_NAME 
-	        		   + " VALUES (0,'correr',1,1);");
+	        		   + " VALUES (0,'correr',10,6, 'true', 0.5);");
 	        		   
 	           
 	           
@@ -129,12 +130,12 @@ public class AlmacenDatos  {
 	                   + newVersion + ", which will destroy all old data");
 
 	           
-	           /*
-               db.execSQL("ALTER TABLE " + EstructuraDB.Sesion.TABLE_NAME
-       		   		+ " ADD COLUMN " + EstructuraDB.Sesion.COLUMN_NAME_RATING + " INTEGER"
+	           
+               db.execSQL("ALTER TABLE " + EstructuraDB.Punto.TABLE_NAME
+       		   		+ " ADD COLUMN " + EstructuraDB.Punto.COLUMN_NAME_INTERVALO + " TEXT" 
        		   		+ ";"
        		   );
-               
+               /*
                db.execSQL("UPDATE " + EstructuraDB.Sesion.TABLE_NAME
             		   + " SET " +  EstructuraDB.Sesion.COLUMN_NAME_RATING + "= 0;"
             		   );
@@ -272,6 +273,11 @@ public class AlmacenDatos  {
 		return rowId;
 		}
 	
+	public Cursor recuperaSesionesDestacadas() {
+		
+		return recuperaSesiones(-2);
+	}
+	
 	/*
 	 * Return a Cursor over the list of all sesiones in the database
      * 
@@ -287,6 +293,10 @@ public class AlmacenDatos  {
 		if (sesionId > 1) {
 			
 			strQuery = EstructuraDB.Sesion._ID + "=" + sesionId;
+		}
+		else if (sesionId == -2) {
+			
+			strQuery = EstructuraDB.Sesion.COLUMN_NAME_RATING + "> 0 ";
 		}
 		else {
 			// if multiple records order by 
@@ -419,6 +429,9 @@ public class AlmacenDatos  {
 	                    else if(etiqueta.equals("numpuntos")) {
 	                    	puntosSesion = Double.valueOf(valor).longValue();
 	                    }
+	                    else if(etiqueta.equals("intervalo")) {
+	                    	elPunto.intervalo = valor;
+	                    }
 	                    
 	                    valor = "";
 	                	
@@ -464,7 +477,8 @@ public class AlmacenDatos  {
 						        EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD,
 						        EstructuraDB.Punto.COLUMN_NAME_ALTITUD,
 						        EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS,
-						        EstructuraDB.Punto.COLUMN_NAME_PRECISION}
+						        EstructuraDB.Punto.COLUMN_NAME_PRECISION,
+						        EstructuraDB.Punto.COLUMN_NAME_INTERVALO}
 		 		, EstructuraDB.Punto.COLUMN_NAME_SESION + "=" + sesionId , null, null, null, null
 		 		);
 		
@@ -548,6 +562,7 @@ public class AlmacenDatos  {
 		public Long index;
 		public Long tiempo;
 		public Long puntosSesion;
+		public String intervalo;
 		
 	}
 	
@@ -560,6 +575,8 @@ public class AlmacenDatos  {
 		public String nomFicheroSesion;
 		
 	}
+	
+	
 	
 	
 	//solo abro y cierro la DB en modo escritura para que el metodo onUpgrade se lance con permisos si lo necesita
@@ -644,19 +661,24 @@ public class AlmacenDatos  {
         String nomFicheroExport="";
         String nomSesion="";
         String comentSesion="";
+        Long msTiempoInicial=(long)0;
         
         nomSesion = "Sesion CorrePicos ID " + sesionID;
         String distSesion = cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_DISTANCIA)  );
         String durSesion = cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_DURACION)  );
         
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
         comentSesion = distSesion + "Km - Duracion " + durSesion;
     	
         try {
-	    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    	
 	    	Date lafecha = df.parse(cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_FECHA)  ))  ;
 	    	df = new SimpleDateFormat("yyyy-M-dd_HH_mm");
 			nomFicheroExport = df.format(lafecha);
+			
+			df = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ssZ");
+			msTiempoInicial = lafecha.getTime();
 			
 			comentSesion += " - cuando " + nomFicheroExport;
 			
@@ -675,7 +697,7 @@ public class AlmacenDatos  {
     	
     	
 
-         String lat = "", lon="", alt="", hdop="", seq="", dist=distSesion, vel="", tmpt=durSesion;
+         String lat = "", lon="", alt="", hdop="", seq="", dist=distSesion, vel="", tmpt=durSesion, intervalo = "";
          Double altitudPos=0.0, altitudNeg=0.0, altitud=null, altitudAnt=null;
         
 
@@ -708,7 +730,7 @@ public class AlmacenDatos  {
  	    	 out.write("<trkseg>\n");
  	    	
  	    	 long numPuntos = cPuntos.getCount();
- 	    	 lat = ""; lon=""; alt=""; hdop=""; seq=""; dist="0"; vel="0"; tmpt="0";
+ 	    	
  	    	 
  	    	 out.write("<extensions>\n");
         	 out.write("<cpc:CrcExtension>\n");
@@ -716,6 +738,7 @@ public class AlmacenDatos  {
         	 out.write("</cpc:CrcExtension>\n");
         	 out.write("</extensions>\n");
  	    	 
+        	 lat = ""; lon=""; alt=""; hdop=""; seq=""; dist="0"; vel="0"; tmpt="0";
  	    	 
  	    	 if ( numPuntos > 0 ) {
  	    		 
@@ -732,7 +755,12 @@ public class AlmacenDatos  {
 	 	        	 seq = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_SECUENCIA)) );
 	 	        	 dist = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA)) );
 	 	        	 vel = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD)) );
-	 	        	 tmpt = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS)) );
+	 	        	 Long tiempoTransPunto = cPuntos.getLong( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS));
+	 	        	 tmpt = Double.toString( tiempoTransPunto );
+	 	        	 intervalo = cPuntos.getString( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_INTERVALO));
+	 	        	
+	 	        	 // calculo el timestand del punto
+	 	        	 msTiempoInicial += tiempoTransPunto;
 	 	        	 
 	 	        	 if (altitud != null ) {
 	 	        		 
@@ -759,12 +787,15 @@ public class AlmacenDatos  {
 	 	        	 out.write("<ele>" + alt + "</ele>\n");
 	 	        	 out.write("<hdop>" + hdop + "</hdop>\n");
 	 	        	
+	 	        	 out.write("<time>" + df.format(new Date(msTiempoInicial)) + "</time>\n");
+	 	        	 
 	 	        	 out.write("<extensions>\n");
 	 	        	 out.write("<cpc:CrcExtension>\n");
 	 	        	 out.write("<cpc:seq>" + seq + "</cpc:seq>\n");
 	 	        	 out.write("<cpc:dist>" + dist + "</cpc:dist>\n");
 	 	        	 out.write("<cpc:vel>" + vel + "</cpc:vel>\n");
-	 	        	 out.write("<cpc:tmpt>" + tmpt + "</cpc:tmpt>\n");     	
+	 	        	 out.write("<cpc:tmpt>" + tmpt + "</cpc:tmpt>\n"); 
+	 	        	 out.write("<cpc:intervalo>" + intervalo + "</cpc:intervalo>\n" ) ;
 	 	        	 out.write("</cpc:CrcExtension>\n");
 	 	        	 out.write("</extensions>\n");
 	 	        	 

@@ -2,6 +2,7 @@ package es.fenoll.javier;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
@@ -18,6 +19,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,6 +46,8 @@ public class Registra extends Activity implements OnClickListener{
 	private MapView map;
 	
 	private AlmacenDatos.Deporte elDeporte;
+	
+	private static int SELECIONA_INTERVALO = 1;
 	
  	// para controlar lso gestos y en un swipe pasar a la otra pantalla
  	private	class MyGestureDetector extends SimpleOnGestureListener {
@@ -346,7 +352,63 @@ public class Registra extends Activity implements OnClickListener{
 		
 		
 		
-		}
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.registramenu, menu);
+	    return true;
+	}
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.intervalos:
+            
+        	Intent intent = new Intent(this, gestionaIntervalos.class);
+        	startActivityForResult(intent,SELECIONA_INTERVALO);
+        	break;
+        	
+        	
+            
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+        
+        return true;
+    }
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    
+		ArrayList<Intervalo> intervalos = null ;
+		
+		// If the request went well (OK) and the request was PICK_CONTACT_REQUEST
+		// quito del if 
+		// por que si vengo de editar puntos y doy al back hace autosave y quiero refrescar
+		// realmente lo que me importar es que el intent tenga el salvado a true
+	    if ( resultCode == Activity.RESULT_OK && requestCode == SELECIONA_INTERVALO) {  
+	    	
+	    	
+	    	// recupero el id que llega desde quien lo llama
+	    	Bundle extras = data.getExtras();
+	    	if(extras !=null) {
+	    		intervalos =  extras.getParcelableArrayList("intervalos");
+	    	}
+	    	
+	    	
+	    	
+	    }
+	    
+	    if (intervalos != null) {
+	    	
+	    	locationListener.startIntervalos(intervalos);
+	    	
+	    }
+	    	
+	}
 
 	
 }

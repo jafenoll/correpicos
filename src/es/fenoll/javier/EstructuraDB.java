@@ -49,7 +49,7 @@ public final class EstructuraDB {
         public static final String COLUMN_NAME_DESC = "desc";
         
         public static final String COLUMN_NAME_RATING = "rating";
-        
+             
     	
     	
     }
@@ -163,6 +163,8 @@ public final class EstructuraDB {
          * <P>Type: FLOAT</P>
          */
         public static final String COLUMN_NAME_PRECISION = "precision";
+        
+        public static final String COLUMN_NAME_INTERVALO =  "intervalo";
 
     }
 }

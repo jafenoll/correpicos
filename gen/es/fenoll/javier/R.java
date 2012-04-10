@@ -72,15 +72,18 @@ public final class R {
         public static final int ic_menu_export=0x7f02001b;
         public static final int ic_menu_follow=0x7f02001c;
         public static final int ic_menu_follow_pulsado=0x7f02001d;
-        public static final int listados=0x7f02001e;
-        public static final int listados_pulsado=0x7f02001f;
-        public static final int registra=0x7f020020;
-        public static final int registra_pulsado=0x7f020021;
-        public static final int save=0x7f020022;
-        public static final int subida_fuerte=0x7f020023;
-        public static final int subida_llano=0x7f020024;
-        public static final int subida_media=0x7f020025;
-        public static final int subida_vacio=0x7f020026;
+        public static final int ic_menu_intervalos=0x7f02001e;
+        public static final int ic_menu_showall=0x7f02001f;
+        public static final int ic_menu_showstared=0x7f020020;
+        public static final int listados=0x7f020021;
+        public static final int listados_pulsado=0x7f020022;
+        public static final int registra=0x7f020023;
+        public static final int registra_pulsado=0x7f020024;
+        public static final int save=0x7f020025;
+        public static final int subida_fuerte=0x7f020026;
+        public static final int subida_llano=0x7f020027;
+        public static final int subida_media=0x7f020028;
+        public static final int subida_vacio=0x7f020029;
     }
     public static final class id {
         public static final int Cancel=0x7f090012;
@@ -131,6 +134,7 @@ public final class R {
         public static final int filaSesionDuracion=0x7f090027;
         public static final int filaSesionRating=0x7f09002e;
         public static final int filaSesionVelocidad=0x7f090029;
+        public static final int intervalos=0x7f09007d;
         public static final int km=0x7f090031;
         public static final int linearLayout1=0x7f090010;
         public static final int linearLayoutfilasesion=0x7f090020;
@@ -159,8 +163,8 @@ public final class R {
         public static final int relativeLayout1=0x7f090063;
         public static final int relativeLayout111=0x7f090037;
         public static final int ritmo=0x7f090034;
-        public static final int salvaSesion=0x7f09007a;
-        public static final int salvaSesionKML=0x7f090079;
+        public static final int salvaSesion=0x7f09007c;
+        public static final int salvaSesionKML=0x7f09007b;
         public static final int screenMapa=0x7f09005e;
         public static final int screenReloj=0x7f090064;
         public static final int screensesioneslista=0x7f09003a;
@@ -181,6 +185,8 @@ public final class R {
         public static final int sesionKm=0x7f090006;
         public static final int sesionKmLbl=0x7f090005;
         public static final int sesionTime=0x7f090004;
+        public static final int showall=0x7f090079;
+        public static final int showstared=0x7f09007a;
         public static final int siguienteKm=0x7f090062;
         public static final int startRegistra=0x7f090048;
         public static final int startRegistraLbl=0x7f090049;
@@ -216,20 +222,24 @@ public final class R {
         public static final int filatablaestadisticassesiones_oculta=0x7f030005;
         public static final int filatablapuntos=0x7f030006;
         public static final int filatablapuntos_oculta=0x7f030007;
-        public static final int listasesiones=0x7f030008;
-        public static final int main=0x7f030009;
-        public static final int puntossesion=0x7f03000a;
-        public static final int registra=0x7f03000b;
+        public static final int intervalos=0x7f030008;
+        public static final int listasesiones=0x7f030009;
+        public static final int main=0x7f03000a;
+        public static final int puntossesion=0x7f03000b;
+        public static final int registra=0x7f03000c;
     }
     public static final class menu {
-        public static final int listasesionesmenu=0x7f080000;
-        public static final int puntossesionmenu=0x7f080001;
+        public static final int listasesionesmenuall=0x7f080000;
+        public static final int listasesionesmenustared=0x7f080001;
+        public static final int puntossesionmenu=0x7f080002;
+        public static final int registramenu=0x7f080003;
     }
     public static final class string {
         public static final int CCServiceLocationListener=0x7f050020;
         public static final int CCServiceLocationListenerLabel=0x7f050021;
         public static final int GPSUpdateDistlbl=0x7f050008;
         public static final int GPSUpdateTimelbl=0x7f050007;
+        public static final int Intervaloslbl=0x7f05003c;
         public static final int OSM_credits=0x7f050002;
         public static final int PauseTrackingLbl=0x7f05000b;
         public static final int ResumeTrackingLbl=0x7f05000a;
@@ -273,6 +283,8 @@ public final class R {
         public static final int sesionDurError=0x7f050037;
         public static final int sesionKmError=0x7f050038;
         public static final int sesiondesc=0x7f050039;
+        public static final int showAlllbl=0x7f05003b;
+        public static final int showStaredlbl=0x7f05003a;
         public static final int sin_sesiones=0x7f050014;
         public static final int startRegistra=0x7f05000c;
         public static final int startRegistraLbl=0x7f05002a;

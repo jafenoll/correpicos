@@ -26,6 +26,25 @@ TODO
      >  poder poner un track como activo en el mapa y que si me alejo mas de una distancia de el
         avise, o si voy en direccion contraria
      > soportar entrenamiento por intervalos, registrando los ritmos de cada intervalo
+     
+           el diseño de esto es el siguiente
+           en la activity de registra poner un menu que lance un activity donde se gestionan 
+           los intervalos, se crean, etc  y se selecciona 
+           esta activity devuelve como result un intent con un array con cada uno de los intervalos
+           ejem, si es 2x1' con 30'' de descanso y 1' de preparacion, devuelve { {preparacion,60000,ms}, {corre, 60000, ms}, {trota, 30000,ms},{corre,60000,ms}, {trota,30000,ms}}
+           de esta forma queda preparado tambien para intervalos con distancia
+           ejem si es 2x300m con 30'' descanso y 1' de preparacion { {preparacion,60000,ms}, {corre, 300, m}, {trota, 30000,ms},{corre,300,m}, {trota,30000,ms}}
+     	   
+     	   la activity registro cambia y pone en otro color los marcadores de los intervalos (cada vez uno si cambia de dist a tiempo )
+     	   y van a ir contando haci a atras (pensar si esto lo gestiona la acitvity de registro o el servicio)
+     	   
+     	   luego al dar a estart, se le pasa tambien el array a el servicio que es el que
+     	   se encarga de hacer ruidos cada vez que pasa por cada una de las condiciones que marca el array
+     	   asi como de poner el label y el flag de intervalos en el punto
+     	   
+     	 
+     
+     
      > solo registra un punto cuando esta mas lejos que la acuracy del anterior
      > al dar a parar, que salga un resumen general de la sesion y botones para grabar o eliminar direcatmente
           llamar al activity de puntossesion
@@ -45,11 +64,11 @@ TODO
   > poder meter un campo texto descripcion de la sesion y editarlo
   > es posible añadir sesiones  no registradas
   > las sesiones se guardan como TRX, no hace falta exportar
-  > poder marcar sesion como hito
+  > poder marcar sesion como destacada
+  > en las lista de sesiones poder pasar de entre la de todas a la de destacadas
   todo:
      > varios gráficos...
-     > si tengo laps cargadas, sacar tambien una lista por laps
-     ***> en las lista de sesiones poder pasar de entre la de todas a la de hitos
+     > si tengo laps cargadas, sacar tambien una lista por lap
      > cargar track en KML para sesiones no registradas 
      > poder asociar una sesion a otra que ester marcada como hito, para asi poder comparar sesiones
      > en lista de sesiones asociadas, poder cambiar de entre ellas cual es el hito sin perder la asociacion

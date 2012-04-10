@@ -60,6 +60,9 @@
     <string name="sesionDurError">Por favor revise el valor de la duracion</string>
     <string name="sesionKmError">Por favor revise el valor de la distancia</string>
     <string name="sesiondesc">Descripcion</string>
+    <string name="showStaredlbl">ver destacadas</string>
+    <string name="showAlllbl">ver todas</string>
+    <string name="Intervaloslbl">intervalos</string>
     
         
 </resources>

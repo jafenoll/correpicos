@@ -4,5 +4,9 @@
     <item android:id="@+id/addsesion"
           android:icon="@drawable/ic_menu_add"
           android:title="@string/addSesionlbl" />
+    
+    <item android:id="@+id/showall"
+          android:icon="@drawable/ic_menu_showall"
+          android:title="@string/showAlllbl" />
 
 </menu>

@@ -61,6 +61,9 @@
     <string name="sesionDurError">Please review the time value</string>
     <string name="sesionKmError">Please review the distance value</string>
     <string name="sesiondesc">Description</string>
+    <string name="showStaredlbl">show stared</string>
+    <string name="showAlllbl">show all</string>
+    <string name="Intervaloslbl">intervals</string>
     
         
 </resources>
