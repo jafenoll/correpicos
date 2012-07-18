@@ -16,12 +16,15 @@ import org.osmdroid.util.GeoPoint;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.util.Xml;
 
@@ -30,9 +33,11 @@ public class AlmacenDatos  {
 
 	// Used for debugging and logging
     private static final String TAG = "AlmacenDatos";
+    private static final String FormatoFechaFichGPX = "yyyy-MM-dd HH:mm:ss.SSSZ";
+	
     
-    private static final String pathSesiones = "correpicos" + File.separator + "sesiones";
-
+    private static final String pathSesiones = "correpicos" + File.separator + "sesiones" ;
+    
 	
 	/**
      * The database that the provider uses as its underlying data store
@@ -48,6 +53,7 @@ public class AlmacenDatos  {
     private DatabaseHelper mOpenHelper;
 
     
+    
 	public AlmacenDatos(Context context) {
 		
 		// Creates a new helper object. Note that the database itself isn't opened until
@@ -60,9 +66,9 @@ public class AlmacenDatos  {
 	static class DatabaseHelper extends SQLiteOpenHelper {
 
 	       DatabaseHelper(Context context) {
-	           // calls the super constructor, requesting the default cursor factory.
-	            
+	           // calls the super constructor, requesting the default cursor factory
 	    	   super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	    	
 	       }
 
 	       /**
@@ -80,9 +86,10 @@ public class AlmacenDatos  {
 	                   + EstructuraDB.Punto.COLUMN_NAME_DISTANCIA + " DOUBLE,"
 	                   + EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD + " DOUBLE,"
 	                   + EstructuraDB.Punto.COLUMN_NAME_ALTITUD + " DOUBLE,"
-	                   + EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS + " DOUBLE,"
+	                   + EstructuraDB.Punto.COLUMN_NAME_TIMESTAMP + " DOUBLE,"
+	                   + EstructuraDB.Punto.COLUMN_NAME_TIEMPOPAUSADO + " DOUBLE,"
 	                   + EstructuraDB.Punto.COLUMN_NAME_SESION + " INTEGER,"
-	                   + EstructuraDB.Punto.COLUMN_NAME_PRECISION + " LONG,"
+	                   + EstructuraDB.Punto.COLUMN_NAME_PRECISIONH + " LONG,"
 	                   + EstructuraDB.Punto.COLUMN_NAME_INTERVALO + " TEXT"
 	                   + ");");
 	           
@@ -108,7 +115,7 @@ public class AlmacenDatos  {
 	                   
 	                   + ");");
 	           db.execSQL("INSERT INTO " + EstructuraDB.Deportes.TABLE_NAME 
-	        		   + " VALUES (0,'correr',10,6, 'true', 0.5);");
+	        		   + " VALUES (0,'correr',10,6, 1, 0.5);");
 	        		   
 	           
 	           
@@ -167,7 +174,23 @@ public class AlmacenDatos  {
 	       }
 	   }
 
-	public long insertaPunto(ContentValues  valores) {
+	public long insertaPunto(PuntoGPX elPuntoGPX) {
+		
+		
+		ContentValues valores = new ContentValues();
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_SECUENCIA, elPuntoGPX.index);
+		// en la BBDD lo guardo en grados, no en milesimas de grado como es el formato E6
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_LAT,elPuntoGPX.posicion.getLatitudeE6()/1E6 );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_LONG,elPuntoGPX.posicion.getLongitudeE6()/1E6 );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA, elPuntoGPX.distancia );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_SESION, elPuntoGPX.sesionId );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD, elPuntoGPX.velocidad );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_ALTITUD, elPuntoGPX.altitud );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_PRECISIONH, elPuntoGPX.precisionH );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_TIMESTAMP, elPuntoGPX.timestamp );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_TIEMPOPAUSADO, elPuntoGPX.tiempopausado );
+		valores.put(EstructuraDB.Punto.COLUMN_NAME_INTERVALO, elPuntoGPX.intervalo );
+		
 		
 		// Opens the database object in "write" mode.
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -180,7 +203,6 @@ public class AlmacenDatos  {
                                              // into the columns.
         );
 
-
 		return rowId;
 		}
 	
@@ -188,22 +210,24 @@ public class AlmacenDatos  {
 	// distancia en metros
 	// duracion en ms
 	// desniveles en metros
-	public void terminaSesion(long rowid, double distancia, double duracion, int altitudPos, int altitudNeg) {
+	// tambie mueva ya los puntos al GPX
+	public void terminaSesion(long sesionId) {
 		
 		//Al tyerminar la sesion la guerdo en el gpx
-		String nomFicheroSesion = guardaSesionGPX(rowid).nomFicheroSesion;
+		Sesion lasesion = guardaSesionGPX(sesionId);
+		//String nomFicheroSesion = guardaSesionGPX(sesionId).nomFicheroSesion;
 		
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		
 		ContentValues  valores = new ContentValues();
-        valores.put(EstructuraDB.Sesion.COLUMN_NAME_DISTANCIA, distancia );
-        valores.put(EstructuraDB.Sesion.COLUMN_NAME_DURACION, duracion );
-        valores.put(EstructuraDB.Sesion.COLUMN_ALTITUD_POS, altitudPos );
-        valores.put(EstructuraDB.Sesion.COLUMN_ALTITUD_NEG, altitudNeg );
-        valores.put(EstructuraDB.Sesion.COLUMN_NAME_FICHERO,nomFicheroSesion);
+        valores.put(EstructuraDB.Sesion.COLUMN_NAME_DISTANCIA, lasesion.distancia );
+        valores.put(EstructuraDB.Sesion.COLUMN_NAME_DURACION, lasesion.duracion );
+        valores.put(EstructuraDB.Sesion.COLUMN_ALTITUD_POS, lasesion.altitudPos );
+        valores.put(EstructuraDB.Sesion.COLUMN_ALTITUD_NEG, lasesion.altitudNeg );
+        valores.put(EstructuraDB.Sesion.COLUMN_NAME_FICHERO,lasesion.nomFicheroSesion);
         valores.put(EstructuraDB.Sesion.COLUMN_NAME_RATING,0);
         
-		db.update(EstructuraDB.Sesion.TABLE_NAME,valores,EstructuraDB.Sesion._ID + "=" + rowid, null);
+		db.update(EstructuraDB.Sesion.TABLE_NAME,valores,EstructuraDB.Sesion._ID + "=" + sesionId, null);
 		
 		db.close();
 		
@@ -224,6 +248,8 @@ public class AlmacenDatos  {
 			
 			db.close();
 			
+			//TODO: Tambien actualizar fichero gpx
+			
 		}
 	
 	
@@ -239,6 +265,8 @@ public class AlmacenDatos  {
 		db.update(EstructuraDB.Sesion.TABLE_NAME,valores,EstructuraDB.Sesion._ID + "=" + rowid, null);
 		
 		db.close();
+		
+		//TODO: Tambien actualizar fichero gpx
 		
 	}
 	
@@ -323,7 +351,7 @@ public class AlmacenDatos  {
 	// dado un id de sesion, devuelve el parser para emprezar a leer los puntos
 	public XmlPullParser  PreparaRecuperaPuntosSesionGpx(long sesionId) {
 		
-		// borro el fichero GPX 
+		
         String NomFichero = getNomFicheroPuntosSesion(sesionId);
     	File path = new File(Environment.getExternalStorageDirectory()+ File.separator  + pathSesiones);
     	File file = new File(path, NomFichero);
@@ -354,7 +382,54 @@ public class AlmacenDatos  {
     	
 	}
 			
+	
+	public String  RecuperaComentarioSesionGpx ( XmlPullParser parser) {
+		
+		int evento;
+		String etiqueta = null;
+		String valor="";
+		
+		try {
 			
+			evento = parser.next();
+			
+			
+			while ( evento != XmlPullParser.END_DOCUMENT ) {
+				
+				switch (evento) {
+				 
+                case XmlPullParser.TEXT:
+                	
+                	valor += parser.getText();
+                	break;
+                    
+                case XmlPullParser.END_TAG:
+                	
+                	etiqueta = parser.getName();
+               	 
+                    if (etiqueta.equals("cmt"))  {
+                    	// si ha terminado el punto pues lo devuelvo
+                    	return valor;
+                    	}
+                    break;
+				}
+				evento = parser.next();
+			}
+			
+		} catch (XmlPullParserException e) {
+			//e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			//e.printStackTrace();
+			return null;
+		}
+
+		return null;
+		
+		
+	}
+	
+	
 			
 	public PuntoGPX  RecuperaPuntoSesionGpx ( XmlPullParser parser) {
 			
@@ -420,8 +495,24 @@ public class AlmacenDatos  {
 	                    else if(etiqueta.equals("dist")) {
 	                    	elPunto.distancia = Double.valueOf(valor).longValue();
 	                    }
+	                    else if(etiqueta.equals("time")) {
+	                    	// aqui lo devo pasa a ms, 
+							try {
+								SimpleDateFormat df = new SimpleDateFormat( FormatoFechaFichGPX );
+		            			Date lafecha;
+								lafecha = df.parse( valor );
+								elPunto.timestamp = lafecha.getTime();
+							} catch (ParseException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+	                    	
+	                    }
 	                    else if(etiqueta.equals("tmpt")) {
-	                    	elPunto.tiempo = Double.valueOf(valor).longValue();
+	                    	elPunto.timestamp = Double.valueOf(valor).longValue();
+	                    }
+	                    else if(etiqueta.equals("tmpPausado")) {
+	                    	elPunto.tiempopausado = Double.valueOf(valor).longValue();
 	                    }
 	                    else if(etiqueta.equals("seq")) {
 	                    	elPunto.index = Double.valueOf(valor).longValue();
@@ -432,6 +523,14 @@ public class AlmacenDatos  {
 	                    else if(etiqueta.equals("intervalo")) {
 	                    	elPunto.intervalo = valor;
 	                    }
+	                    else if(etiqueta.equals("vel")) {
+	                    	elPunto.velocidad = Double.valueOf(valor).longValue();
+	                    }
+	                    else if(etiqueta.equals("hdop")) {
+	                    	elPunto.precisionH = Double.valueOf(valor).longValue();
+	                    }
+	                    
+	                    
 	                    
 	                    valor = "";
 	                	
@@ -476,8 +575,9 @@ public class AlmacenDatos  {
 						        EstructuraDB.Punto.COLUMN_NAME_DISTANCIA,
 						        EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD,
 						        EstructuraDB.Punto.COLUMN_NAME_ALTITUD,
-						        EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS,
-						        EstructuraDB.Punto.COLUMN_NAME_PRECISION,
+						        EstructuraDB.Punto.COLUMN_NAME_TIMESTAMP,
+						        EstructuraDB.Punto.COLUMN_NAME_TIEMPOPAUSADO,
+						        EstructuraDB.Punto.COLUMN_NAME_PRECISIONH,
 						        EstructuraDB.Punto.COLUMN_NAME_INTERVALO}
 		 		, EstructuraDB.Punto.COLUMN_NAME_SESION + "=" + sesionId , null, null, null, null
 		 		);
@@ -556,23 +656,45 @@ public class AlmacenDatos  {
 	
 	public class PuntoGPX{
 		
+		public PuntoGPX() {
+			sesionId = null;
+			posicion = null;
+			distancia = null;
+			altitud = null;
+			index = null;
+			timestamp = null;
+			tiempopausado = null;
+			puntosSesion = null;
+			velocidad = null;
+			precisionH = null;
+			intervalo = null;
+			
+		}
+		
+		public Long sesionId;
 		public GeoPoint posicion;
 		public Long distancia;
 		public Long altitud;
 		public Long index;
-		public Long tiempo;
+		public Long timestamp;
+		public Long tiempopausado;
 		public Long puntosSesion;
+		public Long velocidad;
+		public Long precisionH;
 		public String intervalo;
 		
 	}
 	
 	public class Sesion {
 		
+		public  Long sesionId;
 		public Long distancia;
 		public Long duracion;
 		public Long altitudPos;
 		public Long altitudNeg;
 		public String nomFicheroSesion;
+		public String descripcion;
+		public String rating;
 		
 	}
 	
@@ -640,6 +762,9 @@ public class AlmacenDatos  {
 	}
 	
 	// guarda la sesion en GPX y devuelve el nombre del fichero (sin ruta)
+	// como esto se hce para pasar los puntos de la BBDD a la SD y se hace siempre
+	// al terminar la sesion, realmenet nunca tiene ni rating ni descripcion
+	// pero aun asi las gestiono por si acaso
 	public Sesion guardaSesionGPX(long sesionID ) {
 		
 		//compruebo si la SD esta bien
@@ -660,27 +785,29 @@ public class AlmacenDatos  {
         
         String nomFicheroExport="";
         String nomSesion="";
-        String comentSesion="";
-        Long msTiempoInicial=(long)0;
+       
         
-        nomSesion = "Sesion CorrePicos ID " + sesionID;
-        String distSesion = cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_DISTANCIA)  );
-        String durSesion = cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_DURACION)  );
+        nomSesion = "" + sesionID;
+        
+        String estrellasSesion = cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_RATING)  );
+        String descSesion = cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_DESC)  );
+        
         
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
-        comentSesion = distSesion + "Km - Duracion " + durSesion;
-    	
+        Long timestampPunto = (long) 0, tiempoPausadoTotal = (long) 0;
+        Date lafecha = null;
+        
+        
         try {
 	    	
-	    	Date lafecha = df.parse(cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_FECHA)  ))  ;
+	    	lafecha = df.parse(cSesiones.getString( cSesiones.getColumnIndex(EstructuraDB.Sesion.COLUMN_NAME_FECHA)  ))  ;
 	    	df = new SimpleDateFormat("yyyy-M-dd_HH_mm");
 			nomFicheroExport = df.format(lafecha);
 			
-			df = new SimpleDateFormat("yyyy-MM-ddTHH:mm:ssZ");
-			msTiempoInicial = lafecha.getTime();
 			
-			comentSesion += " - cuando " + nomFicheroExport;
+			df = new SimpleDateFormat( FormatoFechaFichGPX );
+			
 			
 			nomFicheroExport += ".gpx";
 			
@@ -697,7 +824,7 @@ public class AlmacenDatos  {
     	
     	
 
-         String lat = "", lon="", alt="", hdop="", seq="", dist=distSesion, vel="", tmpt=durSesion, intervalo = "";
+         String lat = "", lon="", alt="", hdop="", seq="", dist="", vel="", tmpPausa = "", intervalo = "";
          Double altitudPos=0.0, altitudNeg=0.0, altitud=null, altitudAnt=null;
         
 
@@ -724,8 +851,14 @@ public class AlmacenDatos  {
  	    	 out.write("http://www.corepicos.es/gpx/CpcExtension/v1/CpcExtensionv1.xsd'>\n");
  	         
  	    	 out.write("<trk>\n");
+ 	    	 
  	    	 out.write("<name>" + nomSesion + "</name>\n");
- 	    	 out.write("<cmt>" + comentSesion + "</cmt>\n");
+ 	    	 // aqui meto si es stared o no
+ 	    	 out.write("<cmt>" + estrellasSesion + "</cmt>\n");
+ 	    	 // aqui meto la descripcion
+ 	    	 out.write("<desc>" + descSesion + "</desc>\n");
+ 	    	 
+ 	    	 out.write("<number>1</number>");
  	    	
  	    	 out.write("<trkseg>\n");
  	    	
@@ -735,10 +868,11 @@ public class AlmacenDatos  {
  	    	 out.write("<extensions>\n");
         	 out.write("<cpc:CrcExtension>\n");
         	 out.write("<cpc:numpuntos>" + numPuntos + "</cpc:numpuntos>\n");  	
+        	 out.write("<cpc:rating>" + estrellasSesion + "</cpc:rating>\n");
         	 out.write("</cpc:CrcExtension>\n");
         	 out.write("</extensions>\n");
  	    	 
-        	 lat = ""; lon=""; alt=""; hdop=""; seq=""; dist="0"; vel="0"; tmpt="0";
+        	 lat = ""; lon=""; alt=""; hdop=""; seq=""; dist="0"; vel="0"; tmpPausa = "0";
  	    	 
  	    	 if ( numPuntos > 0 ) {
  	    		 
@@ -751,17 +885,18 @@ public class AlmacenDatos  {
 	 	        	 lon =  Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_LONG)) );
 	 	        	 altitud = cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_ALTITUD));
 	 	        	 alt = Double.toString( altitud );
-	 	        	 hdop = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_PRECISION)) );
+	 	        	 hdop = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_PRECISIONH)) );
 	 	        	 seq = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_SECUENCIA)) );
 	 	        	 dist = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA)) );
 	 	        	 vel = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD)) );
-	 	        	 Long tiempoTransPunto = cPuntos.getLong( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS));
-	 	        	 tmpt = Double.toString( tiempoTransPunto );
-	 	        	 intervalo = cPuntos.getString( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_INTERVALO));
+	 	        	 timestampPunto = cPuntos.getLong( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIMESTAMP));
 	 	        	
-	 	        	 // calculo el timestand del punto
-	 	        	 msTiempoInicial += tiempoTransPunto;
+	 	        	 Long tiempoPausaPunto = cPuntos.getLong( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIEMPOPAUSADO));
+	 	        	 tiempoPausadoTotal += tiempoPausaPunto;
+	 	        	 tmpPausa  = Double.toString( tiempoPausaPunto );
 	 	        	 
+	 	        	 intervalo = cPuntos.getString( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_INTERVALO));
+	 	        		 	
 	 	        	 if (altitud != null ) {
 	 	        		 
 	 	        		 if (altitudAnt != null) {
@@ -785,16 +920,14 @@ public class AlmacenDatos  {
 	 	        	 out.write("lat='" +  lat + "'");
 	 	        	 out.write(" lon='" + lon + "'>\n");
 	 	        	 out.write("<ele>" + alt + "</ele>\n");
-	 	        	 out.write("<hdop>" + hdop + "</hdop>\n");
-	 	        	
-	 	        	 out.write("<time>" + df.format(new Date(msTiempoInicial)) + "</time>\n");
-	 	        	 
+	 	        	 out.write("<time>" + df.format(new Date(timestampPunto)) + "</time>\n");
+	 	        	 out.write("<hdop>" + hdop + "</hdop>\n"); 
 	 	        	 out.write("<extensions>\n");
 	 	        	 out.write("<cpc:CrcExtension>\n");
 	 	        	 out.write("<cpc:seq>" + seq + "</cpc:seq>\n");
 	 	        	 out.write("<cpc:dist>" + dist + "</cpc:dist>\n");
 	 	        	 out.write("<cpc:vel>" + vel + "</cpc:vel>\n");
-	 	        	 out.write("<cpc:tmpt>" + tmpt + "</cpc:tmpt>\n"); 
+	 	        	 out.write("<cpc:tmpPausado>" + tmpPausa + "</cpc:tmpPausado>\n"); 
 	 	        	 out.write("<cpc:intervalo>" + intervalo + "</cpc:intervalo>\n" ) ;
 	 	        	 out.write("</cpc:CrcExtension>\n");
 	 	        	 out.write("</extensions>\n");
@@ -831,18 +964,25 @@ public class AlmacenDatos  {
 		 
 		 Sesion returnSesion = new Sesion();
 		
+		 
 		 returnSesion.nomFicheroSesion = nomFicheroExport;
 		 returnSesion.distancia = Double.valueOf(dist).longValue();
-		 returnSesion.duracion = Double.valueOf(tmpt).longValue();
+		 returnSesion.duracion =  timestampPunto - lafecha.getTime() - tiempoPausadoTotal ;
 		 returnSesion.altitudPos = altitudPos.longValue();
 		 returnSesion.altitudNeg = altitudNeg.longValue();
+		 returnSesion.sesionId = sesionID;
+		 returnSesion.rating = estrellasSesion;
+		 returnSesion.descripcion = descSesion;
 		 
 		 
 		 return returnSesion ;
 		
 	}
 	
-	//actualiza la sesion con la distancia y tiempototales al terminar
+	//pasa las sesiones a la SD desde la BBDD
+	// sabe cuales no stan ya por que tienen el COLUMN_NAME_FICHERO a null
+	// por si alguna sesion se habia quedado colgada en la BBDD al colgarse la app
+	// por falta de bateria o lo que sea
 	public void PasaSesionesSD() {
 		
 			
@@ -888,6 +1028,145 @@ public class AlmacenDatos  {
 		db.close();
 			
 		}
+	
+	
+	// esta funcion serviv´´a para importar ficheros gpx normales a 
+	// la BBDD y estructura de gpx de correpicos
+	
+	// por el momento l ausaremos para pasar las sesion viejas en gpx
+	// al nuevo formato, leemos el gpx, escribimos ñla sesion en la BBDD 
+	// y generamso un nuevo gpx
+	public void RecuperaSesionesSD(String directorio, ProgressDialog dialogo) {
+    	ImportaFicherosThread cargaParcialThread = new ImportaFicherosThread( directorio, dialogo );
+        cargaParcialThread.start(); 	
+	}
+	
+	//actualiza la sesion con la distancia y tiempototales al terminar
+	public void RecuperaSesionesSDThread(String directorio, ProgressDialog dialogo) {
+		
+		
+		if (directorio == "") {
+			directorio = Environment.getExternalStorageDirectory()+ File.separator  + pathSesiones;
+		}
+		
+		//recorro el directorio
+		File dir = new File(directorio);
+		
+		dialogo.setMax( dir.listFiles().length );
+		
+		int i = 0;
+		for (File fichGPX : dir.listFiles()) {
+		    
+			i++;
+			dialogo.setProgress( i );
+			
+			if (".".equals(fichGPX.getName()) || "..".equals(fichGPX.getName())) {
+		      continue;  // Ignore the self and parent aliases.
+		    }
+		    	        
+	        //me preparo para leer el fichero
+	        InputStream gpxreader;
+	    	XmlPullParser parser = Xml.newPullParser();
+	    	try {
+				gpxreader = new FileInputStream(fichGPX);
+				parser.setInput(gpxreader, null);
+	    	} catch (FileNotFoundException e) {
+				//e.printStackTrace();
+				return;
+			} catch (XmlPullParserException e) {
+				//e.printStackTrace();
+				return;
+			}
+	    	
+	    	Date laFecha;
+	    	String comentario = RecuperaComentarioSesionGpx( parser);
+	    	//ahora del comentario saco la fecha
+	    	
+	    	comentario = comentario.substring( comentario.indexOf("cuando")+7);
+	    	SimpleDateFormat df = new SimpleDateFormat("yyyy-M-dd_HH_mm");
+	      	try {
+	      		laFecha = df.parse(comentario)  ;  			
+	      	}catch (ParseException e) {
+				//e.printStackTrace();
+	      		// error importando, 
+	      		continue;
+	      		// sigo importando los demas
+	      		
+			} 
+	    	
+	      	//INSERTO LA SESION
+	        long sesionId =  insertaSesion(laFecha);
+	      	
+	    	// y voy leyendo los puntos para sacar lo que me falta
+	    	PuntoGPX elPuntoGPX =  RecuperaPuntoSesionGpx ( parser);
+	    	
+	    	
+	    	Long tiempoActual =  (long) 0;
+	    	
+	         
+	        //TODO: esto son sesiones antiguas, por tanto hay que llet el campo tmpt del gpx
+	        // y luego escribir bien el gpx en el nuevo sitio, intentar utilizar funciones que existen
+	        //por ejemplo guadar en la BBDD insertando los puntos y luego llamar a pasar a GPX
+	        // despues ya se puede dejar todo bien otra vez
+	        // por tanto, modificar esta funcion y RecuperaPuntoSesionGpx, luego importar y ya dejar bien
+			
+	        if (elPuntoGPX != null) {
+	        
+	        	do {
+	        		// en los puntos se guadda la distancia desde el inicio
+	        		// asi que lo que quiero es la del ultimo
+	        		
+	        		tiempoActual = elPuntoGPX.timestamp;
+	        		// como es un fiechero viejo, realmente lo que lee es el tiempo transcurrido 
+	        		// lo tengo que pasa a timestamp
+	        		tiempoActual += laFecha.getTime();
+
+	        		elPuntoGPX.timestamp = tiempoActual;
+	        		elPuntoGPX.sesionId = sesionId;
+	        		
+					insertaPunto(elPuntoGPX);
+		        	
+	        		elPuntoGPX =  RecuperaPuntoSesionGpx ( parser) ;
+	        	
+	        	} while ( elPuntoGPX != null   );
+	        
+	        
+	        }
+	        	
+			// actualizo la sesion con los datos globales
+			terminaSesion(sesionId);
+			
+		  }
+
+	}
+	
+	private class ImportaFicherosThread extends Thread {
+
+        private String m_directorio;
+        private ProgressDialog m_dialogo;
+        
+        public ImportaFicherosThread(String Directorio, ProgressDialog dialogo ) {
+        	m_directorio = Directorio;
+        	m_dialogo = dialogo;
+        }
+
+        @Override
+        public void run() {         
+        	RecuperaSesionesSDThread( m_directorio, m_dialogo );
+            handler.sendEmptyMessage(0);
+        }
+
+        private Handler handler = new Handler() {
+
+            @Override
+            public void handleMessage(Message msg) {
+                
+            	m_dialogo.dismiss();
+            	
+            }
+        };
+
+ }
 		
 	
 	

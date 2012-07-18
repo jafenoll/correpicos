@@ -64,6 +64,13 @@
     <string name="showStaredlbl">show stared</string>
     <string name="showAlllbl">show all</string>
     <string name="Intervaloslbl">intervals</string>
+    <string name="configSaved">configuration saved</string>
+    <string name="roundslbl">Rounds</string>
+    <string name="preparalbl">Prepare</string>
+    <string name="trotalbl">Slow</string>
+    <string name="correlbl">Fast</string>
+    <string name="importarSesionlbl">Import</string>
+    <string name="importando">importing sessions ...</string>
     
         
 </resources>

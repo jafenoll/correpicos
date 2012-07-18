@@ -1,5 +1,6 @@
 package es.fenoll.javier;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -10,10 +11,12 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.GestureDetector;
@@ -44,6 +47,8 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	private static int ADD_MOD_SESION_REQUEST = 1;
 	
 	private int menuEstado;
+	
+	private ProgressDialog dialog;
 
 	// para controlar lso gestos y en un swipe pasar a la otra pantalla
 	 private class MyGestureDetector extends SimpleOnGestureListener {
@@ -538,6 +543,21 @@ public class ListaSesiones extends ListActivity implements OnClickListener  {
 	        case R.id.showstared:
 	        	menuEstado = 2;
 	        	fillListData(true);
+	        	break;
+	        	
+	        case R.id.importarsesiones:
+	        	
+
+	    		dialog = new ProgressDialog(this);
+	    		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+	        	dialog.setMessage( getText(R.string.cargando).toString() );
+	        	dialog.setCancelable(false);
+	        	dialog.setProgress(0);
+	        	dialog.show();
+	        	
+	        	String pathImportar =  Environment.getExternalStorageDirectory()+ File.separator  +  "correpicos" + File.separator + "importar";
+	        	
+	        	registroDB.RecuperaSesionesSD(pathImportar, dialog);
 	        	break;
 	        }
 	        

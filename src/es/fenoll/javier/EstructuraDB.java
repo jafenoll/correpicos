@@ -150,7 +150,8 @@ public final class EstructuraDB {
          * Column name for the time elapsed since start in ms
          * <P>Type: INTEGER</P>
          */
-        public static final String COLUMN_NAME_TIEMPOTRANS = "tiempotrans";
+        public static final String COLUMN_NAME_TIMESTAMP = "timestamp";
+        public static final String COLUMN_NAME_TIEMPOPAUSADO = "tiempopausado";
         
         /**
          * Column name for the time elapsed since start in ms
@@ -162,7 +163,7 @@ public final class EstructuraDB {
          * Column name for the tposition acuracy
          * <P>Type: FLOAT</P>
          */
-        public static final String COLUMN_NAME_PRECISION = "precision";
+        public static final String COLUMN_NAME_PRECISIONH = "precisionH";
         
         public static final String COLUMN_NAME_INTERVALO =  "intervalo";
 

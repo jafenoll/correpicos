@@ -8,6 +8,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.osmdroid.util.GeoPoint;
+
+import es.fenoll.javier.AlmacenDatos.PuntoGPX;
+
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -191,7 +195,7 @@ public class addSesion extends Activity implements OnClickListener{
 				
 				return;
 			}
-			Double distanciaTotal = Double.valueOf ( valor ); 
+			Long distanciaTotal = Long.valueOf ( valor ); 
 			// lo pongo en m
 			distanciaTotal = distanciaTotal * 1000;
 		
@@ -236,8 +240,30 @@ public class addSesion extends Activity implements OnClickListener{
 			
 			long sesionId =  registroDB.insertaSesion(mDate);
 			
+			//en las sesiones de este tipo meto tres puntos falsos en el 0,0
+			// para que luego calcule todo bien
+
+			PuntoGPX elPuntoGPX = registroDB.new PuntoGPX();
+			elPuntoGPX.posicion = new GeoPoint( 0  , 0 );
+			elPuntoGPX.index = (long) 1;
+			elPuntoGPX.distancia = (long) 0;
+			elPuntoGPX.sesionId = sesionId;
+			elPuntoGPX.altitud = (long) 0;
+			elPuntoGPX.timestamp = mDate.getTime();		
+			registroDB.insertaPunto(elPuntoGPX);
+			elPuntoGPX.index = (long) 2;
+			elPuntoGPX.distancia =  (long) distanciaTotal/2;
+			elPuntoGPX.altitud = (long) altitudAcumPos;
+			elPuntoGPX.timestamp = (long) (mDate.getTime() + tiempoTranscurrido/2);	
+			registroDB.insertaPunto(elPuntoGPX);
+			elPuntoGPX.index = (long) 3;
+			elPuntoGPX.distancia =  distanciaTotal;
+			elPuntoGPX.altitud = (long) (altitudAcumPos - altitudAcumNeg);
+			elPuntoGPX.timestamp = (long) (mDate.getTime() + tiempoTranscurrido );	
+			registroDB.insertaPunto(elPuntoGPX);
+			
 			// actualizo la sesion con los datos globales
-			registroDB.terminaSesion(sesionId, distanciaTotal,tiempoTranscurrido, altitudAcumPos, altitudAcumNeg);
+			registroDB.terminaSesion(sesionId);
 			
 			valor = ((TextView)findViewById(R.id.sesionDesc)).getText().toString();
 			if (valor.length() != 0) {

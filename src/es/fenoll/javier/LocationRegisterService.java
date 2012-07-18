@@ -2,11 +2,14 @@ package es.fenoll.javier;
 
 import java.util.ArrayList;
 
+import org.osmdroid.util.GeoPoint;
+
+import es.fenoll.javier.AlmacenDatos.PuntoGPX;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -56,6 +59,8 @@ public class LocationRegisterService extends Service implements LocationListener
 		private double distanciaComienzoIntervalo;
 		private String flagGuardaIntervalo;
 		
+		private  Context context;
+
 		
 		//sesion
 		private long sesionId;
@@ -68,6 +73,7 @@ public class LocationRegisterService extends Service implements LocationListener
 		private final int REFRESH_RATE = 1000;
 		private Handler mHandler;
 		private long tiempoTranscurrido;
+		private long tiempoActual;
 		// en ms cuando empece a registar
 		private long tiempoInicial;
 		
@@ -80,66 +86,88 @@ public class LocationRegisterService extends Service implements LocationListener
 	  //para que no se duerma el telefono
 		private WakeLock wl;
 		
+		private void PlaySound(int resourceID) {
+			
+			
+			
+			MediaPlayer intervalosMediaPlayer = MediaPlayer.create( this, resourceID );
+			
+			intervalosMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+	            @Override
+	            public void onCompletion(MediaPlayer mp) {
+	                mp.stop();
+	                mp.release();
+	            }
+	        });
+			
+			intervalosMediaPlayer.start(); // no need to call prepare(); create() does that for you
+			
+			
+		}
+		
 		//para gestionar el cronometro
 	 	private Runnable startTimer = new Runnable() {
 	 	   public void run() {
-	 		    		   
-	 		   tiempoTranscurrido = System.currentTimeMillis() - tiempoInicial;
+	 		    
+	 		   tiempoActual = System.currentTimeMillis();
+	 		   tiempoTranscurrido = tiempoActual - tiempoInicial;
 	 		   
 	 		   // si he comenzado con los intervalos
 	 		   if (enIntervalo >= 0) {
 	 			   
 	 			  //y  este intervalo esta fijado por el tiempo 
-	 			  if (intervalos.get(enIntervalo).unidad == "ms") {
+	 			  if (intervalos.get(enIntervalo).unidad.equals("ms") ) {
 	 				  
 	 				  
 	 				  //comprueba si ha pasado el tiempo del intervalo desde que se iniciaron lso intervalos
 	 				  // si es asi pasa al siguienet tramo y pone el flag de almacenar
 	 				 
 	 				 Long tiempoIntervalo = tiempoTranscurrido - tiempoComienzoIntervalo;
-	 				 Long tiempoRestaIntervalo = intervalos.get(enIntervalo).duracion - tiempoIntervalo;
+	 				 // a esto le sumo 1 s por que como luego hay redondeos se pierden coas y yo quiero que cuando queden 700ms diga que queda 1s y no 0
+	 				 Long tiempoRestaIntervalo = intervalos.get(enIntervalo).duracion - tiempoIntervalo+1000;
 	 				
+	 				 updateTimer(tiempoRestaIntervalo,intervalos.get(enIntervalo).etiqueta);
+	 				 
 	 				 // como solo se llama a esta funcion cada segundo solo suano 1 vez por segundo
 	 				 // suena 3 segundos antes de acabar
-	 				 //TODO: Hacer que el num de segundos antes sea configurable
-	 				 if (tiempoRestaIntervalo <= 3) {
-	 					//preparo para hecer ruido
-	 					//MediaPlayer intervalosMediaPlayer = MediaPlayer.create(this, R.raw.tick);
-	 					//intervalosMediaPlayer.start(); // no need to call prepare(); create() does that for you
-	 					//intervalosMediaPlayer.release();
-	 				 }
+	 				 
+	 				 // por algun motivo tengo que comprobar siempre con valores 1 segundo mayores
+	 				 
 	 				 
 	 				 // acaba de terminar este intervalo
-	 				 if (tiempoRestaIntervalo <= 0) {
+	 				 if (tiempoRestaIntervalo <= 1000) {
 	 					
 	 					//pongo la cedena para guardar 
 	 					flagGuardaIntervalo = intervalos.get(enIntervalo).etiqueta;
 	 					//pongo a cero el tiempo 
 	 					tiempoComienzoIntervalo = tiempoTranscurrido;
 	 					//paso al siguiente intervalo o termino
-	 					if (enIntervalo < intervalos.size() ) {
+	 					if (enIntervalo < intervalos.size()-1 ) {
 	 						enIntervalo +=1;
 	 						//TODO: hacer que este sonido sea diferente
-	 						//MediaPlayer intervalosMediaPlayer = MediaPlayer.create(this, R.raw.tick);
-		 					//intervalosMediaPlayer.start(); // no need to call prepare(); create() does that for you
-		 					//intervalosMediaPlayer.release();
+	 						
 	 					}
 	 					else {
 	 						enIntervalo = -1;
 	 						//TODO: hacer que este sonido sea diferente
-	 						//MediaPlayer intervalosMediaPlayer = MediaPlayer.create(this, R.raw.tick);
-		 					//intervalosMediaPlayer.start(); // no need to call prepare(); create() does that for you
-		 					//intervalosMediaPlayer.release();
+	 						
 	 					}
 	 						
 	 					
 	 					
 	 				 }
+	 				//TODO: Hacer que el num de segundos antes sea configurable
+	 				 else if (tiempoRestaIntervalo <= 4000) {
+	 					//preparo para hecer ruido
+	 					PlaySound(R.raw.tick);
+	 				 }
 	 				  
 	 			  }
 	 		   }
+	 		   else {
 
-	 		   updateTimer(tiempoTranscurrido);
+	 			   updateTimer(tiempoTranscurrido, null);
+	 		   }
 	 		   
 	 		   
 	 		   // si el GPS esta activado, pero no recibo puntos desde por lo 
@@ -166,9 +194,9 @@ public class LocationRegisterService extends Service implements LocationListener
 	 		}
 	 	};
 		
-	 	private void updateTimer(long tiempo){
+	 	private void updateTimer(long tiempo, String accion){
 	 		if (UImanager != null)
-	 			UImanager.updateTimerUI(tiempo);
+	 			UImanager.updateTimerUI(tiempo,accion);
 	 		
 	 	}
 	 	
@@ -249,7 +277,7 @@ public class LocationRegisterService extends Service implements LocationListener
 			mNM.cancel(NOTIFICATION);
 			
 			// actualizo la sesion con los datos globales
-			registroDB.terminaSesion(sesionId, distanciaTotal,tiempoTranscurrido, altitudAcumPos, altitudAcumNeg);
+			registroDB.terminaSesion(sesionId);
 						
 			//  e inicializo la sesion por si vuelve a arrancar
 			initSesion();
@@ -312,11 +340,13 @@ public class LocationRegisterService extends Service implements LocationListener
 		
 		// Called when a new location is found by the network location provider.
 		public void onLocationChanged(Location location) {
-			  
+			 
+			long tiempoPausado = 0;
+			
 			//si llega un punto es que estoy activo
 			estado_gps = true;
 			
-			// si no estoy registrando, me salgo
+			// si no estoy registrando me salgo
 			if (tracking == false)
 				return;
 			
@@ -332,6 +362,8 @@ public class LocationRegisterService extends Service implements LocationListener
 			// si estaba en autpause lo quito , pues como ha llegado hasta aqui es que hay movimiento
 			if (estado_autopause == true) {
 				estado_autopause = false;
+				
+				tiempoPausado = System.currentTimeMillis() - tiempoInicial - tiempoTranscurrido;
 				
 				tiempoInicial = System.currentTimeMillis() - tiempoTranscurrido;
 				mHandler.removeCallbacks(startTimer);
@@ -366,38 +398,34 @@ public class LocationRegisterService extends Service implements LocationListener
 			}
 			posicionAnterior = location;
 			
-			// ahora almaceno los datos en la BBDD
-			ContentValues valores = new ContentValues();
-			valores.put(EstructuraDB.Punto.COLUMN_NAME_SECUENCIA, numPuntos);
-			valores.put(EstructuraDB.Punto.COLUMN_NAME_LAT,location.getLatitude() );
-			valores.put(EstructuraDB.Punto.COLUMN_NAME_LONG,location.getLongitude() );
-			valores.put(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA, distanciaTotal );
-			valores.put(EstructuraDB.Punto.COLUMN_NAME_SESION, sesionId );
+			PuntoGPX elPuntoGPX = registroDB.new PuntoGPX();
+					
+			
+			elPuntoGPX.posicion = new GeoPoint( location.getLatitude()  , location.getLongitude() );
+			elPuntoGPX.index = (long) numPuntos;
+			elPuntoGPX.distancia = (long) distanciaTotal;
+			elPuntoGPX.sesionId = sesionId;
 			if ( location.hasSpeed() ) {
-				valores.put(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD, location.getSpeed() );
+				elPuntoGPX.velocidad =  (long) location.getSpeed() ;
 			}
 			if ( location.hasAltitude() ) {
-				valores.put(EstructuraDB.Punto.COLUMN_NAME_ALTITUD, location.getAltitude() );
+				elPuntoGPX.altitud =  (long) location.getAltitude() ;
 			}
 			if ( location.hasAccuracy() ) {
-				valores.put(EstructuraDB.Punto.COLUMN_NAME_PRECISION, location.getAccuracy() );
+				elPuntoGPX.precisionH =  (long) location.getAccuracy() ;
 			}
-			
-			valores.put(EstructuraDB.Punto.COLUMN_NAME_TIEMPOTRANS, tiempoTranscurrido );
+			elPuntoGPX.timestamp =  tiempoActual ;
+			elPuntoGPX.tiempopausado =  tiempoPausado ;
 			
 			//si llegael flag de que ha terminado el intervalo guardo 
 			if( flagGuardaIntervalo != null) {
-				
-				valores.put(EstructuraDB.Punto.COLUMN_NAME_INTERVALO, flagGuardaIntervalo );
-				
+				elPuntoGPX.intervalo =  flagGuardaIntervalo ;
 				// lo dejo a null para no volver a guardar hasta el siguiente
 				flagGuardaIntervalo = null;
 			}
 			
-			//TODO: si flagGuardaIntervalo entonces guarda algun dato del intervalo anterior
-			// que ha terminado
 			
-			registroDB.insertaPunto(valores);
+			registroDB.insertaPunto(elPuntoGPX);
 			
 			
 			//actualiza los displais en pantalla
@@ -445,6 +473,8 @@ public class LocationRegisterService extends Service implements LocationListener
     @Override
     public void onCreate() {
         
+    	context = this;
+    	
     	//inicializo a desactivado por si acaso
     	autopause = -1;
     	estado_autopause = false;

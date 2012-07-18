@@ -63,6 +63,13 @@
     <string name="showStaredlbl">ver destacadas</string>
     <string name="showAlllbl">ver todas</string>
     <string name="Intervaloslbl">intervalos</string>
+    <string name="configSaved">configuracion salvada</string>
+    <string name="roundslbl">Rondas</string>
+    <string name="preparalbl">Preparacion</string>
+    <string name="trotalbl">Lento</string>
+    <string name="correlbl">Rapido</string>
+    <string name="importarSesionlbl">Importar</string>
+    <string name="importando">importando sesiones ...</string>
     
         
 </resources>

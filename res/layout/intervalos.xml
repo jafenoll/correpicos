@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical" >
 
     
@@ -37,7 +37,91 @@
     	</LinearLayout>
         
     
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+		    android:layout_weight="1">
+        
+		    <TextView
+				android:id="@+id/preparalbl"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="20sp"
+				android:text="@string/preparalbl" />
+		        
+		    <EditText
+		        android:id="@+id/prepara"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" 
+		        android:inputType="numberDecimal" 
+		        android:text="60" />
+	    
+	    </LinearLayout>  
     
+    	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+		    android:layout_weight="1">
+        
+		    <TextView
+				android:id="@+id/rondasLbl"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="20sp"
+				android:text="@string/roundslbl" />
+		        
+		    <EditText
+		        android:id="@+id/rondas"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" 
+		        android:inputType="numberDecimal" 
+		        android:text="8" />
+	    
+	    </LinearLayout> 
+	    
+    	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+		    android:layout_weight="1">
+        
+		    <TextView
+				android:id="@+id/trotalbl"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="20sp"
+				android:text="@string/trotalbl" />
+		        
+		    <EditText
+		        android:id="@+id/trota"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" 
+		        android:inputType="numberDecimal" 
+		        android:text="60" />
+	    
+	    </LinearLayout> 
+	    
+    	    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content" 
+		    android:layout_weight="1">
+        
+		    <TextView
+				android:id="@+id/correlbl"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="20sp"
+				android:text="@string/correlbl" />
+		        
+		    <EditText
+		        android:id="@+id/corre"
+		        android:layout_width="fill_parent"
+		        android:layout_height="wrap_content" 
+		        android:inputType="numberDecimal"
+		        android:text="60"  />
+	    
+	    </LinearLayout>
+        
+        
     
     <LinearLayout
         android:id="@+id/linearLayout1"

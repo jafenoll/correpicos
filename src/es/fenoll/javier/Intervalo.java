@@ -33,9 +33,10 @@ import android.os.Parcelable;
 
 		
 		public Intervalo(Parcel in) {
-			unidad = in.readString();
-			duracion = in.readLong();
 			etiqueta = in.readString();
+			duracion = in.readLong();
+			unidad = in.readString();
+			
 	     }
 
 

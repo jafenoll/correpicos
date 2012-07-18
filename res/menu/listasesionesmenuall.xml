@@ -5,6 +5,10 @@
           android:icon="@drawable/ic_menu_add"
           android:title="@string/addSesionlbl" />
     
+    <item android:id="@+id/importarsesiones"
+          android:icon="@drawable/ic_menu_import"
+          android:title="@string/importarSesionlbl" />
+    
     <item android:id="@+id/showall"
           android:icon="@drawable/ic_menu_showall"
           android:title="@string/showAlllbl" />

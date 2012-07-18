@@ -3,17 +3,16 @@ package es.fenoll.javier;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class gestionaIntervalos extends Activity implements OnClickListener{
 
-	private AlmacenDatos registroDB;
-   
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,7 +20,7 @@ public class gestionaIntervalos extends Activity implements OnClickListener{
      
         setContentView(R.layout.intervalos);
         
-        registroDB = new AlmacenDatos( (Context) this.getApplication() );
+       
         
         
         //engancho los listener 
@@ -46,13 +45,21 @@ public class gestionaIntervalos extends Activity implements OnClickListener{
 	public void onClick(View v) {
 
 		if ( v.getId() == R.id.OK ) {
+			
+			
+			int rondas = Integer.parseInt( ((TextView) findViewById(R.id.rondas)).getText().toString() );
+			int prepara = Integer.parseInt( ((TextView) findViewById(R.id.prepara)).getText().toString() );
+			int trota = Integer.parseInt( ((TextView) findViewById(R.id.trota)).getText().toString() );
+			int corre = Integer.parseInt( ((TextView) findViewById(R.id.corre)).getText().toString() );
 
+			
 			ArrayList<Intervalo> intervalos = new ArrayList<Intervalo>();
-			intervalos.add( new Intervalo("preparacion",(long)3000,"ms") );
-			intervalos.add( new Intervalo("corre", (long)5000, "ms") );
-			intervalos.add( new Intervalo("trota", (long)4000,"ms") );
-			intervalos.add(new Intervalo("corre",(long)5000,"ms") );
-			intervalos.add( new Intervalo("trota",(long)4000,"ms") );
+			intervalos.add( new Intervalo("preparacion",(long) prepara * 1000,"ms") );
+			for (int i=0; i<rondas; i++ ) {
+				intervalos.add( new Intervalo("trota", (long) trota * 1000 ,"ms") );
+				intervalos.add(new Intervalo("corre",(long) corre * 1000,"ms") );
+			}
+			
 					
 			
 			//pongo que hay sesion salvada en el resuktado

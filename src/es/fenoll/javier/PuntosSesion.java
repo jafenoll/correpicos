@@ -772,8 +772,9 @@ public class PuntosSesion extends Activity implements OnClickListener {
         NumberFormat formatter = new DecimalFormat("#.##");
         
         //borro si hay algo en las tablas
-        tablaPuntosCabecera.removeAllViews();
-        tablaPuntos.removeAllViews();
+        //descomentar
+        //tablaPuntosCabecera.removeAllViews();
+        //tablaPuntos.removeAllViews();
         
         
         //pongo las cabeceras, en la tabla normal oculta
@@ -802,6 +803,7 @@ public class PuntosSesion extends Activity implements OnClickListener {
         if (elPuntoGPX != null) {
         	        	
         	long tramo  = 1;
+        	long tiempoInicial = 0;
         	
         	//creo el path 
         	GeoPoint elpunto;
@@ -822,6 +824,10 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	            	items.add(new OverlayItem("Inicio"  , "", elpunto));
 	            	// y centro el mapa en ese punto
 	            	map.getController().setCenter( elpunto );
+	            	
+	            	//me guardo el tiempo del primer punto, para luego poder calcular los acumulados
+	            	tiempoInicial = elPuntoGPX.timestamp  ;
+	            	
 	            }
 	            
 	        	// es la distancia desde el principio
@@ -841,7 +847,8 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	        	}
 	        	AltitudAnterior = AltitudActual ;
 	        	
-	        	tiempoActual = elPuntoGPX.tiempo;
+	        	// aqui tengo que poner el tiempo desde el principio restando el pausado
+	        	tiempoActual = elPuntoGPX.timestamp - tiempoInicial - elPuntoGPX.tiempopausado ;
 	        	
 	        	// Si ya llevo la cantidadque me dice el parametro
 	        	if (  distActual >= tramo * cortesParcial ) {

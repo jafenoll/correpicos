@@ -15,6 +15,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.GestureDetector;
@@ -110,11 +111,20 @@ public class Registra extends Activity implements OnClickListener{
  	}
  	
  	//se llama cuando hay que actualizar el UI
- 	public void updateTimerUI(long tiempo) {
+ 	public void updateTimerUI(long tiempo, String accion) {
 		
 			((TextView)findViewById(R.id.displayTiempo)).setText( cambioFormatos.desdeMStoHHMM(tiempo)  );
 			((TextView)findViewById(R.id.displayTiempoSS)).setText( cambioFormatos.desdeMSobtenSS(tiempo)  );
 			
+			if (accion != null) {
+				
+				((TextView)findViewById(R.id.displayTiempoLbl)).setText( accion );
+				
+			}
+			else {
+				((TextView)findViewById(R.id.displayTiempoLbl)).setText( R.string.displayTiempoLbl );
+				
+			}
 			
  	}
  	
@@ -403,6 +413,10 @@ public class Registra extends Activity implements OnClickListener{
 	    }
 	    
 	    if (intervalos != null) {
+	    	
+	    	//pongo esto para poder gestionar el volumen multimedia (el delos sonidos de los avisos de intervalos)
+	    	// con las teclas del telefono, tiene que estar en una activity
+	    	setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	    	
 	    	locationListener.startIntervalos(intervalos);
 	    	

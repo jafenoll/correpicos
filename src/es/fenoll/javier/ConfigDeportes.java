@@ -8,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ConfigDeportes extends Activity implements OnClickListener{
 
@@ -68,6 +69,12 @@ public class ConfigDeportes extends Activity implements OnClickListener{
 			elDeporte.umbralautopause = Double.parseDouble( ((TextView) findViewById(R.id.umbralAutoPause)).getText().toString() );
 			
 			registroDB.actualizaDeporte(0,elDeporte);
+			
+			String text =  getText(R.string.sesionKmError).toString();
+			Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
+	    	toast.show();
+			
+			finish();	
 		}
 		else if( v.getId() == R.id.cierra) {
 			finish();	
