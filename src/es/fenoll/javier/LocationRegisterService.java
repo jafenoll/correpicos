@@ -38,6 +38,8 @@ public class LocationRegisterService extends Service implements LocationListener
 		private boolean tracking;
 		// umbral de autopause en m/s  -1 para desactivar
 		private double autopause;
+		// para guardar el valor de autopause mientras estoy en intervalos
+		private double autopause_backup_intervalos;
 		//para saber si estoy o no en autopause
 		private boolean estado_autopause;
 		//para saber si el GPS esta bien enganchado
@@ -137,24 +139,26 @@ public class LocationRegisterService extends Service implements LocationListener
 	 				 // acaba de terminar este intervalo
 	 				 if (tiempoRestaIntervalo <= 1000) {
 	 					
-	 					//pongo la cedena para guardar 
+	 					//pongo la cadena para guardar 
 	 					flagGuardaIntervalo = intervalos.get(enIntervalo).etiqueta;
 	 					//pongo a cero el tiempo 
 	 					tiempoComienzoIntervalo = tiempoTranscurrido;
 	 					//paso al siguiente intervalo o termino
 	 					if (enIntervalo < intervalos.size()-1 ) {
 	 						enIntervalo +=1;
-	 						//TODO: hacer que este sonido sea diferente
-	 						
+	 						//TODO: hacer que diga que tengo que hacer en el siguiente inervalo con voicetospeech
+	 						PlaySound(R.raw.vulture);
 	 					}
 	 					else {
+	 						// he terminado losintervalos
 	 						enIntervalo = -1;
-	 						//TODO: hacer que este sonido sea diferente
+	 						autopause = autopause_backup_intervalos ;
+	 						//TODO: hacer que diga fin de los ejerccios con voicetospeech
+	 						PlaySound(R.raw.thunder);
 	 						
 	 					}
 	 						
-	 					
-	 					
+
 	 				 }
 	 				//TODO: Hacer que el num de segundos antes sea configurable
 	 				 else if (tiempoRestaIntervalo <= 4000) {
@@ -207,6 +211,7 @@ public class LocationRegisterService extends Service implements LocationListener
 	 		sesionId = -1;
 	 		tiempoInicial = 0;
 	 		numPuntos = 0;
+	 		
 	 		
 	 		//inicializo la parte de intervalos
 	    	intervalos = null;
@@ -266,7 +271,6 @@ public class LocationRegisterService extends Service implements LocationListener
 	     // Display a notification about us starting.  We put an icon in the status bar.
 	        showNotification();
 	        
-	        //y si tiene el au
 			
 		}
 		
@@ -317,6 +321,10 @@ public class LocationRegisterService extends Service implements LocationListener
 			tiempoComienzoIntervalo = tiempoTranscurrido;
 			distanciaComienzoIntervalo = distanciaTotal;
 			
+			// cuando empiezo los intervalos quito el autopause
+			autopause_backup_intervalos = autopause;
+			autopause = -1;
+			
 			
 			
 		}
@@ -363,9 +371,19 @@ public class LocationRegisterService extends Service implements LocationListener
 			if (estado_autopause == true) {
 				estado_autopause = false;
 				
-				tiempoPausado = System.currentTimeMillis() - tiempoInicial - tiempoTranscurrido;
+				tiempoActual = System.currentTimeMillis();
 				
-				tiempoInicial = System.currentTimeMillis() - tiempoTranscurrido;
+				// si tiempoInicial = 0 es que ha empezado con autopause y este es el primer punto
+				// por tanto no hay pausa
+				if ( tiempoInicial ==0 )  {
+					tiempoPausado= 0;
+				}
+				else {
+					tiempoPausado = tiempoActual - tiempoInicial - tiempoTranscurrido;
+				}
+				
+				tiempoInicial = tiempoActual - tiempoTranscurrido ;
+				
 				mHandler.removeCallbacks(startTimer);
 		        mHandler.postDelayed(startTimer, 0);
 		        

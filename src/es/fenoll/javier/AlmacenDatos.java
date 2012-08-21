@@ -795,7 +795,7 @@ public class AlmacenDatos  {
         
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         
-        Long timestampPunto = (long) 0, tiempoPausadoTotal = (long) 0;
+        Long timestampPunto = (long) 0, tiempoPausadoTotal = (long) 0, timestampPuntoInicio = (long) 0;
         Date lafecha = null;
         
         
@@ -824,8 +824,8 @@ public class AlmacenDatos  {
     	
     	
 
-         String lat = "", lon="", alt="", hdop="", seq="", dist="", vel="", tmpPausa = "", intervalo = "";
-         Double altitudPos=0.0, altitudNeg=0.0, altitud=null, altitudAnt=null;
+         String lat = "", lon="", alt="", hdop="", seq="", vel="", tmpPausa = "", intervalo = "";
+         Double altitudPos=0.0, altitudNeg=0.0, altitud=null, altitudAnt=null, dist=null;
         
 
     	 try {
@@ -860,7 +860,7 @@ public class AlmacenDatos  {
  	    	 
  	    	 out.write("<number>1</number>");
  	    	
- 	    	 out.write("<trkseg>\n");
+ 	    	 
  	    	
  	    	 long numPuntos = cPuntos.getCount();
  	    	
@@ -871,12 +871,15 @@ public class AlmacenDatos  {
         	 out.write("<cpc:rating>" + estrellasSesion + "</cpc:rating>\n");
         	 out.write("</cpc:CrcExtension>\n");
         	 out.write("</extensions>\n");
- 	    	 
-        	 lat = ""; lon=""; alt=""; hdop=""; seq=""; dist="0"; vel="0"; tmpPausa = "0";
- 	    	 
+        	 out.write("<trkseg>\n");
+        	 
+        	 lat = ""; lon=""; alt=""; hdop=""; seq=""; dist= (double) 0; vel="0"; tmpPausa = "0";
+        	
+        	 
  	    	 if ( numPuntos > 0 ) {
  	    		 
- 	    	 
+ 	    		//guardo esto para tener el tempo inicial
+ 	    		timestampPuntoInicio = cPuntos.getLong( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIMESTAMP));
  	       
 	 	         do {
 	 	        	
@@ -887,7 +890,7 @@ public class AlmacenDatos  {
 	 	        	 alt = Double.toString( altitud );
 	 	        	 hdop = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_PRECISIONH)) );
 	 	        	 seq = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_SECUENCIA)) );
-	 	        	 dist = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA)) );
+	 	        	 dist =  cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_DISTANCIA));
 	 	        	 vel = Double.toString( cPuntos.getDouble( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_VELOCIDAD)) );
 	 	        	 timestampPunto = cPuntos.getLong( cPuntos.getColumnIndex(EstructuraDB.Punto.COLUMN_NAME_TIMESTAMP));
 	 	        	
@@ -966,8 +969,8 @@ public class AlmacenDatos  {
 		
 		 
 		 returnSesion.nomFicheroSesion = nomFicheroExport;
-		 returnSesion.distancia = Double.valueOf(dist).longValue();
-		 returnSesion.duracion =  timestampPunto - lafecha.getTime() - tiempoPausadoTotal ;
+		 returnSesion.distancia = dist.longValue();
+		 returnSesion.duracion =  timestampPunto - timestampPuntoInicio - tiempoPausadoTotal ;
 		 returnSesion.altitudPos = altitudPos.longValue();
 		 returnSesion.altitudNeg = altitudNeg.longValue();
 		 returnSesion.sesionId = sesionID;
@@ -1078,50 +1081,25 @@ public class AlmacenDatos  {
 				return;
 			}
 	    	
-	    	Date laFecha;
-	    	String comentario = RecuperaComentarioSesionGpx( parser);
-	    	//ahora del comentario saco la fecha
-	    	
-	    	comentario = comentario.substring( comentario.indexOf("cuando")+7);
-	    	SimpleDateFormat df = new SimpleDateFormat("yyyy-M-dd_HH_mm");
-	      	try {
-	      		laFecha = df.parse(comentario)  ;  			
-	      	}catch (ParseException e) {
-				//e.printStackTrace();
-	      		// error importando, 
-	      		continue;
-	      		// sigo importando los demas
-	      		
-			} 
-	    	
-	      	//INSERTO LA SESION
-	        long sesionId =  insertaSesion(laFecha);
-	      	
 	    	// y voy leyendo los puntos para sacar lo que me falta
 	    	PuntoGPX elPuntoGPX =  RecuperaPuntoSesionGpx ( parser);
 	    	
-	    	
-	    	Long tiempoActual =  (long) 0;
-	    	
-	         
-	        //TODO: esto son sesiones antiguas, por tanto hay que llet el campo tmpt del gpx
-	        // y luego escribir bien el gpx en el nuevo sitio, intentar utilizar funciones que existen
-	        //por ejemplo guadar en la BBDD insertando los puntos y luego llamar a pasar a GPX
-	        // despues ya se puede dejar todo bien otra vez
-	        // por tanto, modificar esta funcion y RecuperaPuntoSesionGpx, luego importar y ya dejar bien
-			
+	    	Date laFecha;    
+	        Calendar c = Calendar.getInstance();
+	        c.setTimeInMillis( elPuntoGPX.timestamp );
+	        laFecha = c.getTime();
+	            	
+	    	//INSERTO LA SESION
+	        long sesionId =  insertaSesion(laFecha);
+
 	        if (elPuntoGPX != null) {
 	        
-	        	do {
-	        		// en los puntos se guadda la distancia desde el inicio
-	        		// asi que lo que quiero es la del ultimo
+	        	do {    
 	        		
-	        		tiempoActual = elPuntoGPX.timestamp;
-	        		// como es un fiechero viejo, realmente lo que lee es el tiempo transcurrido 
-	        		// lo tengo que pasa a timestamp
-	        		tiempoActual += laFecha.getTime();
-
-	        		elPuntoGPX.timestamp = tiempoActual;
+	        		//TODO: Por si importo ficheros que no son ya de correpicos
+	        		// controlar que por lo menos de cada punto tengo el minimo
+	        		// necesario o calcular lo que me falte
+	        		
 	        		elPuntoGPX.sesionId = sesionId;
 	        		
 					insertaPunto(elPuntoGPX);

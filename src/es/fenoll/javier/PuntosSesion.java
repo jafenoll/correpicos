@@ -769,7 +769,8 @@ public class PuntosSesion extends Activity implements OnClickListener {
         double velocidadTramo = 0;
         
         FormatosDisplay cambioFormatos = new FormatosDisplay();
-        NumberFormat formatter = new DecimalFormat("#.##");
+        NumberFormat formatter2d = new DecimalFormat("#.##");
+        NumberFormat formatter0d = new DecimalFormat("#");
         
         //borro si hay algo en las tablas
         //descomentar
@@ -851,12 +852,21 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	        	tiempoActual = elPuntoGPX.timestamp - tiempoInicial - elPuntoGPX.tiempopausado ;
 	        	
 	        	// Si ya llevo la cantidadque me dice el parametro
-	        	if (  distActual >= tramo * cortesParcial ) {
+	        	//if (  distActual >= tramo * cortesParcial || !elPuntoGPX.intervalo.equals("null") ) {
+	        	if (   distParcial >= cortesParcial || !elPuntoGPX.intervalo.equals("null") ) {
 	        		
 	        		// acumulo distancia 
 	        		distAcmulada = distActual;
 	        		//valores.add(formatter.format(distAcmulada));
-	        		valores.add(String.valueOf(tramo));
+	        		//valores.add(String.valueOf(tramo));
+	        		String nombreIntervalo = formatter0d.format( (double)(distAcmulada)/1000 );
+	        		
+	        		if (!elPuntoGPX.intervalo.equals("null")){
+	        			nombreIntervalo +=  "(" + formatter2d.format( (double)(distParcial)/1000 ) + ")";
+	        			nombreIntervalo += " - " + elPuntoGPX.intervalo;
+	        		}
+	        		
+	        		valores.add(nombreIntervalo);
 	        		
 	        		// calculo el tiempo desde el último acumulado y acumulo
 	        		// no tengo que acumular en cada tramo por que ya viene así en la tabla 
@@ -895,8 +905,11 @@ public class PuntosSesion extends Activity implements OnClickListener {
 	        
 	        
 	        
-	        // al final añado lo poco que me queda que no llega al intervalo fijado
-	        valores.add(formatter.format( (double)(distParcial)/1000 ));
+	        // al final añado lo poco que me queda que no llega al intervalo fijado       
+	        String nombreIntervalo = formatter0d.format( (double)(distAcmulada)/1000 );
+    		nombreIntervalo +=  "(" + formatter2d.format( (double)(distParcial)/1000 ) + ")";
+    		valores.add(nombreIntervalo);
+	        
 	        //valores.add( cambioFormatos.desdeMStoHHMM( tiempoActual - tiempoAcmulado ) + cambioFormatos.desdeMSobtenSS(tiempoActual - tiempoAcmulado) );
     		velocidadTramo = (double) distParcial/( (tiempoActual - tiempoAcmulado)/1000 );
     		//valores.add(cambioFormatos.desdeMsaKh(velocidadTramo) );

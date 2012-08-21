@@ -245,7 +245,9 @@ public final class R {
         public static final int registramenu=0x7f090003;
     }
     public static final class raw {
-        public static final int tick=0x7f050000;
+        public static final int thunder=0x7f050000;
+        public static final int tick=0x7f050001;
+        public static final int vulture=0x7f050002;
     }
     public static final class string {
         public static final int CCServiceLocationListener=0x7f060020;
